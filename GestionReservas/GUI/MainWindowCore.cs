@@ -18,32 +18,38 @@ namespace GestionReservas.GUI
         public MainWindowCore()
         {
             Console.Write("main core");
+            this.Clientes = RegistroClientes.RecuperarXml();
+            this.Reservas = RegistroReserva.RecuperarXml();
+
             this.View = new MainWindowView();
-        //    try { 
-        //        this.Actualiza();
-        //    }catch(Exception e)
-        //    {
-        //        Console.WriteLine("\nerror actualiza, " + e);
-        //    }
+           // this.AddReserva = new DlgInsertaReserva(Clientes.List);
+           /* try { 
+                this.Actualiza();
+            }catch(Exception e)
+            {
+                Console.WriteLine("\nerror actualiza, " + e);
+            }*/
             this.View.FormClosed += (sender, e) => this.OnQuit();
             this.View.opSalir.Click += (sender, e) => this.Salir();
 
        //     try
         //    {
                 this.View.btnAddReserva.Click += (sender, e) => this.InsertaReserva();
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Console.WriteLine("\nerror btnAdd, msg:" + e);
-        //    }
-            
+                this.View.btnConsultaReserva.Click += (sender, e) => this.ConsultaReserva();
+            //    }
+            //    catch (Exception e)
+            //    {
+            //        Console.WriteLine("\nerror btnAdd, msg:" + e);
+            //    }
+
 
         }
 
         void InsertaReserva()
         {
             Console.WriteLine("Inserta reserva");
-            var dlgInsertaReserva = new DlgInsertaReserva();
+            var dlgInsertaReserva = new DlgInsertaReserva(Clientes.List);
+            
 
             this.View.Hide();
 
@@ -51,12 +57,16 @@ namespace GestionReservas.GUI
             {
                 Reserva reserva = null;
 
-             /*   Reserva new_reserva = reserva.Crear(
-                    dlgInsertaReserva.habita, dlgInsertaReserva.tipo, dlgInsertaReserva.cliente, dlgInsertaReserva.FindForm, 
-                    dlgInsertaReserva.fOut, dlgInsertaReserva.garaje, dlgInsertaReserva.precioDia, dlgInsertaReserva.Iva
-                  );*/
+                //   Habitacion h = this.Habitacion.getHabitacion(dlgInsertaReserva.NumHabitacion);
+                Cliente c = this.Clientes.getCliente(dlgInsertaReserva.DniCliente);
 
-                this.RegistroReserva.Add(reserva);
+                //obtener el cliente a partir del DNI con getCliente(DNI) del registro de clientes
+                   Reserva newReserva = reserva.Crear(
+                       dlgInsertaReserva.NumHabitacion, dlgInsertaReserva.Tipo, c, dlgInsertaReserva.FechaEntrada, 
+                       dlgInsertaReserva.FechaSalida, dlgInsertaReserva.Garaje, dlgInsertaReserva.PrecioDia, dlgInsertaReserva.Iva
+                     );
+
+                this.Reservas.Add(newReserva);
 
                 this.Actualiza();
             }
@@ -64,12 +74,30 @@ namespace GestionReservas.GUI
             this.View.Show();
         }
 
+        void ConsultaReserva()
+        {
+            Console.WriteLine("Consulta reservas");
+            var dlgConsultaReserva = new DlgConsultaReserva();
+
+            this.View.Hide();
+
+            if (dlgConsultaReserva.ShowDialog() == DialogResult.OK)
+            {
+               
+
+            }
+
+            this.View.Show();
+        }
+
+
+
         void Actualiza()
         {
             Console.WriteLine("dentro actualiza");
-            Console.WriteLine("---"+this.RegistroReserva.List);
+            Console.WriteLine("---"+this.Reservas.List);
 
-            int numElementos = this.RegistroReserva.Count;
+            int numElementos = this.Reservas.Count;
             this.View.SbStatus.Text = ("Numero de reservas: " + numElementos);
             for (int i = 0; i < numElementos; i++)
             {
@@ -98,7 +126,7 @@ namespace GestionReservas.GUI
             }
 
             DataGridViewRow fila = this.View.GrdLista.Rows[numFila];
-            Reserva reserva = this.RegistroReserva.List[numFila];
+            Reserva reserva = this.Reservas.List[numFila];
 
             fila.Cells[0].Value = (numFila + 1).ToString().PadLeft(4, ' ');
             fila.Cells[1].Value = reserva.Id; //aaaammddhhh
@@ -117,7 +145,7 @@ namespace GestionReservas.GUI
 
         void Salir()
         {
-            this.RegistroReserva.GuardarXml();
+            this.Reservas.GuardarXml();
             Application.Exit();
         }
 
@@ -127,7 +155,10 @@ namespace GestionReservas.GUI
         }
 
         public MainWindowView View { get; private set; }
+        public DlgInsertaReserva AddReserva { get; private set; }
 
-        private RegistroReserva RegistroReserva { get; set; }
+        private RegistroReserva Reservas { get; set; }
+        private RegistroClientes Clientes { get; set; }
+
     }
 }

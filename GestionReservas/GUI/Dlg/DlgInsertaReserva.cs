@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GestionReservas.Core;
 
 
 namespace GestionReservas.GUI.Dlg
@@ -18,12 +19,23 @@ namespace GestionReservas.GUI.Dlg
             this.Build();
         }
 
+        public DlgInsertaReserva(List<Cliente> clientesList)
+        {
+            this.rgCli = clientesList;
+            this.Build();
+        }
+
         void Build()
         {
+
+            this.BuildStatus();
+            this.BuildMenu();
+
             this.SuspendLayout();
 
-            var pnlInserta = new TableLayoutPanel {
-                Size = new Size(442, 440), //Size(alto,ancho)
+            this.pnlInserta = new TableLayoutPanel
+            {
+                Size = new Size(442, 440), //Size(ancho, alto)
                 Dock = DockStyle.Fill,
                 BackColor = Color.FromArgb(49, 66, 82),
             };
@@ -34,33 +46,40 @@ namespace GestionReservas.GUI.Dlg
             var pnlReserva = this.BuildReservaPanel();
             pnlInserta.Controls.Add(pnlReserva);
 
+            var pnlEspacio = this.BuildEspacioPanel();
+            pnlInserta.Controls.Add(pnlEspacio);
 
+            //Habitacion
+            var pnlnumHabitacion = this.BuildHabitacion();
+            pnlInserta.Controls.Add(pnlnumHabitacion);
+
+            //Cliente
+            var pnldniCliente = this.BuildCliente();
+            pnlInserta.Controls.Add(pnldniCliente);
+
+            //Tipo reserva
             var pnlTipo = this.BuilTipo();
             pnlInserta.Controls.Add(pnlTipo);
 
-            //Cliente
-
             //F_entrada
+            var pnlDateIn = this.BuildFechaEntrada();
+            pnlInserta.Controls.Add(pnlDateIn);
 
             //F_salida
+            var pnlDateOut = this.BuildFechaSalida();
+            pnlInserta.Controls.Add(pnlDateOut);
 
             //Garaje
+            var pnlGaraje = this.BuildGaraje();
+            pnlInserta.Controls.Add(pnlGaraje);
 
             //Precio/dia
+            var pnlPrecioDia = this.BuildPrecioDia();
+            pnlInserta.Controls.Add(pnlPrecioDia);
 
             //Iva
-
-            var pnlNumSerie = this.BuildNumSeriePanel();
-            pnlInserta.Controls.Add(pnlNumSerie);
-            
-            var pnlBanda = this.BuildBandaPanel();
-            pnlInserta.Controls.Add(pnlBanda);
-
-            var pnlPrecioPiezas = this.BuildPrecioPiezasPanel();
-            pnlInserta.Controls.Add(pnlPrecioPiezas);
-
-            var pnlTiempoRep = this.BuildDuracionPanel();
-            pnlInserta.Controls.Add(pnlTiempoRep);
+            var pnlIva = this.BuildIva();
+            pnlInserta.Controls.Add(pnlIva);
 
             var pnlBotones = this.BuildBotonesPanel();
             pnlInserta.Controls.Add(pnlBotones);
@@ -68,9 +87,17 @@ namespace GestionReservas.GUI.Dlg
             pnlInserta.ResumeLayout(true);
 
             this.Text = "Gestion de un hotel - Añadir reserva";
-            this.Size = new Size(440,
-                    pnlReserva.Height + pnlNumSerie.Height + pnlTipo.Height +
-                    pnlBanda.Height + pnlPrecioPiezas.Height + pnlTiempoRep.Height + pnlBotones.Height + 15);
+
+            Console.WriteLine(pnlReserva.Height);
+
+            this.Size = new Size(600,
+                      100 + pnlReserva.Height + pnlEspacio.Height + pnlnumHabitacion.Height + pnldniCliente.Height + pnlTipo.Height + pnlDateIn.Height + dtpDateOut.Height +
+                      pnlGaraje.Height + pnlPrecioDia.Height + pnlIva.Height + pnlBotones.Height);
+
+            this.MinimumSize = new Size(600,
+                      100 + pnlReserva.Height + pnlEspacio.Height + pnlnumHabitacion.Height + pnldniCliente.Height + pnlTipo.Height + pnlDateIn.Height + dtpDateOut.Height +
+                      pnlGaraje.Height + pnlPrecioDia.Height + pnlIva.Height + pnlBotones.Height);
+
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MinimizeBox = false;
             this.MaximizeBox = false;
@@ -78,6 +105,32 @@ namespace GestionReservas.GUI.Dlg
             this.ResumeLayout(false);
         }
 
+
+        private void BuildStatus()
+        {
+            this.SbStatus = new StatusBar();
+            this.SbStatus.Dock = DockStyle.Bottom;
+            this.Controls.Add(this.SbStatus);
+        }
+
+        private void BuildMenu()
+        {
+            this.mPpal = new MainMenu();
+
+            this.mArchivo = new MenuItem("&Archivo");
+            // this.mInsertar = new MenuItem("&Insertar");
+
+            this.opSalir = new MenuItem("&Salir");
+            this.opSalir.Shortcut = Shortcut.CtrlQ;
+
+            this.mArchivo.MenuItems.Add(this.opSalir);
+
+            this.mPpal.MenuItems.Add(this.mArchivo);
+
+            this.Menu = mPpal;
+
+
+        }
 
 
 
@@ -89,6 +142,7 @@ namespace GestionReservas.GUI.Dlg
                 ColumnCount = 2,
                 RowCount = 1,
                 Dock = DockStyle.Top,
+
             };
 
             var btCierra = new Button()
@@ -125,7 +179,13 @@ namespace GestionReservas.GUI.Dlg
         Panel BuildReservaPanel()
         {
 
-            var pnlReserva = new Panel();
+            this.pnlReserva = new Panel()
+            {
+                Dock = DockStyle.Fill,
+                MaximumSize = new Size(int.MaxValue, 30),
+                Height = 30,
+            };
+
             var lblReserva = new Label()
             {
                 Text = "Datos de la reserva",
@@ -145,48 +205,169 @@ namespace GestionReservas.GUI.Dlg
             pnlReserva.Controls.Add(lblEspacio);
             pnlReserva.Controls.Add(lblReserva);
 
-            pnlReserva.Dock = DockStyle.Fill;
-            pnlReserva.MaximumSize = new Size(int.MaxValue, 30);
 
             return pnlReserva;
         }
 
 
+        Panel BuildEspacioPanel()
+        {
 
-        //Panel BuildHabitacion() { }
+            this.pnlEspacio = new Panel()
+            {
+                Height = 5
+            };
+
+            var lblEspacio = new Label()
+            {
+                Text = " ",
+                Dock = DockStyle.Top,
+
+            };
+            pnlEspacio.Controls.Add(lblEspacio);
+
+            pnlEspacio.Dock = DockStyle.Fill;
+            pnlEspacio.MaximumSize = new Size(int.MaxValue, 5);
+
+            return pnlEspacio;
+        }
+
+
+
+
+        Panel BuildHabitacion()
+        {
+            this.pnlNumHabitacion = new Panel
+            {
+                Dock = DockStyle.Fill,
+                Location = new Point(Left, this.pnlEspacio.Top + this.pnlEspacio.Height + 10),
+                Height = 35,
+
+            };
+
+            var lblHabitacion = new Label
+            {
+                Location = new Point(Left, this.pnlEspacio.Top + this.pnlEspacio.Height + 10),
+                Text = "Habitacion:",
+                Dock = DockStyle.Left,
+                ForeColor = Color.White,
+                // Left = 20,
+                Width = 150,
+                TextAlign = ContentAlignment.TopRight,
+
+            };
+
+            this.cbNumHabitacionList = new ComboBox
+            {
+                Left = 0,
+                Width = 250,
+                Anchor = AnchorStyles.Bottom,
+                DropDownStyle = ComboBoxStyle.DropDownList,
+                DropDownWidth = 20,
+            };
+
+
+            //obtener los numeros de todas las habitaciones
+            //  cbNumHabitacionList.Items.Add("AM");
+
+            pnlNumHabitacion.Controls.Add(cbNumHabitacionList);
+            pnlNumHabitacion.Controls.Add(lblHabitacion);
+
+            return pnlNumHabitacion;
+
+        }
+
+        Panel BuildCliente()
+        {
+            this.pnlDniCliente = new Panel
+            {
+                Dock = DockStyle.Fill,
+                Location = new Point(Left, this.pnlNumHabitacion.Top + this.pnlNumHabitacion.Height + 10),
+                Height = 35,
+
+            };
+
+            var lblCliente = new Label
+            {
+                Location = new Point(Left, this.pnlNumHabitacion.Top + this.pnlNumHabitacion.Height + 10),
+                Text = "Cliente:",
+                Dock = DockStyle.Left,
+                ForeColor = Color.White,
+                Width = 150,
+                TextAlign = ContentAlignment.TopRight,
+
+            };
+
+            this.cbDniClienteList = new ComboBox
+            {
+                Left = 0,
+                Width = 250,
+                Anchor = AnchorStyles.Bottom,
+                DropDownStyle = ComboBoxStyle.DropDownList,
+                DropDownWidth = 20,
+
+            };
+
+            string[] op = new string[this.rgCli != null ? this.rgCli.Count : 0];
+            for (int i = 0; i < op.Length; i++)
+            {
+                Cliente cliente = this.rgCli[i];
+                op[i] = cliente.DNI ;
+
+            }
+            cbDniClienteList.Items.AddRange(op);
+
+            pnlDniCliente.Controls.Add(cbDniClienteList);
+            pnlDniCliente.Controls.Add(lblCliente);
+
+            return pnlDniCliente;
+
+        }
+
 
         Panel BuilTipo()
         {
-            var pnlTipo = new Panel()
+            this.pnlTipo = new Panel()
             {
-                Dock = DockStyle.Top,
-            };
+                Dock = DockStyle.Fill,
+                Location = new Point(Left, this.pnlNumHabitacion.Top + this.pnlNumHabitacion.Height + 10),
 
-            this.tbTipo = new TextBox() { Dock = DockStyle.Fill };
+            };
 
             var lblTipo = new Label()
             {
+                Location = new Point(Left, this.pnlNumHabitacion.Top + this.pnlNumHabitacion.Height + 10),
                 Text = "Tipo:",
                 Dock = DockStyle.Left,
                 ForeColor = Color.White,
+                Width = 150,
+                TextAlign = ContentAlignment.TopRight,
 
+
+            };
+
+            this.tbTipo = new TextBox()
+            {
+                Left = 0,
+                Width = 250,
+                Anchor = AnchorStyles.Bottom,
 
             };
 
             this.tbTipo.Validating += (sender, cancelArgs) =>
             {
                 var btAccept = (Button)this.AcceptButton;
-                bool invalid = string.IsNullOrWhiteSpace(this.Modelo);
+                bool invalid = string.IsNullOrWhiteSpace(this.Tipo);
 
-                invalid = invalid || !char.IsLetter(this.Modelo[0]);
+                invalid = invalid || !char.IsLetter(this.Tipo[0]);
 
                 if (invalid)
                 {
-                    this.tbTipo.Text = "Inserte un tipo";
+                    this.tbTipo.Text = "¿ Tipo ?";
                 }
 
                 btAccept.Enabled = !invalid;
-                cancelArgs.Cancel = invalid;
+                //  cancelArgs.Cancel = invalid;
             };
 
             pnlTipo.MaximumSize = new Size(int.MaxValue, tbTipo.Height * 2);
@@ -197,150 +378,267 @@ namespace GestionReservas.GUI.Dlg
             return pnlTipo;
         }
 
-        Panel BuildNumSeriePanel()
+
+
+        Panel BuildFechaEntrada()
         {
-            var pnlNumSerie = new Panel();
-            this.nudNumSerie = new NumericUpDown
+            this.pnlDateIn = new Panel()
             {
-                Value = 0,
-                TextAlign = HorizontalAlignment.Right,
                 Dock = DockStyle.Fill,
-                Minimum = 1
-            };
+                Location = new Point(Left, this.pnlTipo.Top + this.pnlTipo.Height + 10),
 
-            var lbNumSerie = new Label()
+            };
+            Console.WriteLine("comienzo dateIn: " + (this.pnlTipo.Top + this.pnlTipo.Height + 10));
+
+            var lblDateIn = new Label()
             {
-                Text = "Número de serie:",
+                Location = new Point(Left, (this.pnlTipo.Top + this.pnlTipo.Height + 10)),
+                Text = "Fecha de entrada:",
                 Dock = DockStyle.Left,
-                Size = new Size(102, 15),
-                Location = new Point(45, 111),
-                AutoSize = true,
-                TabIndex = 43,
-                Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(0)))
-            };
-            pnlNumSerie.Controls.Add(this.nudNumSerie);
-            pnlNumSerie.Controls.Add(lbNumSerie);
-            pnlNumSerie.Dock = DockStyle.Top;
-            pnlNumSerie.MaximumSize = new Size(int.MaxValue, nudNumSerie.Height * 2);
+                ForeColor = Color.White,
+                Width = 150,
+                TextAlign = ContentAlignment.TopRight,
 
-            return pnlNumSerie;
+            };
+
+            this.dtpDateIn = new DateTimePicker()
+            {
+                Left = 0,
+                Width = 250,
+                MinDate = DateTime.Today,
+                Value = DateTime.Today,
+                Anchor = AnchorStyles.Bottom,
+
+
+            };
+
+            pnlDateIn.MaximumSize = new Size(int.MaxValue, dtpDateIn.Height * 2);
+
+            pnlDateIn.Controls.Add(this.dtpDateIn);
+            pnlDateIn.Controls.Add(lblDateIn);
+
+            return pnlDateIn;
         }
 
-     
 
-        Panel BuildBandaPanel()
+        Panel BuildFechaSalida()
         {
-            this.pnlBanda = new Panel { Dock = DockStyle.Top };
-
-            this.rbAM = new RadioButton()
+            this.pnlDateOut = new Panel()
             {
-                Text = "AM",
+                Dock = DockStyle.Fill,
+                Location = new Point(Left, this.pnlDateIn.Top + this.pnlDateIn.Height + 10),
+            };
+
+            var lblDateOut = new Label()
+            {
+                Location = new Point(Left, (this.pnlDateIn.Top + this.pnlDateIn.Height + 10)),
+                Text = "Fecha de salida:",
+                Dock = DockStyle.Left,
+                ForeColor = Color.White,
+                Width = 150,
+                TextAlign = ContentAlignment.TopRight,
+
+            };
+
+            this.dtpDateOut = new DateTimePicker()
+            {
+                Left = 0,
+                Width = 250,
+                MinDate = DateTime.Today,
+                Value = DateTime.Today,
+                Anchor = AnchorStyles.Bottom,
+
+
+            };
+
+            this.dtpDateOut.Validating += (sender, cancelArgs) =>
+            {
+                var btAccept = (Button)this.AcceptButton;
+                bool invalid = false;
+
+                invalid = invalid || (this.dtpDateOut.Value < this.dtpDateIn.Value);
+
+                if (invalid || (this.dtpDateOut.Value < this.dtpDateIn.Value))
+                {
+                    MessageBox.Show("La fecha de salida debe ser mayor o igual de la de entrada");
+                }
+
+                btAccept.Enabled = !invalid;
+            };
+
+            pnlDateOut.MaximumSize = new Size(int.MaxValue, dtpDateOut.Height * 2);
+
+            pnlDateOut.Controls.Add(this.dtpDateOut);
+            pnlDateOut.Controls.Add(lblDateOut);
+
+            return pnlDateOut;
+        }
+
+
+
+        Panel BuildGaraje()
+        {
+
+            this.pnlGaraje = new Panel
+            {
+                Dock = DockStyle.Fill,
+                Location = new Point(Left, this.pnlDateOut.Top + this.pnlDateOut.Height + 10),
+                Height = 35,
+            };
+
+            var lblGaraje = new Label
+            {
+                Text = "Garaje: ",
+                Dock = DockStyle.Left,
+                Location = new Point(Left, this.pnlDateOut.Top + this.pnlDateOut.Height + 10),
+                ForeColor = Color.White,
+                Width = 150,
+                TextAlign = ContentAlignment.TopRight,
+
+            };
+
+            this.cbGaraje = new ComboBox()
+            {
+                Left = 0,
+                Width = 250,
+                Anchor = AnchorStyles.Bottom,
+                DropDownStyle = ComboBoxStyle.DropDownList,
+                DropDownWidth = 20,
+            };
+
+            cbGaraje.Items.Add("SI");
+            cbGaraje.Items.Add("NO");
+
+            this.pnlGaraje.Controls.Add(cbGaraje);
+            this.pnlGaraje.Controls.Add(lblGaraje);
+
+            //  this.pnlGaraje.MaximumSize = new Size(int.MaxValue, this.rbSI.Height * 2 + 5);
+
+            return this.pnlGaraje;
+        }
+
+        Panel BuildPrecioDia()
+        {
+            this.pnlPrecioDia = new Panel()
+            {
                 Dock = DockStyle.Top,
-                Checked = true
+                Location = new Point(Left, this.pnlGaraje.Top + this.pnlGaraje.Height + 10),
+                Height = 35
             };
 
-            this.rbFM = new RadioButton()
+            var lblPrecioDia = new Label()
             {
-                Text = "FM",
-                Dock = DockStyle.Top
-
-            };
-
-            this.rbAM_FM = new RadioButton()
-            {
-                Text = "AM/FM",
-                Dock = DockStyle.Top
-
-            };
-
-            var lbBanda = new Label
-            {
-                Text = "Banda: ",
+                Text = "Pecio/Dia: ",
                 Dock = DockStyle.Left,
+                Location = new Point(Left, this.pnlGaraje.Top + this.pnlGaraje.Height + 10),
+                ForeColor = Color.White,
+                Width = 150,
+                TextAlign = ContentAlignment.TopRight,
             };
 
-
-            this.pnlBanda.Controls.Add(this.rbAM);
-            this.pnlBanda.Controls.Add(this.rbFM);
-            this.pnlBanda.Controls.Add(this.rbAM_FM);
-            this.pnlBanda.Controls.Add(lbBanda);
-            this.pnlBanda.MaximumSize = new Size(int.MaxValue, this.rbAM.Height * 3);
-
-            return this.pnlBanda;
-        }
-
-        String rbSelected()
-        {
-            var botonElegido = this.pnlBanda.Controls.OfType<RadioButton>().FirstOrDefault(r => r.Checked);
-
-            return botonElegido.Text;
-        }
-
-
-        Panel BuildPrecioPiezasPanel()
-        {
-            var pnlPrecioPiezas = new Panel();
-            this.nudPrecioPiezas = new NumericUpDown
+            this.numPrecioDia = new NumericUpDown
             {
                 Value = 0,
                 TextAlign = HorizontalAlignment.Right,
-                Dock = DockStyle.Fill,
-                Minimum = 1
+                //  Dock = DockStyle.Fill,
+                Minimum = 1,
+                Left = 0,
+                Width = 250,
+                Anchor = AnchorStyles.Bottom,
+
             };
 
-            var lbPrecioPiezas = new Label
-            {
-                Text = "Precio de las piezas: ",
-                Dock = DockStyle.Left
-            };
 
-            pnlPrecioPiezas.Controls.Add(this.nudPrecioPiezas);
-            pnlPrecioPiezas.Controls.Add(lbPrecioPiezas);
-            pnlPrecioPiezas.Dock = DockStyle.Top;
-            pnlPrecioPiezas.MaximumSize = new Size(int.MaxValue, nudPrecioPiezas.Height * 2);
+            this.pnlPrecioDia.Controls.Add(this.numPrecioDia);
+            this.pnlPrecioDia.Controls.Add(lblPrecioDia);
 
-            return pnlPrecioPiezas;
+            //   this.pnlPrecioDia.MaximumSize = new Size(int.MaxValue, numPrecioDia.Height * 2);
+
+            return this.pnlPrecioDia;
         }
-        Panel BuildDuracionPanel()
+
+        Panel BuildIva()
         {
-            var pnlDuracion = new Panel();
-            this.nudDuracion = new NumericUpDown
+            this.pnlIva = new Panel()
+            {
+                Dock = DockStyle.Top,
+                Location = new Point(Left, this.pnlPrecioDia.Top + this.pnlPrecioDia.Height + 10),
+                Height = 35
+            };
+
+            var lblIva = new Label()
+            {
+                Text = "IVA: ",
+                Dock = DockStyle.Left,
+                Location = new Point(Left, this.pnlPrecioDia.Top + this.pnlPrecioDia.Height + 10),
+                ForeColor = Color.White,
+                Width = 150,
+                TextAlign = ContentAlignment.TopRight,
+            };
+
+            this.numIva = new NumericUpDown
             {
                 Value = 0,
                 TextAlign = HorizontalAlignment.Right,
-                Dock = DockStyle.Fill,
-                Minimum = 1
+                //  Dock = DockStyle.Fill,
+                Minimum = 1,
+                Left = 0,
+                Width = 250,
+                Anchor = AnchorStyles.Bottom,
+
             };
 
-            var lbDuracion = new Label
-            {
-                Text = "Tiempo de reparación: ",
-                Dock = DockStyle.Left
-            };
 
-            pnlDuracion.Controls.Add(this.nudDuracion);
-            pnlDuracion.Controls.Add(lbDuracion);
-            pnlDuracion.Dock = DockStyle.Top;
-            pnlDuracion.MaximumSize = new Size(int.MaxValue, nudDuracion.Height * 2);
+            this.pnlIva.Controls.Add(this.numIva);
+            this.pnlIva.Controls.Add(lblIva);
 
-            return pnlDuracion;
+            //    this.pnlIva.MaximumSize = new Size(int.MaxValue, numIva.Height * 2);
+
+            return this.pnlIva;
         }
-        private NumericUpDown nudNumSerie;
+
+
+        private ComboBox cbNumHabitacionList;
+        private ComboBox cbDniClienteList;
         private TextBox tbTipo;
-        private NumericUpDown nudDuracion;
-        private NumericUpDown nudPrecioPiezas;
-        //private ComboBox cbBanda;
-        private RadioButton rbAM;
-        private RadioButton rbFM;
-        private RadioButton rbAM_FM;
-        private Panel pnlBanda;
+        private DateTimePicker dtpDateIn;
+        private DateTimePicker dtpDateOut;
+        private ComboBox cbGaraje;
+        private NumericUpDown numPrecioDia;
+        private NumericUpDown numIva;
+
+
+        private Panel pnlReserva;
+        private Panel pnlEspacio;
         private Panel pnlTipo;
+        private Panel pnlDateIn;
+        private Panel pnlDateOut;
+        private Panel pnlGaraje;
+        private Panel pnlPrecioDia;
+        private Panel pnlIva;
+        private Panel pnlNumHabitacion;
+        private Panel pnlDniCliente;
+
+        private Panel pnlInserta;
+
+        public string DniCliente => this.cbDniClienteList.Text;
+        public string NumHabitacion => this.cbNumHabitacionList.Text;
+        public string Tipo => this.tbTipo.Text;
+        public DateTime FechaEntrada => this.dtpDateIn.Value;
+        public DateTime FechaSalida => this.dtpDateOut.Value;
+        public string Garaje => this.cbGaraje.Text;
+        public double PrecioDia => System.Convert.ToDouble(this.numPrecioDia.Value);
+        public int Iva => (int)this.numIva.Value;
 
 
-        public int NumSerie => (int)this.nudNumSerie.Value;
-        public string Modelo => this.tbTipo.Text;
-        public double Duracion => System.Convert.ToDouble(this.nudDuracion.Value);
-        public double PrecioPiezas => System.Convert.ToDouble(this.nudPrecioPiezas.Value);
-        public string Banda => this.rbSelected();
+        public StatusBar SbStatus;
+        private MainMenu mPpal;
+        public MenuItem mArchivo;
+        //  public MenuItem mInsertar;
+        public MenuItem opSalir;
+        public List<Cliente> rgCli = null;
+
+
+
     }
 }

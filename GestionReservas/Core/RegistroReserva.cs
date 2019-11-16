@@ -42,7 +42,6 @@ namespace GestionReservas.Core
         public RegistroReserva()
         {
             this.reservas = new List<Reserva>();
-           // this.regReserva = RegistroReserva.RecuperaXml();
         }
 
         public List<Reserva> List
@@ -109,13 +108,13 @@ namespace GestionReservas.Core
             doc.Save(nf);
         }
 
-        public RegistroReserva RecuperaXml()
+        public static RegistroReserva RecuperarXml()
         {
-            return RecuperaXml(archivoXML);
+            return RecuperarXml(archivoXML);
         }
 
         //Recupera los datos de la reserva de un archivo xml
-        public RegistroReserva RecuperaXml(String nf)
+        public static RegistroReserva RecuperarXml(String nf)
         {
             var toret = new RegistroReserva();
             try
@@ -148,7 +147,7 @@ namespace GestionReservas.Core
             this.reservas.Clear();
         }
 
-        private Cliente GetCliente(XElement element)
+        private static Cliente GetCliente(XElement element)
         {
             //    System.Console.WriteLine((int)element.Attribute(EtqNumSerie) +
             //      (string)element.Attribute(EtqModelo));
@@ -161,13 +160,13 @@ namespace GestionReservas.Core
                 (string)element.Attribute(EtqDireccion));
         }
 
-        private Reserva GetReservaXML(XElement r)
+        private static Reserva GetReservaXML(XElement r)
         {
 
             Reserva toret = new Reserva(
                 (string)r.Attribute(EtqId),
                 (string)r.Attribute(EtqTipo),
-                this.GetCliente(r), 
+                GetCliente(r), 
                 (DateTime)r.Attribute(EtqDataIn),
                 (DateTime)r.Attribute(EtqDataOut),
                 (string)r.Attribute(EtqGaraje),
