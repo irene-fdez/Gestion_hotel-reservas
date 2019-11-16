@@ -1,0 +1,6 @@
+C:\Users\irene\Documents\UVigo\4o_Informatica\1o_cuatri\DIA\Proyecto\GestionReservas\GestionReservas\bin\Release\GestionReservas.exe
+C:\Users\irene\Documents\UVigo\4o_Informatica\1o_cuatri\DIA\Proyecto\GestionReservas\GestionReservas\bin\Release\GestionReservas.pdb
+C:\Users\irene\Documents\UVigo\4o_Informatica\1o_cuatri\DIA\Proyecto\GestionReservas\GestionReservas\obj\Release\GestionReservas.csproj.CoreCompileInputs.cache
+C:\Users\irene\Documents\UVigo\4o_Informatica\1o_cuatri\DIA\Proyecto\GestionReservas\GestionReservas\obj\Release\GestionReservas.exe
+C:\Users\irene\Documents\UVigo\4o_Informatica\1o_cuatri\DIA\Proyecto\GestionReservas\GestionReservas\obj\Release\GestionReservas.pdb
+C:\Users\irene\Documents\UVigo\4o_Informatica\1o_cuatri\DIA\Proyecto\GestionReservas\GestionReservas\obj\Release\GestionReservas.csprojAssemblyReference.cache
