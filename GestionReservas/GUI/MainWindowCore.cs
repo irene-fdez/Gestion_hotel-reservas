@@ -17,58 +17,51 @@ namespace GestionReservas.GUI
 
         public MainWindowCore()
         {
-            Console.Write("main core");
-            this.Clientes = RegistroClientes.RecuperarXml();
-            this.Reservas = RegistroReserva.RecuperarXml();
 
             this.View = new MainWindowView();
-           // this.AddReserva = new DlgInsertaReserva(Clientes.List);
-           /* try { 
-                this.Actualiza();
-            }catch(Exception e)
-            {
-                Console.WriteLine("\nerror actualiza, " + e);
-            }*/
+            Console.Write("main core");
+            this.Clientes = RegistroClientes.RecuperarXml();
+            this.Habitaciones = RegistroHabitaciones.RecuperarXml();
+            this.Reservas = new RegistroReserva(this.Clientes.List);
+         
+
             this.View.FormClosed += (sender, e) => this.OnQuit();
+            this.View.opGuardar.Click += (sender, e) => this.Guardar();
             this.View.opSalir.Click += (sender, e) => this.Salir();
 
-       //     try
-        //    {
-                this.View.btnAddReserva.Click += (sender, e) => this.InsertaReserva();
-                this.View.btnConsultaReserva.Click += (sender, e) => this.ConsultaReserva();
-            //    }
-            //    catch (Exception e)
-            //    {
-            //        Console.WriteLine("\nerror btnAdd, msg:" + e);
-            //    }
-
-
+            this.View.btnAddReserva.Click += (sender, e) => this.InsertaReserva();
+            this.View.btnConsultaReserva.Click += (sender, e) => this.ConsultaReserva();
+           
         }
 
         void InsertaReserva()
         {
             Console.WriteLine("Inserta reserva");
-            var dlgInsertaReserva = new DlgInsertaReserva(Clientes.List);
+            var dlgInsertaReserva = new DlgInsertaReserva(Clientes.List, Habitaciones.List);
             
 
             this.View.Hide();
 
             if (dlgInsertaReserva.ShowDialog() == DialogResult.OK)
             {
-                Reserva reserva = null;
 
-                //   Habitacion h = this.Habitacion.getHabitacion(dlgInsertaReserva.NumHabitacion);
+                Habitacion h = this.Habitaciones.getHabitacion(dlgInsertaReserva.NumHabitacion);
                 Cliente c = this.Clientes.getCliente(dlgInsertaReserva.DniCliente);
 
                 //obtener el cliente a partir del DNI con getCliente(DNI) del registro de clientes
-                   Reserva newReserva = reserva.Crear(
-                       dlgInsertaReserva.NumHabitacion, dlgInsertaReserva.Tipo, c, dlgInsertaReserva.FechaEntrada, 
+                   Reserva newReserva =  new Reserva(
+                       h, dlgInsertaReserva.Tipo, c, dlgInsertaReserva.FechaEntrada, 
                        dlgInsertaReserva.FechaSalida, dlgInsertaReserva.Garaje, dlgInsertaReserva.PrecioDia, dlgInsertaReserva.Iva
                      );
 
                 this.Reservas.Add(newReserva);
 
-                this.Actualiza();
+                this.Reservas.GuardarXml();
+            }
+
+            if (this.presionadoSalir)
+            {
+                Application.Exit();
             }
 
             this.View.Show();
@@ -77,76 +70,101 @@ namespace GestionReservas.GUI
         void ConsultaReserva()
         {
             Console.WriteLine("Consulta reservas");
-            var dlgConsultaReserva = new DlgConsultaReserva();
+            var dlgConsultaReserva = new DlgConsultaReserva(this.Reservas, this.Clientes.List);
+
 
             this.View.Hide();
 
-            if (dlgConsultaReserva.ShowDialog() == DialogResult.OK)
-            {
-               
+            if(dlgConsultaReserva.ShowDialog() == DialogResult.OK) { }
 
+            if (this.presionadoSalir)
+            {
+                Application.Exit();
             }
-
-            this.View.Show();
-        }
-
-
-
-        void Actualiza()
-        {
-            Console.WriteLine("dentro actualiza");
-            Console.WriteLine("---"+this.Reservas.List);
-
-            int numElementos = this.Reservas.Count;
-            this.View.SbStatus.Text = ("Numero de reservas: " + numElementos);
-            for (int i = 0; i < numElementos; i++)
+            else
             {
-                if (this.View.GrdLista.Rows.Count <= i)
-                {
-                    this.View.GrdLista.Rows.Add();
-                }
-                this.ActualizaFilaDeLista(i);
-            }
-
-            // Eliminar filas sobrantes
-            int numExtra = this.View.GrdLista.Rows.Count - numElementos;
-            for (; numExtra > 0; --numExtra)
-            {
-                this.View.GrdLista.Rows.RemoveAt(numElementos);
+                this.View.Show();
             }
         }
 
-        private void ActualizaFilaDeLista(int numFila)
+
+
+
+
+    /*    public void Eliminar(DlgConsultaReserva dlg, string id)
         {
-            if (numFila < 0
-              || numFila > this.View.GrdLista.Rows.Count)
+
+            Console.WriteLine("dentro eliminar");
+     
+
+            //Dialogo de confirmación de eiminación
+            DialogResult result;
+            string mensaje = "¿Está seguro de que desea eliminar la reserva con Id( " + id + " ), del registro de reservas?";
+            string tittle = "Eliminar reserva";
+            MessageBoxButtons buttons = MessageBoxButtons.YesNo;
+            result = MessageBox.Show(mensaje, tittle, buttons);
+
+            if (result == DialogResult.Yes)
             {
-                throw new System.ArgumentOutOfRangeException(
-                            "fila fuera de rango: " + nameof(numFila));
+
+                Console.WriteLine(this.Reservas.Count);
+                Console.WriteLine("reserva a eliminar: " + id);
+                Console.WriteLine(dlg.Reservas.Remove(dlg.Reservas.getReserva(id)));
+                Console.WriteLine(this.Reservas.Count);
+                Console.WriteLine(dlg.Reservas.Count);
+
             }
 
-            DataGridViewRow fila = this.View.GrdLista.Rows[numFila];
-            Reserva reserva = this.Reservas.List[numFila];
 
-            fila.Cells[0].Value = (numFila + 1).ToString().PadLeft(4, ' ');
-            fila.Cells[1].Value = reserva.Id; //aaaammddhhh
-            fila.Cells[2].Value = reserva.FechaEntrada;
-            fila.Cells[3].Value = reserva.FechaSalida;
-            fila.Cells[4].Value = reserva.Garaje;
-            fila.Cells[5].Value = reserva.CalcularTotal();
-            fila.Cells[6].Value = reserva.ObtenerDniCliente();
+            
+        }
 
-            foreach (DataGridViewCell celda in fila.Cells)
-            {
-                celda.ToolTipText = reserva.ToString();
-            }
+        public void Modificar(string id)
+        {
+            var dlgConsultaReserva = new DlgConsultaReserva(this.Reservas.List, this.Clientes.List);
+            //A partir de la clave de la entidad Reserva, obtenemos la reserva a modificar
+            Reserva ResModif = this.Reservas.getReserva(id);
+            Cliente c = ResModif.Cliente;
+
+               var dlgModificar = new DlgModificarCuenta(ResModif);
+               if (dlgModificar.ShowDialog() == DialogResult.OK)
+               {
+                   this.Reservas.Remove(ResModif);
+
+                   string tipo = dlgModificar.Tipo;
+                   DateTime fechaEntrada = dlgModificar.FechaEntrada;
+                   DateTime fechaSalida = dlgModificar.FechaSalida;
+                   string garaje = dlgModificar.Garaje;
+
+                   Reserva r = new Reserva(id, tipo, c, fechaEntrada, fechaSalida, garaje, ResModif.PrecioDia, ResModif.IVA, ResModif.Total);
+
+
+                   this.Reservas.Add(r);
+
+               }
+        }*/
+
+
+        public void PulsadoSalir()
+        {
+            Console.WriteLine("pulsado salir");
+            this.presionadoSalir = true;
+            this.Salir();
         }
 
 
         void Salir()
         {
+            Console.WriteLine("guarda y sale");
             this.Reservas.GuardarXml();
             Application.Exit();
+        }
+
+        void Guardar()
+        {
+            Console.WriteLine("dentro guardar");
+
+            this.Reservas.GuardarXml();
         }
 
         void OnQuit()
@@ -155,10 +173,13 @@ namespace GestionReservas.GUI
         }
 
         public MainWindowView View { get; private set; }
-        public DlgInsertaReserva AddReserva { get; private set; }
 
         private RegistroReserva Reservas { get; set; }
         private RegistroClientes Clientes { get; set; }
+        private RegistroHabitaciones Habitaciones { get; set; }
+
+        private bool presionadoSalir = false;
+        
 
     }
 }

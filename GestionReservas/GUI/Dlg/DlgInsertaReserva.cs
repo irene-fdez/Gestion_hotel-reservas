@@ -17,12 +17,20 @@ namespace GestionReservas.GUI.Dlg
         public DlgInsertaReserva()
         {
             this.Build();
+            this.CenterToScreen();
+
         }
 
-        public DlgInsertaReserva(List<Cliente> clientesList)
+        public DlgInsertaReserva(List<Cliente> clientesList, List<Habitacion> habitacionesList)
         {
+            var MVC = new MainWindowCore();
+
             this.rgCli = clientesList;
+            this.rgHab = habitacionesList;
             this.Build();
+
+            this.opSalir.Click += (sender, e) => { this.DialogResult = DialogResult.Cancel; MVC.PulsadoSalir(); };
+
         }
 
         void Build()
@@ -268,7 +276,14 @@ namespace GestionReservas.GUI.Dlg
 
 
             //obtener los numeros de todas las habitaciones
-            //  cbNumHabitacionList.Items.Add("AM");
+            string[] op = new string[this.rgHab != null ? this.rgHab.Count : 0];
+            for (int i = 0; i < op.Length; i++)
+            {
+                Habitacion habitacion = this.rgHab[i];
+                op[i] = habitacion.Numero;
+
+            }
+            cbNumHabitacionList.Items.AddRange(op);
 
             pnlNumHabitacion.Controls.Add(cbNumHabitacionList);
             pnlNumHabitacion.Controls.Add(lblHabitacion);
@@ -342,8 +357,6 @@ namespace GestionReservas.GUI.Dlg
                 ForeColor = Color.White,
                 Width = 150,
                 TextAlign = ContentAlignment.TopRight,
-
-
             };
 
             this.tbTipo = new TextBox()
@@ -351,7 +364,7 @@ namespace GestionReservas.GUI.Dlg
                 Left = 0,
                 Width = 250,
                 Anchor = AnchorStyles.Bottom,
-
+                Text = "Diaria",
             };
 
             this.tbTipo.Validating += (sender, cancelArgs) =>
@@ -538,7 +551,7 @@ namespace GestionReservas.GUI.Dlg
 
             this.numPrecioDia = new NumericUpDown
             {
-                Value = 0,
+                Value = 15,
                 TextAlign = HorizontalAlignment.Right,
                 //  Dock = DockStyle.Fill,
                 Minimum = 1,
@@ -578,7 +591,7 @@ namespace GestionReservas.GUI.Dlg
 
             this.numIva = new NumericUpDown
             {
-                Value = 0,
+                Value = 21,
                 TextAlign = HorizontalAlignment.Right,
                 //  Dock = DockStyle.Fill,
                 Minimum = 1,
@@ -637,6 +650,7 @@ namespace GestionReservas.GUI.Dlg
         //  public MenuItem mInsertar;
         public MenuItem opSalir;
         public List<Cliente> rgCli = null;
+        public List<Habitacion> rgHab = null;
 
 
 

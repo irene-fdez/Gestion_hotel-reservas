@@ -24,12 +24,27 @@ namespace GestionReservas.Core
     public class Reserva
     {
 
-        public Reserva( String id, String tipo, Cliente cliente,DateTime fechaEntrada, DateTime fechaSalida, String garaje, double precioDia, int IVA)
+        public Reserva( Habitacion habitacion, String tipo, Cliente cliente,DateTime fechaEntrada, DateTime fechaSalida, String garaje, double precioDia, int IVA)
         {
-        //    this.Ano = ano;
-        //    this.Mes = mes;
-        //    this.Dia = dia;
-        //    this.Habitacion = habitacion;
+
+            DateTime f = DateTime.Now;
+            string dia = f.ToString("dd");
+            string mes = f.ToString("MM");
+            string ano = f.ToString("yyyy");
+
+
+            this.Id = componer_Id(ano, mes, dia, habitacion.Numero);
+            this.Tipo = tipo;
+            this.Cliente = cliente;
+            this.FechaEntrada = fechaEntrada;
+            this.FechaSalida = fechaSalida;
+            this.Garaje = garaje;
+            this.PrecioDia = precioDia;
+            this.IVA = IVA;
+        }
+
+        public Reserva(string id, String tipo, Cliente cliente, DateTime fechaEntrada, DateTime fechaSalida, String garaje, double precioDia, int IVA, double total)
+        {
             this.Id = id;
             this.Tipo = tipo;
             this.Cliente = cliente;
@@ -38,6 +53,7 @@ namespace GestionReservas.Core
             this.Garaje = garaje;
             this.PrecioDia = precioDia;
             this.IVA = IVA;
+            this.Total = this.TotalConIva();
         }
 
         public Habitacion Habitacion { get; private set; }
@@ -49,40 +65,49 @@ namespace GestionReservas.Core
         public String Garaje { get; private set; }
         public double PrecioDia { get; private set; }
         public int IVA { get; private set; }
+        public double Total { get; private set; }
 
-        public double CalcularTotal(){
-            // Diferencia en dias, horas y minutos
-            TimeSpan ts = this.FechaSalida - this.FechaEntrada;
+        public int NumDias
+        {
+            get
+            {
+                TimeSpan ts = this.FechaSalida - this.FechaEntrada;
 
-            //Diferencia en dias
-            int numDias = ts.Days;
+                //Diferencia en dias
+                int numDias = ts.Days;
+                if (numDias == 0) numDias = 1;
 
-            double totalSinIva = numDias * this.PrecioDia;
-            double totalConIva = totalSinIva + (totalSinIva * (this.IVA / 100));
-
-            return totalConIva;
+                return numDias;
+            }
         }
 
-        public string ObtenerDniCliente(){
-             return Cliente.DNI;
+        public double TotalSinIva()
+        {
+               return this.NumDias * this.PrecioDia;
         }
+
+        public double TotalConIva(){
+
+
+            double precioSinIva = this.TotalSinIva();
+
+            return precioSinIva + (precioSinIva * (this.IVA / 100.0));
+        }
+
         
-        private string componer_Id(string a, string m, string d, int numHabitacion)
+        private string componer_Id(string a, string m, string d, string numH)
         {
             string toret = null;
 
             if ( this.compruebaDatosId(a, 4)  && 
                     this.compruebaDatosId(m, 2) &&
                     this.compruebaDatosId(d, 2) &&
-                    this.compruebaDatosId(numHabitacion.ToString(), 3)
+                    this.compruebaDatosId(numH, 3)
                 )
             {
-                toret = string.Format("{0}{1}{2}{3}", a, m, d, numHabitacion);  /*Buscar popup error para GUI --> MessageBox.Show("No se puede dejar ningún campo en blanco.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information); */
+                toret = string.Format("{0}{1}{2}{3}", a, m, d, numH);  /*Buscar popup error para GUI --> MessageBox.Show("No se puede dejar ningún campo en blanco.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information); */
             }
-
           
-             
-
             return toret;
         }
 
@@ -95,7 +120,7 @@ namespace GestionReservas.Core
             }
             else
             {
-                if (dato.Length == longitud)
+                if (dato.Length != longitud)
                 {
                     Console.WriteLine("El dato introducido debe ser un entero de {0} digitos", longitud);
                     return false;
@@ -104,21 +129,35 @@ namespace GestionReservas.Core
             return true;
         }
 
-
-        public Reserva Crear( Habitacion habitacion, String tipo, Cliente cliente,  DateTime fechaEntrada, DateTime fechaSalida, String garaje, double precioDia, int IVA)
+        public string DatosEconomicosReserva()
         {
-            Reserva toret = null;
-            
-            //se obtiene la fecha actual y se sacan el dia, mes y año para formar el id junto con el numero de habitacion
-            DateTime f = DateTime.Now;
-            string dia = f.ToString("dd");
-            string mes = f.ToString("MM");
-            string ano = f.ToString("yyyy");
-            string id = componer_Id(ano, mes, dia, habitacion.Numero);
+            StringBuilder toret = new StringBuilder();
 
-            toret = new Reserva(id, tipo, cliente, fechaEntrada, fechaSalida, garaje, precioDia, IVA);
+            toret.AppendLine("Precio/día: " + this.PrecioDia);
+            toret.AppendLine("Numero de dias: " + this.NumDias);
+            toret.AppendLine("Total sin Iva: " + this.TotalSinIva());
+            toret.AppendLine("Iva: " + this.IVA + "%");
+            toret.AppendLine("Total con Iva: " + this.TotalConIva());
 
-            return toret;
+            return toret.ToString();
         }
+
+        public override string ToString()
+        {
+            StringBuilder toret = new StringBuilder();
+
+            toret.AppendLine("Id: " + this.Id);
+            toret.AppendLine("Tipo: " + this.Tipo);
+            toret.AppendLine("Fecha entrada: " + this.FechaEntrada);
+            toret.AppendLine("Fecha salida: " + this.FechaSalida);
+            toret.AppendLine("Garaje: " + this.Garaje);
+            toret.AppendLine("Precio/dia: " + this.PrecioDia);
+            toret.AppendLine("IVA: " + this.IVA + "%");
+
+
+            return toret.ToString();
+        }
+
+
     }
 }

@@ -71,11 +71,13 @@ namespace GestionReservas.GUI
             this.mPpal = new MainMenu();
 
             this.mArchivo = new MenuItem("&Archivo");
-           // this.mInsertar = new MenuItem("&Insertar");
+            this.opGuardar = new MenuItem("&Guardar");
+
 
             this.opSalir = new MenuItem("&Salir");
             this.opSalir.Shortcut = Shortcut.CtrlQ;
 
+            this.mArchivo.MenuItems.Add(this.opGuardar);
             this.mArchivo.MenuItems.Add(this.opSalir);
 
             this.mPpal.MenuItems.Add(this.mArchivo);
@@ -194,7 +196,9 @@ namespace GestionReservas.GUI
 
         private MainMenu mPpal;
         public MenuItem mArchivo;
-      //  public MenuItem mInsertar;
+        public MenuItem opGuardar;
+
+        //  public MenuItem mInsertar;
         public MenuItem opSalir;
       /*  public MenuItem OpInsertarAdaptadorTDT;
         public MenuItem OpInsertarRadio;

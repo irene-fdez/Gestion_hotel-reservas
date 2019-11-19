@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<habitaciones>
+  <habitacion numero="001" tipo="matrimoniales" fechaRenovacion="2019-11-19T00:00:00+01:00" fechaUltimaReserva="2019-11-19T00:00:00+01:00" />
+  <habitacion numero="002" tipo="dobles" fechaRenovacion="2019-11-19T00:00:00+01:00" fechaUltimaReserva="2019-11-19T00:00:00+01:00" />
+  <habitacion numero="003" tipo="individuales" fechaRenovacion="2019-11-19T00:00:00+01:00" fechaUltimaReserva="2019-11-19T00:00:00+01:00" />
+</habitaciones>

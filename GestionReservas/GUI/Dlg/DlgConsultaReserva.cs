@@ -15,18 +15,30 @@ namespace GestionReservas.GUI.Dlg
     public class DlgConsultaReserva : Form
     {
 
-        public DlgConsultaReserva()
+        public DlgConsultaReserva(RegistroReserva res, List<Cliente> cli)
         {
+            this.MVC = new MainWindowCore();
+            this.Reservas = res;
+            this.Clientes = cli;
             this.BuildGUI();
             this.CenterToScreen();
+            
+
+          //  this.regRes = new RegistroReserva(this.Clientes);
+            this.GrdLista.Click += (sender, e) => ClickLista();
+
+            this.opGuardar.Click += (sender, e) => this.Guardar();
+            this.opSalir.Click += (sender, e) => { this.DialogResult = DialogResult.Cancel; MVC.PulsadoSalir(); };
+            this.opVolver.Click += (sender, e) => this.DialogResult = DialogResult.Cancel;
+
         }
 
         private void BuildGUI()
         {
-  
             this.BuildStatus();
             this.BuildMenu();
-            this.BuildPanelLista();
+
+            // this.BuildPanelLista();
 
             this.SuspendLayout();
             this.pnlPpal = new Panel()
@@ -46,6 +58,7 @@ namespace GestionReservas.GUI.Dlg
             this.Resize += (obj, e) => this.ResizeWindow();
             this.Text = "Gestion de un hotel - Consulta reservas";
 
+            this.Actualiza();
             this.ResumeLayout(true);
             this.ResizeWindow();
         }
@@ -54,37 +67,29 @@ namespace GestionReservas.GUI.Dlg
         private void BuildMenu()
         {
             this.mPpal = new MainMenu();
-
             this.mArchivo = new MenuItem("&Archivo");
-          //  this.mInsertar = new MenuItem("&Insertar");
-
+            this.opGuardar = new MenuItem("&Guardar");
             this.opSalir = new MenuItem("&Salir");
+            this.opVolver = new MenuItem("&Volver");
             this.opSalir.Shortcut = Shortcut.CtrlQ;
+            
 
-        /*    this.OpInsertarAdaptadorTDT = new MenuItem("&Insertar Adaptador TDT");
-            this.OpInsertarTelevisor = new MenuItem("&Insertar Televisor");
-            this.OpInsertarRadio = new MenuItem("&Insertar Radio");
-            this.OpInsertarReproductorDVD = new MenuItem("&Insertar Reproductor DVD");*/
-
-
+            this.mArchivo.MenuItems.Add(this.opVolver);
+            this.mArchivo.MenuItems.Add(this.opGuardar);
             this.mArchivo.MenuItems.Add(this.opSalir);
-         /*   this.mInsertar.MenuItems.Add(this.OpInsertarAdaptadorTDT);
-            this.mInsertar.MenuItems.Add(this.OpInsertarTelevisor);
-            this.mInsertar.MenuItems.Add(this.OpInsertarRadio);
-            this.mInsertar.MenuItems.Add(this.OpInsertarReproductorDVD);*/
-
             this.mPpal.MenuItems.Add(this.mArchivo);
-          //  this.mPpal.MenuItems.Add(this.mInsertar);
 
             this.Menu = mPpal;
-
-
         }
 
 
         private Panel BuildPanelDetalle()
         {
-            var pnlDetalle = new Panel { Dock = DockStyle.Bottom };
+            var pnlDetalle = new Panel {
+                Dock = DockStyle.Bottom,
+                Height = 110
+
+            };
             pnlDetalle.SuspendLayout();
 
             this.edDetalle = new TextBox
@@ -92,12 +97,13 @@ namespace GestionReservas.GUI.Dlg
                 Dock = DockStyle.Fill,
                 Multiline = true,
                 ReadOnly = true,
-                Font = new Font(FontFamily.GenericMonospace, 12),
-                ForeColor = Color.Navy,
+                Font = new Font(FontFamily.GenericMonospace, 10),
+                ForeColor = Color.Black,
                 //BackColor = Color.LightGray,
                 BackColor = Color.FromArgb(55, 95, 132),
             };
 
+            
             pnlDetalle.Controls.Add(this.edDetalle);
             pnlDetalle.ResumeLayout(false);
             return pnlDetalle;
@@ -110,14 +116,6 @@ namespace GestionReservas.GUI.Dlg
             this.Controls.Add(this.SbStatus);
         }
 
-
-        /*  private Panel BuildPanelGestion()
-          {
-              var pnlGestion = new Panel();
-              pnlGestion.SuspendLayout();
-              pnlGestion.Dock = DockStyle.Fill;
-          }
-          */
         private Panel BuildPanelLista()
         {
             var pnlLista = new Panel();
@@ -140,7 +138,11 @@ namespace GestionReservas.GUI.Dlg
 
             this.GrdLista.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
             this.GrdLista.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(49, 66, 82);
+            this.GrdLista.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            this.GrdLista.ColumnHeadersHeight = 30;
+            this.GrdLista.ColumnHeadersDefaultCellStyle.Font = new Font(FontFamily.GenericSansSerif, 10, FontStyle.Regular);
 
+            //texto
             var textCellTemplate0 = new DataGridViewTextBoxCell();
             var textCellTemplate1 = new DataGridViewTextBoxCell();
             var textCellTemplate2 = new DataGridViewTextBoxCell();
@@ -149,23 +151,59 @@ namespace GestionReservas.GUI.Dlg
             var textCellTemplate5 = new DataGridViewTextBoxCell();
             var textCellTemplate6 = new DataGridViewTextBoxCell();
             var textCellTemplate7 = new DataGridViewTextBoxCell();
+
+            //botones
+            var buttonCellTemplate8 = new DataGridViewButtonCell();
+            var buttonCellTemplate9 = new DataGridViewButtonCell();
+            var buttonCellTemplate10 = new DataGridViewButtonCell();
+            
+            //texto
             textCellTemplate0.Style.BackColor = Color.LightGray;
             textCellTemplate0.Style.ForeColor = Color.Black;
+
             textCellTemplate1.Style.BackColor = Color.Coral;
             textCellTemplate1.Style.ForeColor = Color.Black;
             textCellTemplate1.Style.Alignment = DataGridViewContentAlignment.MiddleRight;
+
             textCellTemplate2.Style.BackColor = Color.Wheat;
             textCellTemplate2.Style.ForeColor = Color.Black;
+            textCellTemplate2.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            
             textCellTemplate3.Style.BackColor = Color.Wheat;
             textCellTemplate3.Style.ForeColor = Color.Black;
+            textCellTemplate3.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+
             textCellTemplate4.Style.BackColor = Color.Wheat;
             textCellTemplate4.Style.ForeColor = Color.Black;
+            textCellTemplate4.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+
             textCellTemplate5.Style.BackColor = Color.Wheat;
             textCellTemplate5.Style.ForeColor = Color.Black;
+            textCellTemplate5.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+
             textCellTemplate6.Style.BackColor = Color.Wheat;
             textCellTemplate6.Style.ForeColor = Color.Black;
+            textCellTemplate6.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+
             textCellTemplate7.Style.BackColor = Color.Wheat;
             textCellTemplate7.Style.ForeColor = Color.Black;
+            textCellTemplate7.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+
+            //botones
+            buttonCellTemplate8.Style.BackColor = Color.Wheat;
+            buttonCellTemplate8.Style.ForeColor = Color.Black;
+            buttonCellTemplate8.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            buttonCellTemplate8.Style.Font = new Font(FontFamily.GenericMonospace, 11, FontStyle.Regular);
+
+            buttonCellTemplate9.Style.BackColor = Color.Wheat;
+            buttonCellTemplate9.Style.ForeColor = Color.Black;
+            buttonCellTemplate9.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            buttonCellTemplate9.Style.Font = new Font(FontFamily.GenericMonospace, 11, FontStyle.Regular);
+
+            buttonCellTemplate10.Style.BackColor = Color.Wheat;
+            buttonCellTemplate10.Style.ForeColor = Color.Black;
+            buttonCellTemplate10.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            buttonCellTemplate10.Style.Font = new Font(FontFamily.GenericMonospace, 11, FontStyle.Regular);
 
             var column0 = new DataGridViewTextBoxColumn //numero de reparacion
             {
@@ -238,27 +276,29 @@ namespace GestionReservas.GUI.Dlg
                 Width = 15,
                 ReadOnly = true
             };
-            var column8 = new DataGridViewTextBoxColumn  //modificar
+            var column8 = new DataGridViewButtonColumn  //modificar
             {
                 SortMode = DataGridViewColumnSortMode.NotSortable,
-                CellTemplate = textCellTemplate7,
+                CellTemplate = buttonCellTemplate8,
                 HeaderText = "Modificar",
                 Width = 15,
-                ReadOnly = true
-            };
-            var column9 = new DataGridViewTextBoxColumn  //borrar
-            {
-                SortMode = DataGridViewColumnSortMode.NotSortable,
-                CellTemplate = textCellTemplate7,
-                HeaderText = "Eliminar",
-                Width = 15,
-                ReadOnly = true
+                ReadOnly = true,
             };
 
-            var column10 = new DataGridViewTextBoxColumn  //factura
+            var column9 = new DataGridViewButtonColumn  //borrar
             {
                 SortMode = DataGridViewColumnSortMode.NotSortable,
-                CellTemplate = textCellTemplate7,
+                CellTemplate = buttonCellTemplate8,
+                HeaderText = "Eliminar",
+                Width = 15,
+                ReadOnly = true,
+            };
+
+
+            var column10 = new DataGridViewButtonColumn  //factura
+            {
+                SortMode = DataGridViewColumnSortMode.NotSortable,
+                CellTemplate = buttonCellTemplate10,
                 HeaderText = "Factura",
                 Width = 15,
                 ReadOnly = true
@@ -268,9 +308,35 @@ namespace GestionReservas.GUI.Dlg
                 column0, column1, column2, column3, column4, column5, column6, column7, column8, column9, column10
             });
 
+            this.GrdLista.SelectionChanged += (sender, e) => this.FilaSeleccionada();
+
             pnlLista.Controls.Add(this.GrdLista);
             pnlLista.ResumeLayout(false);
             return pnlLista;
+        }
+
+        private void FilaSeleccionada()
+        {
+            int fila = System.Math.Max(0, this.GrdLista.CurrentRow.Index);
+            int posicion = this.GrdLista.CurrentCellAddress.X;
+
+            if (posicion == 7 && this.Reservas.Count > fila)
+            {
+                this.edDetalle.Text = this.Reservas[fila].Cliente.ToString();
+                this.edDetalle.SelectionStart = this.edDetalle.Text.Length;
+                this.edDetalle.SelectionLength = 0;
+            }
+            else if(posicion < 7){
+                this.edDetalle.Text = this.Reservas[fila].DatosEconomicosReserva();
+                this.edDetalle.SelectionStart = this.edDetalle.Text.Length;
+                this.edDetalle.SelectionLength = 0;
+            }
+            else 
+            {
+                this.edDetalle.Clear();
+            }
+
+            return;
         }
 
 
@@ -286,49 +352,188 @@ namespace GestionReservas.GUI.Dlg
           
 
             this.GrdLista.Columns[0].Width =
-                                (int)System.Math.Floor(width * .05); // Num reserva
+                                (int)System.Math.Floor(width * .03); // Num reserva
             this.GrdLista.Columns[1].Width =
                                 (int)System.Math.Floor(width * .10); // id
             this.GrdLista.Columns[2].Width =
-                                (int)System.Math.Floor(width * .10); // tipo
+                                (int)System.Math.Floor(width * .07); // tipo
             this.GrdLista.Columns[3].Width =
                                 (int)System.Math.Floor(width * .14); // Fecha entrada
             this.GrdLista.Columns[4].Width =
                                 (int)System.Math.Floor(width * .14); // Fecha salida
             this.GrdLista.Columns[5].Width =
-                               (int)System.Math.Floor(width * .10); // garaje
+                               (int)System.Math.Floor(width * .06); // garaje
             this.GrdLista.Columns[6].Width =
                                (int)System.Math.Floor(width * .10); // Precio total
             this.GrdLista.Columns[7].Width =
                                (int)System.Math.Floor(width * .09); // DNI Cliente
             this.GrdLista.Columns[8].Width =
-                               (int)System.Math.Floor(width * .06); // btn modificar
+                               (int)System.Math.Floor(width * .09); // btn modificar
             this.GrdLista.Columns[9].Width =
-                               (int)System.Math.Floor(width * .06); // btn borrar
+                               (int)System.Math.Floor(width * .09); // btn borrar
             this.GrdLista.Columns[10].Width =
-                               (int)System.Math.Floor(width * .06); // btn factura
+                               (int)System.Math.Floor(width * .09); // btn factura
+        }
+
+
+        void Actualiza()
+        {
+            Console.WriteLine("dentro actualiza");
+
+            // var consultRes = new DlgConsultaReserva();
+
+
+            int numElementos = this.Reservas.Count;
+            Console.WriteLine("NUMERO DE RESERVAS: " + numElementos);
+
+            this.SbStatus.Text = ("Numero de reservas: " + numElementos);
+
+            for (int i = 0; i < numElementos; i++)
+            {
+                if (this.GrdLista.Rows.Count <= i)
+                {
+                    this.GrdLista.Rows.Add();
+                }
+                this.ActualizaFilaDeLista(i);
+            }
+
+            // Eliminar filas sobrantes
+            int numExtra = this.GrdLista.Rows.Count - numElementos;
+            for (; numExtra > 0; --numExtra)
+            {
+                this.GrdLista.Rows.RemoveAt(numElementos);
+            }
+        }
+
+        private void ActualizaFilaDeLista(int numFila)
+        {
+            Console.WriteLine("dentro ActualizaFilaDeLista");
+
+            if (numFila < 0
+              || numFila > this.GrdLista.Rows.Count)
+            {
+                throw new System.ArgumentOutOfRangeException(
+                            "fila fuera de rango: " + nameof(numFila));
+            }
+
+            DataGridViewRow fila = this.GrdLista.Rows[numFila];
+            Reserva reserva = this.Reservas[numFila];
+
+
+            fila.Cells[0].Value = (numFila + 1).ToString().PadLeft(4, ' ');
+            fila.Cells[1].Value = reserva.Id; //aaaammddhhh
+            fila.Cells[2].Value = reserva.Tipo; 
+            fila.Cells[3].Value = reserva.FechaEntrada;
+            fila.Cells[4].Value = reserva.FechaSalida;
+            fila.Cells[5].Value = reserva.Garaje;
+            fila.Cells[6].Value = reserva.TotalConIva();
+            fila.Cells[7].Value = reserva.Cliente.DNI;
+            fila.Cells[8].Value = "*";
+            fila.Cells[9].Value = "*";
+            fila.Cells[10].Value = "*";
+
+
+            foreach (DataGridViewCell celda in fila.Cells)
+            {
+                if (celda.ColumnIndex < 7)
+                {
+                    celda.ToolTipText = reserva.ToString();
+                }
+                else if(celda.ColumnIndex == 7)
+                {
+                    celda.ToolTipText = reserva.Cliente.ToString();
+                }
+            }
         }
 
 
 
+        public void ClickLista()
+        {
+            Console.WriteLine("clickLista : " + this.GrdLista.CurrentCell.ColumnIndex);
+
+            if (this.GrdLista.CurrentCell.ColumnIndex == 9)
+            {
+                this.Eliminar();
+            }
+            else if (this.GrdLista.CurrentCell.ColumnIndex == 8)
+            {
+                int fila = this.GrdLista.CurrentCell.RowIndex;
+                this.Modificar((string)this.GrdLista.Rows[fila].Cells[1].Value);
+            }
+
+            this.Actualiza();
+        }
+
+
+        public void Eliminar()
+        {
+
+            Console.WriteLine("dentro eliminar");
+            var id = (string)this.GrdLista.CurrentRow.Cells[1].Value;
+
+            //Dialogo de confirmación de eiminación
+            DialogResult result;
+            string mensaje = "¿Está seguro de que desea eliminar la reserva con ID(" + id + "), del registro de reservas?";
+            string tittle = "Eliminar reserva";
+
+            result = MessageBox.Show(mensaje, tittle, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (result == DialogResult.Yes)
+            {
+                this.Reservas.Remove(this.Reservas.getReserva(id));
+            }
+        }
+
+        public void Modificar(string id)
+        {
+            //A partir de la clave de la entidad Reserva, obtenemos la reserva a modificar
+            Reserva ResModif = this.Reservas.getReserva(id);
+            Cliente c = ResModif.Cliente;
+
+               var dlgModificar = new DlgModificaReserva(ResModif, this.Clientes);
+               if (dlgModificar.ShowDialog() == DialogResult.OK)
+               {
+                   this.Reservas.Remove(ResModif);
+
+                   string tipo = dlgModificar.Tipo;
+                   DateTime fechaEntrada = dlgModificar.FechaEntrada;
+                   DateTime fechaSalida = dlgModificar.FechaSalida;
+                   string garaje = dlgModificar.Garaje;
+
+                   Reserva r = new Reserva(id, tipo, c, fechaEntrada, fechaSalida, garaje, ResModif.PrecioDia, ResModif.IVA, ResModif.Total);
+                
+                   this.Reservas.Add(r);
+
+               }
+        }
+
+
+        void Guardar()
+        {
+            // this.regRes.GuardarXml();
+            this.Reservas.GuardarXml();
+        }
+
+
         private MainMenu mPpal;
         public MenuItem mArchivo;
-        public MenuItem mInsertar;
+        public MenuItem opGuardar;
         public MenuItem opSalir;
-        public MenuItem OpInsertarAdaptadorTDT;
-        public MenuItem OpInsertarRadio;
-        public MenuItem OpInsertarTelevisor;
-        public MenuItem OpInsertarReproductorDVD;
+        public MenuItem opVolver;
+
 
         public StatusBar SbStatus;
         private Panel pnlPpal;
         private TextBox edDetalle;
-
-
         public DataGridView GrdLista;
 
+        //public List<Reserva> Reservas { get;  set; }
 
-        //   private MenuItem opInsertar; //hacer una por tipo de aparato
-
+        private readonly List<Cliente> Clientes;
+        //  private RegistroReserva regRes;
+        private RegistroReserva Reservas;
+        private MainWindowCore MVC;
     }
+
 }

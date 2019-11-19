@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\RegistroClientes.cs" />
+    <Compile Include="Core\RegistroHabitaciones.cs" />
     <Compile Include="GUI\Dlg\DlgConsultaReserva.cs">
       <SubType>Form</SubType>
     </Compile>

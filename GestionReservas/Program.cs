@@ -26,6 +26,14 @@ namespace GestionReservas
 
             rc.GuardarXml();
 
+            
+            var rh = new RegistroHabitaciones();
+            rh.Add(new Habitacion("001", "matrimoniales", DateTime.Today, DateTime.Today));
+            rh.Add(new Habitacion("002", "dobles", DateTime.Today, DateTime.Today));
+            rh.Add(new Habitacion("003", "individuales", DateTime.Today, DateTime.Today));
+
+            rh.GuardarXml();
+
             Console.ReadLine();
         }
 

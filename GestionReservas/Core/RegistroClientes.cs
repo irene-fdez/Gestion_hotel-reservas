@@ -49,15 +49,7 @@
             return null;
         }
 
-        public List<String> getDnis()
-        {
-            List<String> dnis = new List<string>();
-            foreach (Cliente c in this.clientes)
-            {
-                dnis.Add(c.DNI);
-            }
-            return dnis;
-        }
+        
 
         public int Count
         {
