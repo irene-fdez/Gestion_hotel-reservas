@@ -28,7 +28,7 @@ namespace GestionReservas.GUI.Dlg
             this.GrdLista.Click += (sender, e) => ClickLista();
 
             this.opGuardar.Click += (sender, e) => this.Guardar();
-            this.opSalir.Click += (sender, e) => { this.DialogResult = DialogResult.Cancel; MVC.PulsadoSalir(); };
+            this.opSalir.Click += (sender, e) => { this.DialogResult = DialogResult.Cancel; this.Salir(); };
             this.opVolver.Click += (sender, e) => this.DialogResult = DialogResult.Cancel;
 
         }
@@ -156,51 +156,53 @@ namespace GestionReservas.GUI.Dlg
             var buttonCellTemplate8 = new DataGridViewButtonCell();
             var buttonCellTemplate9 = new DataGridViewButtonCell();
             var buttonCellTemplate10 = new DataGridViewButtonCell();
-            
+
             //texto
+            Color colorCeldasDatos = Color.PapayaWhip;
+
             textCellTemplate0.Style.BackColor = Color.LightGray;
             textCellTemplate0.Style.ForeColor = Color.Black;
 
-            textCellTemplate1.Style.BackColor = Color.Coral;
+            textCellTemplate1.Style.BackColor = Color.DarkSalmon; 
             textCellTemplate1.Style.ForeColor = Color.Black;
             textCellTemplate1.Style.Alignment = DataGridViewContentAlignment.MiddleRight;
 
-            textCellTemplate2.Style.BackColor = Color.Wheat;
+            textCellTemplate2.Style.BackColor = colorCeldasDatos;
             textCellTemplate2.Style.ForeColor = Color.Black;
             textCellTemplate2.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
             
-            textCellTemplate3.Style.BackColor = Color.Wheat;
+            textCellTemplate3.Style.BackColor = colorCeldasDatos;
             textCellTemplate3.Style.ForeColor = Color.Black;
             textCellTemplate3.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
-            textCellTemplate4.Style.BackColor = Color.Wheat;
+            textCellTemplate4.Style.BackColor = colorCeldasDatos;
             textCellTemplate4.Style.ForeColor = Color.Black;
             textCellTemplate4.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
-            textCellTemplate5.Style.BackColor = Color.Wheat;
+            textCellTemplate5.Style.BackColor = colorCeldasDatos;
             textCellTemplate5.Style.ForeColor = Color.Black;
             textCellTemplate5.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
-            textCellTemplate6.Style.BackColor = Color.Wheat;
+            textCellTemplate6.Style.BackColor = colorCeldasDatos;
             textCellTemplate6.Style.ForeColor = Color.Black;
             textCellTemplate6.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
-            textCellTemplate7.Style.BackColor = Color.Wheat;
+            textCellTemplate7.Style.BackColor = colorCeldasDatos;
             textCellTemplate7.Style.ForeColor = Color.Black;
             textCellTemplate7.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
             //botones
-            buttonCellTemplate8.Style.BackColor = Color.Wheat;
+            buttonCellTemplate8.Style.BackColor = colorCeldasDatos;
             buttonCellTemplate8.Style.ForeColor = Color.Black;
             buttonCellTemplate8.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
             buttonCellTemplate8.Style.Font = new Font(FontFamily.GenericMonospace, 11, FontStyle.Regular);
 
-            buttonCellTemplate9.Style.BackColor = Color.Wheat;
+            buttonCellTemplate9.Style.BackColor = colorCeldasDatos;
             buttonCellTemplate9.Style.ForeColor = Color.Black;
             buttonCellTemplate9.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
             buttonCellTemplate9.Style.Font = new Font(FontFamily.GenericMonospace, 11, FontStyle.Regular);
 
-            buttonCellTemplate10.Style.BackColor = Color.Wheat;
+            buttonCellTemplate10.Style.BackColor = colorCeldasDatos;
             buttonCellTemplate10.Style.ForeColor = Color.Black;
             buttonCellTemplate10.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
             buttonCellTemplate10.Style.Font = new Font(FontFamily.GenericMonospace, 11, FontStyle.Regular);
@@ -317,24 +319,33 @@ namespace GestionReservas.GUI.Dlg
 
         private void FilaSeleccionada()
         {
-            int fila = System.Math.Max(0, this.GrdLista.CurrentRow.Index);
-            int posicion = this.GrdLista.CurrentCellAddress.X;
 
-            if (posicion == 7 && this.Reservas.Count > fila)
+            try
             {
-                this.edDetalle.Text = this.Reservas[fila].Cliente.ToString();
-                this.edDetalle.SelectionStart = this.edDetalle.Text.Length;
-                this.edDetalle.SelectionLength = 0;
+                int fila = System.Math.Max(0, this.GrdLista.CurrentRow.Index);
+                int posicion = this.GrdLista.CurrentCellAddress.X;
+
+                if (posicion == 7 && this.Reservas.Count > fila)
+                {
+                    this.edDetalle.Text = this.Reservas[fila].Cliente.ToString();
+                    this.edDetalle.SelectionStart = this.edDetalle.Text.Length;
+                    this.edDetalle.SelectionLength = 0;
+                }
+                else if(posicion < 7){
+                    this.edDetalle.Text = this.Reservas[fila].DatosEconomicosReserva();
+                    this.edDetalle.SelectionStart = this.edDetalle.Text.Length;
+                    this.edDetalle.SelectionLength = 0;
+                }
+                else 
+                {
+                    this.edDetalle.Clear();
+                }
             }
-            else if(posicion < 7){
-                this.edDetalle.Text = this.Reservas[fila].DatosEconomicosReserva();
-                this.edDetalle.SelectionStart = this.edDetalle.Text.Length;
-                this.edDetalle.SelectionLength = 0;
-            }
-            else 
+            catch(Exception)
             {
                 this.edDetalle.Clear();
             }
+            
 
             return;
         }
@@ -423,8 +434,8 @@ namespace GestionReservas.GUI.Dlg
             fila.Cells[0].Value = (numFila + 1).ToString().PadLeft(4, ' ');
             fila.Cells[1].Value = reserva.Id; //aaaammddhhh
             fila.Cells[2].Value = reserva.Tipo; 
-            fila.Cells[3].Value = reserva.FechaEntrada;
-            fila.Cells[4].Value = reserva.FechaSalida;
+            fila.Cells[3].Value = reserva.FechaEntrada.ToString("dd/MM/yyyy");
+            fila.Cells[4].Value = reserva.FechaSalida.ToString("dd/MM/yyyy");
             fila.Cells[5].Value = reserva.Garaje;
             fila.Cells[6].Value = reserva.TotalConIva();
             fila.Cells[7].Value = reserva.Cliente.DNI;
@@ -450,19 +461,28 @@ namespace GestionReservas.GUI.Dlg
 
         public void ClickLista()
         {
-            Console.WriteLine("clickLista : " + this.GrdLista.CurrentCell.ColumnIndex);
-
-            if (this.GrdLista.CurrentCell.ColumnIndex == 9)
+            try
             {
-                this.Eliminar();
-            }
-            else if (this.GrdLista.CurrentCell.ColumnIndex == 8)
-            {
-                int fila = this.GrdLista.CurrentCell.RowIndex;
-                this.Modificar((string)this.GrdLista.Rows[fila].Cells[1].Value);
-            }
+                Console.WriteLine("clickLista : " + this.GrdLista.CurrentCell.ColumnIndex);
 
-            this.Actualiza();
+                if (this.GrdLista.CurrentCell.ColumnIndex == 8)
+                {
+                    int fila = this.GrdLista.CurrentCell.RowIndex;
+                    this.Modificar((string)this.GrdLista.Rows[fila].Cells[1].Value);
+                }
+                else if (this.GrdLista.CurrentCell.ColumnIndex == 9)
+                {
+                    this.Eliminar();
+                }
+                else if (this.GrdLista.CurrentCell.ColumnIndex == 10)
+                {
+                    int fila = this.GrdLista.CurrentCell.RowIndex;
+                    this.Factura((string)this.GrdLista.Rows[fila].Cells[1].Value);
+                }
+
+                this.Actualiza();
+            }
+            catch(Exception) { }
         }
 
 
@@ -491,21 +511,48 @@ namespace GestionReservas.GUI.Dlg
             Reserva ResModif = this.Reservas.getReserva(id);
             Cliente c = ResModif.Cliente;
 
-               var dlgModificar = new DlgModificaReserva(ResModif, this.Clientes);
-               if (dlgModificar.ShowDialog() == DialogResult.OK)
-               {
-                   this.Reservas.Remove(ResModif);
+            var dlgModificar = new DlgModificaReserva(ResModif, this.Clientes);
 
-                   string tipo = dlgModificar.Tipo;
-                   DateTime fechaEntrada = dlgModificar.FechaEntrada;
-                   DateTime fechaSalida = dlgModificar.FechaSalida;
-                   string garaje = dlgModificar.Garaje;
+            this.Hide();
+            if (dlgModificar.ShowDialog() == DialogResult.OK)
+            {
+                this.Reservas.Remove(ResModif);
 
-                   Reserva r = new Reserva(id, tipo, c, fechaEntrada, fechaSalida, garaje, ResModif.PrecioDia, ResModif.IVA, ResModif.Total);
+                string tipo = dlgModificar.Tipo;
+                DateTime fechaEntrada = dlgModificar.FechaEntrada;
+                DateTime fechaSalida = dlgModificar.FechaSalida;
+                string garaje = dlgModificar.Garaje;
+
+                Reserva r = new Reserva(id, tipo, c, fechaEntrada, fechaSalida, garaje, ResModif.PrecioDia, ResModif.IVA, ResModif.Total);
                 
-                   this.Reservas.Add(r);
+                this.Reservas.Add(r);
+                this.Actualiza();
 
-               }
+            }
+
+            if (!this.IsDisposed) { this.Show(); }
+            else { Application.Exit(); }
+
+        }
+
+        public void Factura(string id)
+        {
+            //A partir de la clave de la entidad Reserva, obtenemos la reserva a modificar
+            Reserva reservaFactura = this.Reservas.getReserva(id);
+            var numRegRes = int.Parse((string)this.GrdLista.CurrentRow.Cells[0].Value);
+
+            
+            var dlgFactura = new DlgFacturaReserva(reservaFactura, this.Clientes, numRegRes);
+
+            this.Hide();
+
+            if (dlgFactura.ShowDialog() == DialogResult.OK)
+            {
+            
+            }
+
+            if (!this.IsDisposed) { this.Show(); }
+            else { Application.Exit(); }
         }
 
 
@@ -514,6 +561,14 @@ namespace GestionReservas.GUI.Dlg
             // this.regRes.GuardarXml();
             this.Reservas.GuardarXml();
         }
+
+        public void Salir()
+        {
+            Console.WriteLine("guarda y sale");
+            this.Reservas.GuardarXml();
+            Application.Exit();
+        }
+
 
 
         private MainMenu mPpal;
@@ -528,12 +583,11 @@ namespace GestionReservas.GUI.Dlg
         private TextBox edDetalle;
         public DataGridView GrdLista;
 
-        //public List<Reserva> Reservas { get;  set; }
 
         private readonly List<Cliente> Clientes;
-        //  private RegistroReserva regRes;
         private RegistroReserva Reservas;
         private MainWindowCore MVC;
+
     }
 
 }

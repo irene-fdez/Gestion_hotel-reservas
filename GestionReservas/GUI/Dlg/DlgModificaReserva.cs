@@ -16,8 +16,7 @@ namespace GestionReservas.GUI.Dlg
 
         public DlgModificaReserva(Reserva reserva, List<Cliente> clientes)
         {
-            var MVC = new MainWindowCore();
-
+            
             this.Reservas = new RegistroReserva(clientes);
             this.reserva = reserva;
             
@@ -25,7 +24,10 @@ namespace GestionReservas.GUI.Dlg
             this.Build();
             this.CenterToScreen();
 
-            this.opSalir.Click += (sender, e) => { this.DialogResult = DialogResult.Cancel; MVC.PulsadoSalir(); };
+            var DCR = new DlgConsultaReserva(this.Reservas, clientes);
+            this.opSalir.Click += (sender, e) => { this.DialogResult = DialogResult.Cancel; DCR.Salir(); };
+            this.opVolver.Click += (sender, e) => this.DialogResult = DialogResult.Cancel;
+
 
         }
 
@@ -104,7 +106,6 @@ namespace GestionReservas.GUI.Dlg
                       pnlGaraje.Height + pnlPrecioDia.Height + pnlIva.Height + pnlBotones.Height);
 
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
-            this.MinimizeBox = false;
             this.MaximizeBox = false;
             this.StartPosition = FormStartPosition.CenterParent;
             this.ResumeLayout(false);
@@ -123,11 +124,12 @@ namespace GestionReservas.GUI.Dlg
             this.mPpal = new MainMenu();
 
             this.mArchivo = new MenuItem("&Archivo");
-            // this.mInsertar = new MenuItem("&Insertar");
+            this.opVolver = new MenuItem("&Volver");
 
             this.opSalir = new MenuItem("&Salir");
             this.opSalir.Shortcut = Shortcut.CtrlQ;
 
+            this.mArchivo.MenuItems.Add(this.opVolver);
             this.mArchivo.MenuItems.Add(this.opSalir);
 
             this.mPpal.MenuItems.Add(this.mArchivo);
@@ -363,15 +365,18 @@ namespace GestionReservas.GUI.Dlg
                 var btAccept = (Button)this.AcceptButton;
                 bool invalid = string.IsNullOrWhiteSpace(this.Tipo);
 
-                invalid = invalid || !char.IsLetter(this.Tipo[0]);
+                invalid = invalid || this.tbTipo.Text == "";
 
-                if (invalid)
+                if (invalid || this.tbTipo.Text == "")
                 {
-                    this.tbTipo.Text = "¿ Tipo ?";
+
+                    string mensaje = "El campo no puede estar vacio";
+                    MessageBox.Show(mensaje, "Informacion", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    this.tbTipo.Focus();
                 }
 
                 btAccept.Enabled = !invalid;
-                //  cancelArgs.Cancel = invalid;
             };
 
             this.tbTipo.Focus();
@@ -412,6 +417,25 @@ namespace GestionReservas.GUI.Dlg
                 Width = 250,
                 Value = this.reserva.FechaEntrada,
                 Anchor = AnchorStyles.Bottom,
+
+            };
+
+            this.dtpDateIn.Validating += (sender, cancelArgs) =>
+            {
+
+                bool invalid = false;
+                var btAccept = (Button)this.AcceptButton;
+
+                invalid = invalid || (this.dtpDateOut.Value < this.dtpDateIn.Value); ;
+
+                if (invalid || (this.dtpDateOut.Value < this.dtpDateIn.Value))
+                {
+                    string mensaje = "La fecha de salida debe ser mayor o igual de la de entrada";
+                    MessageBox.Show(mensaje, "Informacion", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    this.dtpDateIn.Focus();
+                }
+
+                btAccept.Enabled = !invalid;
 
             };
 
@@ -461,11 +485,15 @@ namespace GestionReservas.GUI.Dlg
 
                 if (invalid || (this.dtpDateOut.Value < this.dtpDateIn.Value))
                 {
-                    MessageBox.Show("La fecha de salida debe ser mayor o igual de la de entrada");
+                    string mensaje = "La fecha de salida debe ser mayor o igual de la de entrada";
+                    MessageBox.Show(mensaje, "Informacion", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    this.dtpDateOut.Focus();
                 }
 
                 btAccept.Enabled = !invalid;
             };
+
+            
 
             pnlDateOut.MaximumSize = new Size(int.MaxValue, dtpDateOut.Height * 2);
 
@@ -510,9 +538,11 @@ namespace GestionReservas.GUI.Dlg
             cbGaraje.Items.Add("SI");
             cbGaraje.Items.Add("NO");
 
-          //  Console.WriteLine("id: "+this.reserva.Id +"\ncb: "+this.reserva.Garaje);
+            //  Console.WriteLine("id: "+this.reserva.Id +"\ncb: "+this.reserva.Garaje);
+            this.validarFechaSalida();
 
-           
+
+
             this.cbGaraje.SelectedIndex = (this.reserva.Garaje == "SI" ? 0 : 1);
 
             this.pnlGaraje.Controls.Add(cbGaraje);
@@ -608,6 +638,25 @@ namespace GestionReservas.GUI.Dlg
             return this.pnlIva;
         }
 
+        void validarFechaSalida()
+        {
+            this.dtpDateOut.Validating += (sender, cancelArgs) =>
+            {
+                var btAccept = (Button)this.AcceptButton;
+                bool invalid = false;
+
+                invalid = invalid || (this.dtpDateOut.Value < this.dtpDateIn.Value);
+
+                if (invalid || (this.dtpDateOut.Value < this.dtpDateIn.Value))
+                {
+                    string mensaje = "La fecha de salida debe ser mayor o igual de la de entrada";
+                    MessageBox.Show(mensaje, "Informacion", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    this.dtpDateOut.Focus();
+                }
+
+                btAccept.Enabled = !invalid;
+            };
+        }
 
         private TextBox tbId;
         private TextBox tbCliente;
@@ -645,7 +694,7 @@ namespace GestionReservas.GUI.Dlg
         public StatusBar SbStatus;
         private MainMenu mPpal;
         public MenuItem mArchivo;
-        //  public MenuItem mInsertar;
+        public MenuItem opVolver;
         public MenuItem opSalir;
         public List<Cliente> rgCli = null;
         public List<Habitacion> rgHab = null;

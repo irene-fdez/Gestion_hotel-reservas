@@ -18,24 +18,25 @@ namespace GestionReservas.GUI.Dlg
         {
             this.Build();
             this.CenterToScreen();
-
         }
 
-        public DlgInsertaReserva(List<Cliente> clientesList, List<Habitacion> habitacionesList)
+        public DlgInsertaReserva(RegistroReserva Reservas, List<Cliente> clientesList, List<Habitacion> habitacionesList)
         {
             var MVC = new MainWindowCore();
 
+            this.Reservas = Reservas;
             this.rgCli = clientesList;
             this.rgHab = habitacionesList;
             this.Build();
+            this.CenterToScreen();
 
-            this.opSalir.Click += (sender, e) => { this.DialogResult = DialogResult.Cancel; MVC.PulsadoSalir(); };
 
+            this.opSalir.Click += (sender, e) => { this.DialogResult = DialogResult.Cancel; MVC.Salir(); };
+            this.opVolver.Click += (sender, e) => this.DialogResult = DialogResult.Cancel;
         }
 
         void Build()
         {
-
             this.BuildStatus();
             this.BuildMenu();
 
@@ -107,7 +108,6 @@ namespace GestionReservas.GUI.Dlg
                       pnlGaraje.Height + pnlPrecioDia.Height + pnlIva.Height + pnlBotones.Height);
 
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
-            this.MinimizeBox = false;
             this.MaximizeBox = false;
             this.StartPosition = FormStartPosition.CenterParent;
             this.ResumeLayout(false);
@@ -126,17 +126,16 @@ namespace GestionReservas.GUI.Dlg
             this.mPpal = new MainMenu();
 
             this.mArchivo = new MenuItem("&Archivo");
-            // this.mInsertar = new MenuItem("&Insertar");
+            this.opVolver = new MenuItem("&Volver");
 
             this.opSalir = new MenuItem("&Salir");
             this.opSalir.Shortcut = Shortcut.CtrlQ;
 
+            this.mArchivo.MenuItems.Add(this.opVolver);
             this.mArchivo.MenuItems.Add(this.opSalir);
-
             this.mPpal.MenuItems.Add(this.mArchivo);
 
             this.Menu = mPpal;
-
 
         }
 
@@ -144,13 +143,11 @@ namespace GestionReservas.GUI.Dlg
 
         Panel BuildBotonesPanel()
         {
-
             var pnlBotones = new TableLayoutPanel()
             {
                 ColumnCount = 2,
                 RowCount = 1,
                 Dock = DockStyle.Top,
-
             };
 
             var btCierra = new Button()
@@ -180,7 +177,6 @@ namespace GestionReservas.GUI.Dlg
             pnlBotones.Controls.Add(btGuarda);
             pnlBotones.Controls.Add(btCierra);
 
-
             return pnlBotones;
         }
 
@@ -201,18 +197,16 @@ namespace GestionReservas.GUI.Dlg
                 Font = new Font("Microsoft Sans Serif", 18, FontStyle.Regular, GraphicsUnit.Point),
                 ForeColor = Color.White,
                 TextAlign = ContentAlignment.TopCenter,
-
             };
 
             var lblEspacio = new Label()
             {
                 Text = "",
                 Dock = DockStyle.Top,
-
             };
+
             pnlReserva.Controls.Add(lblEspacio);
             pnlReserva.Controls.Add(lblReserva);
-
 
             return pnlReserva;
         }
@@ -230,7 +224,6 @@ namespace GestionReservas.GUI.Dlg
             {
                 Text = " ",
                 Dock = DockStyle.Top,
-
             };
             pnlEspacio.Controls.Add(lblEspacio);
 
@@ -250,7 +243,6 @@ namespace GestionReservas.GUI.Dlg
                 Dock = DockStyle.Fill,
                 Location = new Point(Left, this.pnlEspacio.Top + this.pnlEspacio.Height + 10),
                 Height = 35,
-
             };
 
             var lblHabitacion = new Label
@@ -259,10 +251,8 @@ namespace GestionReservas.GUI.Dlg
                 Text = "Habitacion:",
                 Dock = DockStyle.Left,
                 ForeColor = Color.White,
-                // Left = 20,
                 Width = 150,
                 TextAlign = ContentAlignment.TopRight,
-
             };
 
             this.cbNumHabitacionList = new ComboBox
@@ -274,22 +264,39 @@ namespace GestionReservas.GUI.Dlg
                 DropDownWidth = 20,
             };
 
-
+            
             //obtener los numeros de todas las habitaciones
             string[] op = new string[this.rgHab != null ? this.rgHab.Count : 0];
             for (int i = 0; i < op.Length; i++)
             {
                 Habitacion habitacion = this.rgHab[i];
                 op[i] = habitacion.Numero;
-
             }
             cbNumHabitacionList.Items.AddRange(op);
+
+
+            this.cbNumHabitacionList.Validating += (sender, cancelArgs) =>
+            {
+                bool invalid = false;
+                var btAccept = (Button)this.AcceptButton;
+
+                invalid = invalid ||(cbNumHabitacionList.Text == "");
+
+                if (invalid || cbNumHabitacionList.Text == "")
+                {
+                    string mensaje = "Debe seleccionar algún elemento";
+                    MessageBox.Show(mensaje, "Informacion", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    cbNumHabitacionList.Focus();
+                }
+
+                btAccept.Enabled = !invalid;
+            };
 
             pnlNumHabitacion.Controls.Add(cbNumHabitacionList);
             pnlNumHabitacion.Controls.Add(lblHabitacion);
 
             return pnlNumHabitacion;
-
         }
 
         Panel BuildCliente()
@@ -299,7 +306,6 @@ namespace GestionReservas.GUI.Dlg
                 Dock = DockStyle.Fill,
                 Location = new Point(Left, this.pnlNumHabitacion.Top + this.pnlNumHabitacion.Height + 10),
                 Height = 35,
-
             };
 
             var lblCliente = new Label
@@ -310,7 +316,6 @@ namespace GestionReservas.GUI.Dlg
                 ForeColor = Color.White,
                 Width = 150,
                 TextAlign = ContentAlignment.TopRight,
-
             };
 
             this.cbDniClienteList = new ComboBox
@@ -320,7 +325,6 @@ namespace GestionReservas.GUI.Dlg
                 Anchor = AnchorStyles.Bottom,
                 DropDownStyle = ComboBoxStyle.DropDownList,
                 DropDownWidth = 20,
-
             };
 
             string[] op = new string[this.rgCli != null ? this.rgCli.Count : 0];
@@ -328,9 +332,27 @@ namespace GestionReservas.GUI.Dlg
             {
                 Cliente cliente = this.rgCli[i];
                 op[i] = cliente.DNI ;
-
             }
             cbDniClienteList.Items.AddRange(op);
+
+
+            this.cbDniClienteList.Validating += (sender, cancelArgs) =>
+            {
+                bool invalid = false;
+                var btAccept = (Button)this.AcceptButton;
+
+                invalid = invalid || (cbDniClienteList.Text == "");
+
+                if (invalid || cbDniClienteList.Text == "")
+                {
+                    string mensaje = "Debe seleccionar algún elemento";
+                    MessageBox.Show(mensaje, "Informacion", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    cbDniClienteList.Focus();
+                }
+
+                btAccept.Enabled = !invalid;
+            };
 
             pnlDniCliente.Controls.Add(cbDniClienteList);
             pnlDniCliente.Controls.Add(lblCliente);
@@ -346,7 +368,6 @@ namespace GestionReservas.GUI.Dlg
             {
                 Dock = DockStyle.Fill,
                 Location = new Point(Left, this.pnlNumHabitacion.Top + this.pnlNumHabitacion.Height + 10),
-
             };
 
             var lblTipo = new Label()
@@ -364,7 +385,6 @@ namespace GestionReservas.GUI.Dlg
                 Left = 0,
                 Width = 250,
                 Anchor = AnchorStyles.Bottom,
-                Text = "Diaria",
             };
 
             this.tbTipo.Validating += (sender, cancelArgs) =>
@@ -372,15 +392,18 @@ namespace GestionReservas.GUI.Dlg
                 var btAccept = (Button)this.AcceptButton;
                 bool invalid = string.IsNullOrWhiteSpace(this.Tipo);
 
-                invalid = invalid || !char.IsLetter(this.Tipo[0]);
+                invalid = invalid || this.tbTipo.Text == "";
 
-                if (invalid)
+                if (invalid || this.tbTipo.Text == "")
                 {
-                    this.tbTipo.Text = "¿ Tipo ?";
+
+                    string mensaje = "El campo no puede estar vacio";
+                    MessageBox.Show(mensaje, "Informacion", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    this.tbTipo.Focus();
                 }
 
                 btAccept.Enabled = !invalid;
-                //  cancelArgs.Cancel = invalid;
             };
 
             pnlTipo.MaximumSize = new Size(int.MaxValue, tbTipo.Height * 2);
@@ -399,9 +422,8 @@ namespace GestionReservas.GUI.Dlg
             {
                 Dock = DockStyle.Fill,
                 Location = new Point(Left, this.pnlTipo.Top + this.pnlTipo.Height + 10),
-
             };
-            Console.WriteLine("comienzo dateIn: " + (this.pnlTipo.Top + this.pnlTipo.Height + 10));
+        //    Console.WriteLine("comienzo dateIn: " + (this.pnlTipo.Top + this.pnlTipo.Height + 10));
 
             var lblDateIn = new Label()
             {
@@ -411,7 +433,6 @@ namespace GestionReservas.GUI.Dlg
                 ForeColor = Color.White,
                 Width = 150,
                 TextAlign = ContentAlignment.TopRight,
-
             };
 
             this.dtpDateIn = new DateTimePicker()
@@ -421,9 +442,47 @@ namespace GestionReservas.GUI.Dlg
                 MinDate = DateTime.Today,
                 Value = DateTime.Today,
                 Anchor = AnchorStyles.Bottom,
+            };
 
+
+
+            this.dtpDateIn.Validating += (sender, cancelArgs) =>
+            {
+
+                var id = dtpDateIn.Value.Year.ToString() + dtpDateIn.Value.Month.ToString() + dtpDateIn.Value.Day.ToString() + cbNumHabitacionList.SelectedItem;
+
+                bool invalid = false;
+                var btAccept = (Button)this.AcceptButton;
+
+                invalid = invalid || (this.Reservas.getReserva(id) != null) || (this.dtpDateOut.Value < this.dtpDateIn.Value); ;
+
+                if (invalid)
+                {
+                    if (this.Reservas.getReserva(id) != null)
+                    {
+                        DialogResult result;
+                        string mensaje = "Lo sentimos! Esta habitacion ya tiene una reserva es esa fecha";
+
+                        result = MessageBox.Show(mensaje, "Informacion", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        this.dtpDateIn.Focus();
+
+
+                    }
+
+                    
+                    if (invalid || (this.dtpDateOut.Value < this.dtpDateIn.Value))
+                    {
+                        string mensaje = "La fecha de salida debe ser mayor o igual de la de entrada";
+                        MessageBox.Show(mensaje, "Informacion", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        this.dtpDateOut.Focus();
+                    }
+                }
+
+                btAccept.Enabled = !invalid;
 
             };
+
+
 
             pnlDateIn.MaximumSize = new Size(int.MaxValue, dtpDateIn.Height * 2);
 
@@ -450,7 +509,6 @@ namespace GestionReservas.GUI.Dlg
                 ForeColor = Color.White,
                 Width = 150,
                 TextAlign = ContentAlignment.TopRight,
-
             };
 
             this.dtpDateOut = new DateTimePicker()
@@ -460,24 +518,9 @@ namespace GestionReservas.GUI.Dlg
                 MinDate = DateTime.Today,
                 Value = DateTime.Today,
                 Anchor = AnchorStyles.Bottom,
-
-
             };
 
-            this.dtpDateOut.Validating += (sender, cancelArgs) =>
-            {
-                var btAccept = (Button)this.AcceptButton;
-                bool invalid = false;
-
-                invalid = invalid || (this.dtpDateOut.Value < this.dtpDateIn.Value);
-
-                if (invalid || (this.dtpDateOut.Value < this.dtpDateIn.Value))
-                {
-                    MessageBox.Show("La fecha de salida debe ser mayor o igual de la de entrada");
-                }
-
-                btAccept.Enabled = !invalid;
-            };
+            this.validarFechaSalida();
 
             pnlDateOut.MaximumSize = new Size(int.MaxValue, dtpDateOut.Height * 2);
 
@@ -507,7 +550,6 @@ namespace GestionReservas.GUI.Dlg
                 ForeColor = Color.White,
                 Width = 150,
                 TextAlign = ContentAlignment.TopRight,
-
             };
 
             this.cbGaraje = new ComboBox()
@@ -522,10 +564,27 @@ namespace GestionReservas.GUI.Dlg
             cbGaraje.Items.Add("SI");
             cbGaraje.Items.Add("NO");
 
+            this.cbGaraje.Validating += (sender, cancelArgs) =>
+            {
+                bool invalid = false;
+                var btAccept = (Button)this.AcceptButton;
+
+                invalid = invalid || (cbGaraje.Text == "");
+
+                if (invalid || cbGaraje.Text == "")
+                {
+                    string mensaje = "Debe seleccionar algún elemento";
+                    MessageBox.Show(mensaje, "Informacion", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    cbGaraje.Focus();
+                }
+
+                btAccept.Enabled = !invalid;
+            };
+            this.validarFechaSalida();
+
             this.pnlGaraje.Controls.Add(cbGaraje);
             this.pnlGaraje.Controls.Add(lblGaraje);
-
-            //  this.pnlGaraje.MaximumSize = new Size(int.MaxValue, this.rbSI.Height * 2 + 5);
 
             return this.pnlGaraje;
         }
@@ -551,21 +610,18 @@ namespace GestionReservas.GUI.Dlg
 
             this.numPrecioDia = new NumericUpDown
             {
-                Value = 15,
                 TextAlign = HorizontalAlignment.Right,
-                //  Dock = DockStyle.Fill,
                 Minimum = 1,
                 Left = 0,
                 Width = 250,
                 Anchor = AnchorStyles.Bottom,
-
             };
 
+            this.validarFechaSalida();
 
             this.pnlPrecioDia.Controls.Add(this.numPrecioDia);
             this.pnlPrecioDia.Controls.Add(lblPrecioDia);
 
-            //   this.pnlPrecioDia.MaximumSize = new Size(int.MaxValue, numPrecioDia.Height * 2);
 
             return this.pnlPrecioDia;
         }
@@ -593,23 +649,39 @@ namespace GestionReservas.GUI.Dlg
             {
                 Value = 21,
                 TextAlign = HorizontalAlignment.Right,
-                //  Dock = DockStyle.Fill,
                 Minimum = 1,
                 Left = 0,
                 Width = 250,
                 Anchor = AnchorStyles.Bottom,
-
             };
 
 
             this.pnlIva.Controls.Add(this.numIva);
             this.pnlIva.Controls.Add(lblIva);
 
-            //    this.pnlIva.MaximumSize = new Size(int.MaxValue, numIva.Height * 2);
-
             return this.pnlIva;
         }
 
+        void validarFechaSalida()
+        {
+            this.dtpDateOut.Validating += (sender, cancelArgs) =>
+            {
+                var btAccept = (Button)this.AcceptButton;
+                bool invalid = false;
+
+                invalid = invalid || (this.dtpDateOut.Value < this.dtpDateIn.Value);
+
+                if (invalid || (this.dtpDateOut.Value < this.dtpDateIn.Value))
+                {
+                    string mensaje = "La fecha de salida debe ser mayor o igual de la de entrada";
+                    MessageBox.Show(mensaje, "Informacion", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    this.dtpDateOut.Focus();
+                }
+
+                btAccept.Enabled = !invalid;
+                
+            };
+        }
 
         private ComboBox cbNumHabitacionList;
         private ComboBox cbDniClienteList;
@@ -619,7 +691,6 @@ namespace GestionReservas.GUI.Dlg
         private ComboBox cbGaraje;
         private NumericUpDown numPrecioDia;
         private NumericUpDown numIva;
-
 
         private Panel pnlReserva;
         private Panel pnlEspacio;
@@ -631,7 +702,6 @@ namespace GestionReservas.GUI.Dlg
         private Panel pnlIva;
         private Panel pnlNumHabitacion;
         private Panel pnlDniCliente;
-
         private Panel pnlInserta;
 
         public string DniCliente => this.cbDniClienteList.Text;
@@ -643,16 +713,14 @@ namespace GestionReservas.GUI.Dlg
         public double PrecioDia => System.Convert.ToDouble(this.numPrecioDia.Value);
         public int Iva => (int)this.numIva.Value;
 
-
         public StatusBar SbStatus;
         private MainMenu mPpal;
         public MenuItem mArchivo;
-        //  public MenuItem mInsertar;
+        public MenuItem opVolver;
         public MenuItem opSalir;
         public List<Cliente> rgCli = null;
         public List<Habitacion> rgHab = null;
-
-
+        private RegistroReserva Reservas;
 
     }
 }

@@ -51,6 +51,9 @@
     <Compile Include="GUI\Dlg\DlgConsultaReserva.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="GUI\Dlg\DlgFacturaReserva.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="GUI\Dlg\DlgInsertaReserva.cs">
       <SubType>Form</SubType>
     </Compile>

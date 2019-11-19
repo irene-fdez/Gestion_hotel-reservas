@@ -37,7 +37,7 @@ namespace GestionReservas.GUI
         void InsertaReserva()
         {
             Console.WriteLine("Inserta reserva");
-            var dlgInsertaReserva = new DlgInsertaReserva(Clientes.List, Habitaciones.List);
+            var dlgInsertaReserva = new DlgInsertaReserva(this.Reservas, Clientes.List, Habitaciones.List);
             
 
             this.View.Hide();
@@ -54,17 +54,24 @@ namespace GestionReservas.GUI
                        dlgInsertaReserva.FechaSalida, dlgInsertaReserva.Garaje, dlgInsertaReserva.PrecioDia, dlgInsertaReserva.Iva
                      );
 
-                this.Reservas.Add(newReserva);
+                if (this.Reservas.comprobarId(newReserva.Id))
+                {
+                    string mensaje = "No se ha insertado la reserva, porque el ID ya pertenece a una reserva del registro";
+                    string tittle = "Error al insertar";
+                    MessageBox.Show(mensaje, tittle, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
-                this.Reservas.GuardarXml();
+                }
+                else
+                {
+                    this.Reservas.Add(newReserva);
+
+                    this.Reservas.GuardarXml();
+                }
+                
             }
 
-            if (this.presionadoSalir)
-            {
-                Application.Exit();
-            }
-
-            this.View.Show();
+            if (!this.View.IsDisposed) { this.View.Show(); }
+            else { Application.Exit(); }
         }
 
         void ConsultaReserva()
@@ -77,83 +84,13 @@ namespace GestionReservas.GUI
 
             if(dlgConsultaReserva.ShowDialog() == DialogResult.OK) { }
 
-            if (this.presionadoSalir)
-            {
-                Application.Exit();
-            }
-            else
-            {
-                this.View.Show();
-            }
+            if (!this.View.IsDisposed) { this.View.Show(); }
+            else{  Application.Exit();  }
+
         }
 
 
-
-
-
-    /*    public void Eliminar(DlgConsultaReserva dlg, string id)
-        {
-
-            Console.WriteLine("dentro eliminar");
-     
-
-            //Dialogo de confirmación de eiminación
-            DialogResult result;
-            string mensaje = "¿Está seguro de que desea eliminar la reserva con Id( " + id + " ), del registro de reservas?";
-            string tittle = "Eliminar reserva";
-            MessageBoxButtons buttons = MessageBoxButtons.YesNo;
-            result = MessageBox.Show(mensaje, tittle, buttons);
-
-            if (result == DialogResult.Yes)
-            {
-
-                Console.WriteLine(this.Reservas.Count);
-                Console.WriteLine("reserva a eliminar: " + id);
-                Console.WriteLine(dlg.Reservas.Remove(dlg.Reservas.getReserva(id)));
-                Console.WriteLine(this.Reservas.Count);
-                Console.WriteLine(dlg.Reservas.Count);
-
-            }
-
-
-            
-        }
-
-        public void Modificar(string id)
-        {
-            var dlgConsultaReserva = new DlgConsultaReserva(this.Reservas.List, this.Clientes.List);
-            //A partir de la clave de la entidad Reserva, obtenemos la reserva a modificar
-            Reserva ResModif = this.Reservas.getReserva(id);
-            Cliente c = ResModif.Cliente;
-
-               var dlgModificar = new DlgModificarCuenta(ResModif);
-               if (dlgModificar.ShowDialog() == DialogResult.OK)
-               {
-                   this.Reservas.Remove(ResModif);
-
-                   string tipo = dlgModificar.Tipo;
-                   DateTime fechaEntrada = dlgModificar.FechaEntrada;
-                   DateTime fechaSalida = dlgModificar.FechaSalida;
-                   string garaje = dlgModificar.Garaje;
-
-                   Reserva r = new Reserva(id, tipo, c, fechaEntrada, fechaSalida, garaje, ResModif.PrecioDia, ResModif.IVA, ResModif.Total);
-
-
-                   this.Reservas.Add(r);
-
-               }
-        }*/
-
-
-        public void PulsadoSalir()
-        {
-            Console.WriteLine("pulsado salir");
-            this.presionadoSalir = true;
-            this.Salir();
-        }
-
-
-        void Salir()
+        public void Salir()
         {
             Console.WriteLine("guarda y sale");
             this.Reservas.GuardarXml();
@@ -177,9 +114,6 @@ namespace GestionReservas.GUI
         private RegistroReserva Reservas { get; set; }
         private RegistroClientes Clientes { get; set; }
         private RegistroHabitaciones Habitaciones { get; set; }
-
-        private bool presionadoSalir = false;
-        
 
     }
 }

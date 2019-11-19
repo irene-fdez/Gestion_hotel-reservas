@@ -27,10 +27,9 @@ namespace GestionReservas.Core
         public Reserva( Habitacion habitacion, String tipo, Cliente cliente,DateTime fechaEntrada, DateTime fechaSalida, String garaje, double precioDia, int IVA)
         {
 
-            DateTime f = DateTime.Now;
-            string dia = f.ToString("dd");
-            string mes = f.ToString("MM");
-            string ano = f.ToString("yyyy");
+            string dia = fechaEntrada.ToString("dd");
+            string mes = fechaEntrada.ToString("MM");
+            string ano = fechaEntrada.ToString("yyyy");
 
 
             this.Id = componer_Id(ano, mes, dia, habitacion.Numero);
@@ -80,6 +79,16 @@ namespace GestionReservas.Core
                 return numDias;
             }
         }
+
+  
+        public string NumeroHabitacion
+        {
+            get
+            {
+                return this.Id.Substring(8, 3);
+            }
+        }
+
 
         public double TotalSinIva()
         {
@@ -136,7 +145,7 @@ namespace GestionReservas.Core
             toret.AppendLine("Precio/día: " + this.PrecioDia);
             toret.AppendLine("Numero de dias: " + this.NumDias);
             toret.AppendLine("Total sin Iva: " + this.TotalSinIva());
-            toret.AppendLine("Iva: " + this.IVA + "%");
+            toret.AppendLine("Iva aplicado: " + this.IVA + "%");
             toret.AppendLine("Total con Iva: " + this.TotalConIva());
 
             return toret.ToString();
@@ -152,7 +161,7 @@ namespace GestionReservas.Core
             toret.AppendLine("Fecha salida: " + this.FechaSalida);
             toret.AppendLine("Garaje: " + this.Garaje);
             toret.AppendLine("Precio/dia: " + this.PrecioDia);
-            toret.AppendLine("IVA: " + this.IVA + "%");
+            toret.AppendLine("IVA aplicado: " + this.IVA + "%");
 
 
             return toret.ToString();

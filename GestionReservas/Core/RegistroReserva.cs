@@ -89,10 +89,26 @@ namespace GestionReservas.Core
             return ids;
         }
 
+        public bool comprobarId(string id)
+        {
+            bool toret = false;
+            foreach (Reserva r in this.reservas)
+            {
+                if (r.Id == id)
+                {
+                    toret = true;
+                }
+            }
+
+            return toret;
+        }
+
         public bool Contains(Reserva reserva)
         {
             return this.reservas.Contains(reserva);
         }
+
+
 
 
         public void CopyTo(Reserva[] reserva, int i)

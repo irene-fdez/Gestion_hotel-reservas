@@ -52,11 +52,9 @@ namespace GestionReservas.GUI
             this.MinimumSize = new Size(600, 400);
             this.MaximumSize = new Size(600, 400);
             this.MaximizeBox = false;
-          //  this.Resize += (obj, e) => this.ResizeWindow();
             this.Text = "Gestión de un hotel";
 
             this.ResumeLayout(false);
-          //  this.ResizeWindow();
         }
 
         private void BuildStatus()
