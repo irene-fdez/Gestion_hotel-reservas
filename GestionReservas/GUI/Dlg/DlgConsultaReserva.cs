@@ -22,15 +22,12 @@ namespace GestionReservas.GUI.Dlg
             this.Clientes = cli;
             this.BuildGUI();
             this.CenterToScreen();
-            
 
-          //  this.regRes = new RegistroReserva(this.Clientes);
             this.GrdLista.Click += (sender, e) => ClickLista();
 
             this.opGuardar.Click += (sender, e) => this.Guardar();
             this.opSalir.Click += (sender, e) => { this.DialogResult = DialogResult.Cancel; this.Salir(); };
             this.opVolver.Click += (sender, e) => this.DialogResult = DialogResult.Cancel;
-
         }
 
         private void BuildGUI()
@@ -72,12 +69,15 @@ namespace GestionReservas.GUI.Dlg
             this.opSalir = new MenuItem("&Salir");
             this.opVolver = new MenuItem("&Volver");
             this.opSalir.Shortcut = Shortcut.CtrlQ;
-            
+            this.mBuscar = new MenuItem("&Buscar");
+
 
             this.mArchivo.MenuItems.Add(this.opVolver);
             this.mArchivo.MenuItems.Add(this.opGuardar);
             this.mArchivo.MenuItems.Add(this.opSalir);
+
             this.mPpal.MenuItems.Add(this.mArchivo);
+            this.mPpal.MenuItems.Add(this.mBuscar);
 
             this.Menu = mPpal;
         }
@@ -576,6 +576,7 @@ namespace GestionReservas.GUI.Dlg
         public MenuItem opGuardar;
         public MenuItem opSalir;
         public MenuItem opVolver;
+        public MenuItem mBuscar;
 
 
         public StatusBar SbStatus;

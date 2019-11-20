@@ -131,9 +131,12 @@ namespace GestionReservas.GUI.Dlg
             this.opSalir = new MenuItem("&Salir");
             this.opSalir.Shortcut = Shortcut.CtrlQ;
 
+            this.mBuscar = new MenuItem("&Buscar");
+
             this.mArchivo.MenuItems.Add(this.opVolver);
             this.mArchivo.MenuItems.Add(this.opSalir);
             this.mPpal.MenuItems.Add(this.mArchivo);
+            this.mPpal.MenuItems.Add(this.mBuscar);
 
             this.Menu = mPpal;
 
@@ -718,6 +721,7 @@ namespace GestionReservas.GUI.Dlg
         public MenuItem mArchivo;
         public MenuItem opVolver;
         public MenuItem opSalir;
+        public MenuItem mBuscar;
         public List<Cliente> rgCli = null;
         public List<Habitacion> rgHab = null;
         private RegistroReserva Reservas;
