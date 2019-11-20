@@ -277,6 +277,17 @@ namespace GestionReservas.GUI.Dlg
             }
             cbNumHabitacionList.Items.AddRange(op);
 
+            cbNumHabitacionList.SelectedValueChanged += (sender, e) =>
+            {
+                string[] op2 = new string[this.rgCli != null ? this.rgCli.Count : 0];
+                for (int i = 0; i < op2.Length; i++)
+                {
+                    Cliente cliente = this.rgCli[i];
+                    op2[i] = cliente.DNI;
+                }
+                  cbDniClienteList.Items.AddRange(op2);
+            }
+
 
             this.cbNumHabitacionList.Validating += (sender, cancelArgs) =>
             {
@@ -330,13 +341,14 @@ namespace GestionReservas.GUI.Dlg
                 DropDownWidth = 20,
             };
 
+            
             string[] op = new string[this.rgCli != null ? this.rgCli.Count : 0];
             for (int i = 0; i < op.Length; i++)
             {
                 Cliente cliente = this.rgCli[i];
                 op[i] = cliente.DNI ;
             }
-            cbDniClienteList.Items.AddRange(op);
+          //  cbDniClienteList.Items.AddRange(op);
 
 
             this.cbDniClienteList.Validating += (sender, cancelArgs) =>

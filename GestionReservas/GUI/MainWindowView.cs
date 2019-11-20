@@ -74,10 +74,27 @@ namespace GestionReservas.GUI
             this.opSalir.Shortcut = Shortcut.CtrlQ;
             this.mBuscar = new MenuItem("&Buscar");
 
+            this.mCliente = new MenuItem("&Cliente");
+            this.opInsertarC = new MenuItem("&Insertar");
+            this.opConsultaC = new MenuItem("&Consulta");
+
+
+            this.mHabitaciones = new MenuItem("&Habitacion");
+            this.opInsertarH = new MenuItem("&Insertar");
+            this.opConsultaH = new MenuItem("&Consulta");
+
             this.mArchivo.MenuItems.Add(this.opGuardar);
             this.mArchivo.MenuItems.Add(this.opSalir);
 
+            this.mCliente.MenuItems.Add(this.opInsertarC);
+            this.mCliente.MenuItems.Add(this.opConsultaC);
+
+            this.mHabitaciones.MenuItems.Add(this.opInsertarH);
+            this.mHabitaciones.MenuItems.Add(this.opConsultaH);
+
             this.mPpal.MenuItems.Add(this.mArchivo);
+            this.mPpal.MenuItems.Add(this.mCliente);
+            this.mPpal.MenuItems.Add(this.mHabitaciones);
             this.mPpal.MenuItems.Add(this.mBuscar);
 
             this.Menu = mPpal;
@@ -197,6 +214,15 @@ namespace GestionReservas.GUI
         public MenuItem opGuardar;
         public MenuItem opSalir;
         public MenuItem mBuscar;
+        public MenuItem mCliente;
+        public MenuItem opInsertarC;
+        public MenuItem opConsultaC;
+
+
+        public MenuItem mHabitaciones;
+        public MenuItem opInsertarH;
+        public MenuItem opConsultaH;
+
 
         public StatusBar SbStatus;
         private Panel pnlPanel;
