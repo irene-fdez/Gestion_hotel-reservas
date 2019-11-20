@@ -130,7 +130,7 @@
 
         public void GuardarXml(String n)
         {
-            Console.WriteLine("Escribe en el fichero: "+n);
+            Console.WriteLine("GuardaXML habitaciones\nEscribe en el fichero: "+n);
             var doc = new XDocument();
             var root = new XElement(EtqHabitaciones);
 

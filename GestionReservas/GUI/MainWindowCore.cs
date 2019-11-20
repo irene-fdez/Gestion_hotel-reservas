@@ -50,7 +50,7 @@ namespace GestionReservas.GUI
 
                 //obtener el cliente a partir del DNI con getCliente(DNI) del registro de clientes
                    Reserva newReserva =  new Reserva(
-                       h, dlgInsertaReserva.Tipo, c, dlgInsertaReserva.FechaEntrada, 
+                       h, dlgInsertaReserva.TipoHabitacion, c, dlgInsertaReserva.FechaEntrada, 
                        dlgInsertaReserva.FechaSalida, dlgInsertaReserva.Garaje, dlgInsertaReserva.PrecioDia, dlgInsertaReserva.Iva
                      );
 
