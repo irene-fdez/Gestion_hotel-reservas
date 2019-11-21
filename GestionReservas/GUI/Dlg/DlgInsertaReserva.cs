@@ -58,7 +58,12 @@ namespace GestionReservas.GUI.Dlg
             var pnlEspacio = this.BuildEspacioPanel();
             pnlInserta.Controls.Add(pnlEspacio);
 
-            //Habitacion
+
+            //tipo Habitacion
+            var pnltipoHabitacion = this.BuildTipoHabitacion();
+            pnlInserta.Controls.Add(pnltipoHabitacion);
+
+            //numero Habitacion
             var pnlnumHabitacion = this.BuildHabitacion();
             pnlInserta.Controls.Add(pnlnumHabitacion);
 
@@ -67,8 +72,8 @@ namespace GestionReservas.GUI.Dlg
             pnlInserta.Controls.Add(pnldniCliente);
 
             //Tipo reserva
-            var pnlTipo = this.BuilTipo();
-            pnlInserta.Controls.Add(pnlTipo);
+         /*   var pnlTipo = this.BuilTipo();
+            pnlInserta.Controls.Add(pnlTipo);*/
 
             //F_entrada
             var pnlDateIn = this.BuildFechaEntrada();
@@ -100,11 +105,11 @@ namespace GestionReservas.GUI.Dlg
             Console.WriteLine(pnlReserva.Height);
 
             this.Size = new Size(600,
-                      100 + pnlReserva.Height + pnlEspacio.Height + pnlnumHabitacion.Height + pnldniCliente.Height + pnlTipo.Height + pnlDateIn.Height + dtpDateOut.Height +
+                      100 + pnlReserva.Height + pnlEspacio.Height + pnlnumHabitacion.Height + pnldniCliente.Height + pnltipoHabitacion.Height + pnlDateIn.Height + dtpDateOut.Height +
                       pnlGaraje.Height + pnlPrecioDia.Height + pnlIva.Height + pnlBotones.Height);
 
             this.MinimumSize = new Size(600,
-                      100 + pnlReserva.Height + pnlEspacio.Height + pnlnumHabitacion.Height + pnldniCliente.Height + pnlTipo.Height + pnlDateIn.Height + dtpDateOut.Height +
+                      100 + pnlReserva.Height + pnlEspacio.Height + pnlnumHabitacion.Height + pnldniCliente.Height + pnltipoHabitacion.Height + pnlDateIn.Height + dtpDateOut.Height +
                       pnlGaraje.Height + pnlPrecioDia.Height + pnlIva.Height + pnlBotones.Height);
 
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
@@ -236,7 +241,91 @@ namespace GestionReservas.GUI.Dlg
             return pnlEspacio;
         }
 
+        Panel BuildTipoHabitacion()
+        {
+            this.pnlTipoHabitacion = new Panel
+            {
+                Dock = DockStyle.Fill,
+                Location = new Point(Left, this.pnlEspacio.Top + this.pnlEspacio.Height + 10),
+                Height = 35,
+            };
 
+            var lblTipoHabitacion = new Label
+            {
+                Location = new Point(Left, this.pnlEspacio.Top + this.pnlEspacio.Height + 10),
+                Text = "Tipo de habitacion:",
+                Dock = DockStyle.Left,
+                ForeColor = Color.White,
+                Width = 150,
+                TextAlign = ContentAlignment.TopRight,
+            };
+
+            this.cbTipoHabitacion = new ComboBox
+            {
+                Left = 0,
+                Width = 250,
+                Anchor = AnchorStyles.Bottom,
+                DropDownStyle = ComboBoxStyle.DropDownList,
+                DropDownWidth = 20,
+            };
+
+            cbTipoHabitacion.Items.Add("matrimoniales");
+            cbTipoHabitacion.Items.Add("doble");
+            cbTipoHabitacion.Items.Add("individuales");
+
+
+            Console.WriteLine("tipo habita select: "+cbTipoHabitacion.Text);
+            //obtener los numeros de habitacion de un tipo en concreto 
+            cbTipoHabitacion.SelectedValueChanged += (sender, e) =>
+            {
+                cbNumHabitacionList.Items.Clear();
+                Console.WriteLine("tipo habita select" + cbTipoHabitacion.Text);
+                foreach (Habitacion h in this.rgHab)
+                {
+                    if (h.Tipo == cbTipoHabitacion.Text)
+                    {
+                        cbNumHabitacionList.Items.Add(h.Numero);
+                    }
+                }
+
+                if(cbTipoHabitacion.Text == "matrimoniales")
+                {
+                    numPrecioDia.Value = 42;
+                }
+                else if (cbTipoHabitacion.Text == "doble")
+                {
+                    numPrecioDia.Value = 38;
+                }
+                else
+                {
+                    numPrecioDia.Value = 31;
+                }
+            };
+            
+
+            this.cbTipoHabitacion.Validating += (sender, cancelArgs) =>
+            {
+                bool invalid = false;
+                var btAccept = (Button)this.AcceptButton;
+
+                invalid = invalid || (cbTipoHabitacion.Text == "");
+
+                if (invalid || cbTipoHabitacion.Text == "")
+                {
+                    string mensaje = "Debe seleccionar algún elemento";
+                    MessageBox.Show(mensaje, "Informacion", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    cbTipoHabitacion.Focus();
+                }
+
+                btAccept.Enabled = !invalid;
+            };
+
+            pnlTipoHabitacion.Controls.Add(cbTipoHabitacion);
+            pnlTipoHabitacion.Controls.Add(lblTipoHabitacion);
+
+            return pnlTipoHabitacion;
+        }
 
 
         Panel BuildHabitacion()
@@ -244,13 +333,13 @@ namespace GestionReservas.GUI.Dlg
             this.pnlNumHabitacion = new Panel
             {
                 Dock = DockStyle.Fill,
-                Location = new Point(Left, this.pnlEspacio.Top + this.pnlEspacio.Height + 10),
+                Location = new Point(Left, this.pnlTipoHabitacion.Top + this.pnlTipoHabitacion.Height + 10),
                 Height = 35,
             };
 
             var lblHabitacion = new Label
             {
-                Location = new Point(Left, this.pnlEspacio.Top + this.pnlEspacio.Height + 10),
+                Location = new Point(Left, this.pnlTipoHabitacion.Top + this.pnlTipoHabitacion.Height + 10),
                 Text = "Habitacion:",
                 Dock = DockStyle.Left,
                 ForeColor = Color.White,
@@ -268,27 +357,6 @@ namespace GestionReservas.GUI.Dlg
             };
 
             
-            //obtener los numeros de todas las habitaciones
-            string[] op = new string[this.rgHab != null ? this.rgHab.Count : 0];
-            for (int i = 0; i < op.Length; i++)
-            {
-                Habitacion habitacion = this.rgHab[i];
-                op[i] = habitacion.Numero;
-            }
-            cbNumHabitacionList.Items.AddRange(op);
-
-            cbNumHabitacionList.SelectedValueChanged += (sender, e) =>
-            {
-                string[] op2 = new string[this.rgCli != null ? this.rgCli.Count : 0];
-                for (int i = 0; i < op2.Length; i++)
-                {
-                    Cliente cliente = this.rgCli[i];
-                    op2[i] = cliente.DNI;
-                }
-                  cbDniClienteList.Items.AddRange(op2);
-            }
-
-
             this.cbNumHabitacionList.Validating += (sender, cancelArgs) =>
             {
                 bool invalid = false;
@@ -348,7 +416,7 @@ namespace GestionReservas.GUI.Dlg
                 Cliente cliente = this.rgCli[i];
                 op[i] = cliente.DNI ;
             }
-          //  cbDniClienteList.Items.AddRange(op);
+            cbDniClienteList.Items.AddRange(op);
 
 
             this.cbDniClienteList.Validating += (sender, cancelArgs) =>
@@ -377,72 +445,18 @@ namespace GestionReservas.GUI.Dlg
         }
 
 
-        Panel BuilTipo()
-        {
-            this.pnlTipo = new Panel()
-            {
-                Dock = DockStyle.Fill,
-                Location = new Point(Left, this.pnlNumHabitacion.Top + this.pnlNumHabitacion.Height + 10),
-            };
-
-            var lblTipo = new Label()
-            {
-                Location = new Point(Left, this.pnlNumHabitacion.Top + this.pnlNumHabitacion.Height + 10),
-                Text = "Tipo:",
-                Dock = DockStyle.Left,
-                ForeColor = Color.White,
-                Width = 150,
-                TextAlign = ContentAlignment.TopRight,
-            };
-
-            this.tbTipo = new TextBox()
-            {
-                Left = 0,
-                Width = 250,
-                Anchor = AnchorStyles.Bottom,
-            };
-
-            this.tbTipo.Validating += (sender, cancelArgs) =>
-            {
-                var btAccept = (Button)this.AcceptButton;
-                bool invalid = string.IsNullOrWhiteSpace(this.Tipo);
-
-                invalid = invalid || this.tbTipo.Text == "";
-
-                if (invalid || this.tbTipo.Text == "")
-                {
-
-                    string mensaje = "El campo no puede estar vacio";
-                    MessageBox.Show(mensaje, "Informacion", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                    this.tbTipo.Focus();
-                }
-
-                btAccept.Enabled = !invalid;
-            };
-
-            pnlTipo.MaximumSize = new Size(int.MaxValue, tbTipo.Height * 2);
-
-            pnlTipo.Controls.Add(this.tbTipo);
-            pnlTipo.Controls.Add(lblTipo);
-
-            return pnlTipo;
-        }
-
-
-
         Panel BuildFechaEntrada()
         {
             this.pnlDateIn = new Panel()
             {
                 Dock = DockStyle.Fill,
-                Location = new Point(Left, this.pnlTipo.Top + this.pnlTipo.Height + 10),
+                Location = new Point(Left, this.pnlDniCliente.Top + this.pnlDniCliente.Height + 10),
             };
         //    Console.WriteLine("comienzo dateIn: " + (this.pnlTipo.Top + this.pnlTipo.Height + 10));
 
             var lblDateIn = new Label()
             {
-                Location = new Point(Left, (this.pnlTipo.Top + this.pnlTipo.Height + 10)),
+                Location = new Point(Left, (this.pnlDniCliente.Top + this.pnlDniCliente.Height + 10)),
                 Text = "Fecha de entrada:",
                 Dock = DockStyle.Left,
                 ForeColor = Color.White,
@@ -630,6 +644,7 @@ namespace GestionReservas.GUI.Dlg
                 Left = 0,
                 Width = 250,
                 Anchor = AnchorStyles.Bottom,
+                ReadOnly = true,
             };
 
             this.validarFechaSalida();
@@ -668,6 +683,7 @@ namespace GestionReservas.GUI.Dlg
                 Left = 0,
                 Width = 250,
                 Anchor = AnchorStyles.Bottom,
+                ReadOnly = true,
             };
 
 
@@ -698,9 +714,9 @@ namespace GestionReservas.GUI.Dlg
             };
         }
 
+        private ComboBox cbTipoHabitacion;
         private ComboBox cbNumHabitacionList;
         private ComboBox cbDniClienteList;
-        private TextBox tbTipo;
         private DateTimePicker dtpDateIn;
         private DateTimePicker dtpDateOut;
         private ComboBox cbGaraje;
@@ -709,7 +725,7 @@ namespace GestionReservas.GUI.Dlg
 
         private Panel pnlReserva;
         private Panel pnlEspacio;
-        private Panel pnlTipo;
+        private Panel pnlTipoHabitacion;
         private Panel pnlDateIn;
         private Panel pnlDateOut;
         private Panel pnlGaraje;
@@ -719,9 +735,9 @@ namespace GestionReservas.GUI.Dlg
         private Panel pnlDniCliente;
         private Panel pnlInserta;
 
+        public string TipoHabitacion => this.cbNumHabitacionList.Text;
         public string DniCliente => this.cbDniClienteList.Text;
         public string NumHabitacion => this.cbNumHabitacionList.Text;
-        public string Tipo => this.tbTipo.Text;
         public DateTime FechaEntrada => this.dtpDateIn.Value;
         public DateTime FechaSalida => this.dtpDateOut.Value;
         public string Garaje => this.cbGaraje.Text;
