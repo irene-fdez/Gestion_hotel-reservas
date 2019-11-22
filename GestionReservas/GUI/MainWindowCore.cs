@@ -29,6 +29,8 @@ namespace GestionReservas.GUI
             this.View.opGuardar.Click += (sender, e) => this.Guardar();
             this.View.opSalir.Click += (sender, e) => this.Salir();
 
+            this.View.opConsultaC.Click += (sender, e) => this.ConsultaCliente();
+
             this.View.btnAddReserva.Click += (sender, e) => this.InsertaReserva();
             this.View.btnConsultaReserva.Click += (sender, e) => this.ConsultaReserva();
            
@@ -74,6 +76,21 @@ namespace GestionReservas.GUI
             else { Application.Exit(); }
         }
 
+        
+        void ConsultaCliente()
+        {
+            Console.WriteLine("Consulta Clientes");
+            var dlgConsultaCliente = new DlgConsultaCliente(this.Clientes);
+
+
+            this.View.Hide();
+
+            if(dlgConsultaCliente.ShowDialog() == DialogResult.OK) { }
+
+            if (!this.View.IsDisposed) { this.View.Show(); }
+            else{  Application.Exit();  }
+
+        }
         void ConsultaReserva()
         {
             Console.WriteLine("Consulta reservas");

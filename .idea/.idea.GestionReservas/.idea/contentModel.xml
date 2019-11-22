@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
-    <e p="$USER_HOME$/Library/Caches/Rider2019.2/extResources" t="IncludeRecursive" />
-    <e p="$USER_HOME$/Library/Caches/Rider2019.2/resharper-host/local/Transient/ReSharperHost/v192/SolutionCaches/_GestionReservas.211732312.00" t="ExcludeRecursive" />
     <e p="$PROJECT_DIR$" t="IncludeFlat">
       <e p="GestionReservas" t="IncludeRecursive">
         <e p="bin" t="ExcludeRecursive" />
@@ -17,6 +15,7 @@
         <e p="GestionReservas.csproj" t="IncludeRecursive" />
         <e p="GUI" t="Include">
           <e p="Dlg" t="Include">
+            <e p="DlgConsultaCliente.cs" t="Include" />
             <e p="DlgConsultaReserva.cs" t="Include" />
             <e p="DlgFacturaReserva.cs" t="Include" />
             <e p="DlgInsertaReserva.cs" t="Include" />
@@ -34,5 +33,7 @@
       <e p="GestionReservas.sln" t="IncludeFlat" />
       <e p="packages" t="ExcludeRecursive" />
     </e>
+    <e p="$USER_HOME$/Library/Caches/Rider2019.2/extResources" t="IncludeRecursive" />
+    <e p="$USER_HOME$/Library/Caches/Rider2019.2/resharper-host/local/Transient/ReSharperHost/v192/SolutionCaches/_GestionReservas.794547822.00" t="ExcludeRecursive" />
   </component>
 </project>
