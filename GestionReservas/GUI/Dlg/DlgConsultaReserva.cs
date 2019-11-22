@@ -28,8 +28,9 @@ namespace GestionReservas.GUI.Dlg
             
             this.GrdLista.Click += (sender, e) => ClickLista();
 
-            this.opBuscarAll.Click += (sender, e) => this.Buscar(0);
-            this.opBuscarPendientes.Click += (sender, e) => this.Buscar(1);
+            this.opBuscarAll.Click += (sender, e) => this.BuscarTodos();
+            this.opBuscarPendientes.Click += (sender, e) => this.BuscarFiltrado();
+            this.opBuscarPorPersona.Click += (sender, e) => this.BuscarPorP();
             this.opGuardar.Click += (sender, e) => this.Guardar();
             this.opSalir.Click += (sender, e) => { this.DialogResult = DialogResult.Cancel; this.Salir(); };
             this.opVolver.Click += (sender, e) => this.DialogResult = DialogResult.Cancel;
@@ -83,6 +84,7 @@ namespace GestionReservas.GUI.Dlg
 
             this.mBuscar.MenuItems.Add(this.opBuscarAll);
             this.mBuscar.MenuItems.Add(this.opBuscarPendientes);
+            this.mBuscar.MenuItems.Add(this.opBuscarPorPersona);
             this.mArchivo.MenuItems.Add(this.opVolver);
             this.mArchivo.MenuItems.Add(this.opGuardar);
             this.mArchivo.MenuItems.Add(this.opSalir);
@@ -403,27 +405,29 @@ namespace GestionReservas.GUI.Dlg
                                (int)System.Math.Floor(width * .09); // btn factura
         }
 
-        void Buscar(int id)
+        void BuscarTodos()
         {
-            if (id == 0)
-            {
+
                 Console.WriteLine("holaaa");
                 this.ReservasBuscar = this.Reservas;
                 this.Actualiza();
-            }
-            else
-            {
-                DateTime today = DateTime.Today;
-                DateTime finish = today.AddDays(5);
-                Console.WriteLine("AQUII");
-                List<Reserva> prueba = this.ReservasBuscar.Where(element =>  element.FechaEntrada >= today && element.FechaEntrada <= finish).ToList();
-                prueba.ForEach(Console.WriteLine);
-                Console.WriteLine("entra");
-                this.ReservasBuscar = new RegistroReserva(prueba,this.Clientes);
-                this.Actualiza();
+        }
 
+        void BuscarFiltrado()
+        {
+            DateTime today = DateTime.Today;
+            DateTime finish = today.AddDays(5);
+            Console.WriteLine("AQUII");
+            List<Reserva> prueba = this.ReservasBuscar.Where(element =>  element.FechaEntrada >= today && element.FechaEntrada <= finish).ToList();
+            prueba.ForEach(Console.WriteLine);
+            Console.WriteLine("entra");
+            this.ReservasBuscar = new RegistroReserva(prueba,this.Clientes);
+            this.Actualiza();
+        }
 
-            }
+        void BuscarPorP()
+        {
+            
         }
         void Actualiza()
         {
