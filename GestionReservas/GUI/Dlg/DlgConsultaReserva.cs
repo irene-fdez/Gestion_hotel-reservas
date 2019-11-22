@@ -19,9 +19,14 @@ namespace GestionReservas.GUI.Dlg
         {
             this.MVC = new MainWindowCore();
             this.Reservas = res;
+            this.ReservasBuscar = this.Reservas;
             this.Clientes = cli;
             this.BuildGUI();
             this.CenterToScreen();
+
+            this.mostrarTodos.CheckedChanged += (sender, e) => this.Buscar();
+            this.mostrarPendientes.CheckedChanged += (sender, e) => this.Buscar();
+            
 
             this.GrdLista.Click += (sender, e) => ClickLista();
 
@@ -47,6 +52,7 @@ namespace GestionReservas.GUI.Dlg
 
             this.pnlPpal.SuspendLayout();
             this.Controls.Add(this.pnlPpal);
+            this.pnlPpal.Controls.Add(this.BuildPanelBuscar());
             this.pnlPpal.Controls.Add(this.BuildPanelLista());
             this.pnlPpal.Controls.Add(this.BuildPanelDetalle());
             this.pnlPpal.ResumeLayout(false);
@@ -80,6 +86,28 @@ namespace GestionReservas.GUI.Dlg
             this.mPpal.MenuItems.Add(this.mBuscar);
 
             this.Menu = mPpal;
+        }
+
+        private Panel BuildPanelBuscar()
+        {
+            var pnlBuscar = new Panel
+            {
+                Dock = DockStyle.Fill
+            };
+            this.mostrarTodos = new RadioButton
+            {
+                Text = "Mostrar todos",
+                Checked = true
+            };
+            this.mostrarPendientes = new RadioButton
+            {
+                Text = "Mostrar pendientes"
+            };
+            pnlBuscar.Controls.Add(this.mostrarTodos);
+            pnlBuscar.Controls.Add(this.mostrarPendientes);
+
+            return pnlBuscar;
+            
         }
 
 
@@ -386,7 +414,20 @@ namespace GestionReservas.GUI.Dlg
                                (int)System.Math.Floor(width * .09); // btn factura
         }
 
-
+        void Buscar()
+        {
+            if (this.mostrarTodos.Checked)
+            {
+                this.ReservasBuscar = this.Reservas;
+            }
+            else
+            {
+                DateTime today = DateTime.Today;
+                DateTime finish = today.AddDays(5);
+                var prueba = this.ReservasBuscar.Where(element =>  element.FechaEntrada >= today && element.FechaSalida <= finish).ToList();
+                this.ReservasBuscar = new RegistroReserva(prueba,this.Clientes);
+            }
+        }
         void Actualiza()
         {
             Console.WriteLine("dentro actualiza");
@@ -584,9 +625,14 @@ namespace GestionReservas.GUI.Dlg
         private TextBox edDetalle;
         public DataGridView GrdLista;
 
+        public RadioButton mostrarTodos;
+        public RadioButton mostrarPendientes;
+
 
         private readonly List<Cliente> Clientes;
+
         private RegistroReserva Reservas;
+        private RegistroReserva ReservasBuscar;
         private MainWindowCore MVC;
 
     }
