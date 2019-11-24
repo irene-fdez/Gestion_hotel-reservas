@@ -182,7 +182,7 @@
             return new Cliente(
                 (string)c.Attribute(EtqDni),
                 (string)c.Attribute(EtqNombre),
-                (int)c.Attribute(EtqTelefono),
+                Convert.ToInt64(c.Attribute(EtqTelefono).Value),
                 (string)c.Attribute(EtqEmail),
                 (string)c.Attribute(EtqDireccionPostal)
             );
