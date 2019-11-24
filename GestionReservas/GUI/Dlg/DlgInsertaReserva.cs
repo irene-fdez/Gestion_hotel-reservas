@@ -285,8 +285,8 @@ namespace GestionReservas.GUI.Dlg
                     Cliente cliente = this.rgCli[i];
                     op2[i] = cliente.DNI;
                 }
-                  cbDniClienteList.Items.AddRange(op2);
-            }
+                cbDniClienteList.Items.AddRange(op2);
+            };
 
 
             this.cbNumHabitacionList.Validating += (sender, cancelArgs) =>
