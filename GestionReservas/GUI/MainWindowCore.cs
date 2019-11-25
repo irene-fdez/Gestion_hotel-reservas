@@ -34,6 +34,19 @@ namespace GestionReservas.GUI
             this.View.opConsultaC.Click += (sender, e) => this.ConsultaCliente();
 
         }
+        void InsertaCliente()
+        {
+            Console.WriteLine("Inserta cliente");
+            var dlgInsertaCliente = new DlgInsertaCliente(this.Clientes);
+
+            this.View.Hide();
+
+            if (dlgInsertaCliente.ShowDialog() == DialogResult.OK)
+            {
+
+            }
+        }
+
 
         void InsertaReserva()
         {

@@ -24,7 +24,7 @@ namespace GestionReservas.GUI.Dlg
 
             this.GrdLista.Click += (sender, e) => ClickLista();
 
-            this.opInsertar.Click += (sender, e) => this.InsertarCliente();
+            this.opInsertar.Click += (sender, e) => this.InsertaCliente();
             this.opGuardar.Click += (sender, e) => this.Guardar();
             this.opSalir.Click += (sender, e) => { this.DialogResult = DialogResult.Cancel; this.Salir(); };
             this.opVolver.Click += (sender, e) => this.DialogResult = DialogResult.Cancel;
@@ -338,9 +338,17 @@ namespace GestionReservas.GUI.Dlg
 
         }
 
-        void InsertarCliente()
+        void InsertaCliente()
         {
-            Console.WriteLine("InsertaCliente");
+            Console.WriteLine("Inserta cliente");
+            var dlgInsertaCliente = new DlgInsertaCliente(this.Clientes);
+
+            //this.View.Hide();
+
+            if (dlgInsertaCliente.ShowDialog() == DialogResult.OK)
+            {
+                this.Actualiza();
+            }
         }
 
         void Actualiza()
