@@ -242,7 +242,7 @@ namespace GestionReservas.GUI.Dlg
             this.tbDNI.Validating += (sender, cancelArgs) =>
             {
                 var btAccept = (Button)this.AcceptButton;
-                bool invalid = string.IsNullOrWhiteSpace(this.Tipo);
+                bool invalid = string.IsNullOrWhiteSpace(this.DNI);
 
                 invalid = invalid || this.tbDNI.Text == "";
 
@@ -295,7 +295,7 @@ namespace GestionReservas.GUI.Dlg
             this.tbNombre.Validating += (sender, cancelArgs) =>
             {
                 var btAccept = (Button)this.AcceptButton;
-                bool invalid = string.IsNullOrWhiteSpace(this.Tipo);
+                bool invalid = string.IsNullOrWhiteSpace(this.Nombre);
 
                 invalid = invalid || this.tbNombre.Text == "";
 
@@ -342,7 +342,7 @@ namespace GestionReservas.GUI.Dlg
                 Left = 0,
                 Width = 250,
                 Anchor = AnchorStyles.Bottom,
-                Mask = "000 000 000",
+                Mask = "000000000",
                 Text = this.Cli.Telefono.ToString()
             };
 
@@ -438,7 +438,7 @@ namespace GestionReservas.GUI.Dlg
             this.tbDirPostal.Validating += (sender, cancelArgs) =>
             {
                 var btAccept = (Button)this.AcceptButton;
-                bool invalid = string.IsNullOrWhiteSpace(this.Tipo);
+                bool invalid = string.IsNullOrWhiteSpace(this.DirPostal);
 
                 invalid = invalid || this.tbDirPostal.Text == "";
 
@@ -474,8 +474,10 @@ namespace GestionReservas.GUI.Dlg
 
         private Panel pnlInserta;
 
-        public string Tipo => this.tbDNI.Text;
+        public string DNI => this.tbDNI.Text;
+        public string Nombre => this.tbNombre.Text;
 
+        public long Telefono => Convert.ToInt64(this.mtbTelef.Text);
         public string Email => this.tbEmail.Text;
 
         public string DirPostal => this.tbDirPostal.Text;

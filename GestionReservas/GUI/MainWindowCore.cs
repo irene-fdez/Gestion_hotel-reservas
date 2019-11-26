@@ -132,6 +132,7 @@ namespace GestionReservas.GUI
         {
             Console.WriteLine("MAINCORE guarda y sale");
             this.Reservas.GuardarXml();
+            this.Clientes.GuardarXml();
             Application.Exit();
         }
 
@@ -140,7 +141,7 @@ namespace GestionReservas.GUI
             Console.WriteLine("MAIN CORE dentro guardar");
 
             this.Reservas.GuardarXml();
-
+            this.Clientes.GuardarXml();
         }
 
         void OnQuit()
