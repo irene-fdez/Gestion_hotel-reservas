@@ -17,6 +17,9 @@ namespace GestionReservas.GUI.Dlg
             this.Clientes = cli;
             this.Build();
             this.CenterToScreen();
+
+            this.opSalir.Click += (sender, e) => { this.DialogResult = DialogResult.Cancel; this.Salir(); };
+            this.opVolver.Click += (sender, e) => this.DialogResult = DialogResult.Cancel;
         }
 
         void Build()
@@ -106,12 +109,11 @@ namespace GestionReservas.GUI.Dlg
             this.opSalir = new MenuItem("&Salir");
             this.opSalir.Shortcut = Shortcut.CtrlQ;
 
-            this.mBuscar = new MenuItem("&Buscar");
 
             this.mArchivo.MenuItems.Add(this.opVolver);
             this.mArchivo.MenuItems.Add(this.opSalir);
             this.mPpal.MenuItems.Add(this.mArchivo);
-            this.mPpal.MenuItems.Add(this.mBuscar);
+
 
             this.Menu = mPpal;
 
@@ -240,7 +242,7 @@ namespace GestionReservas.GUI.Dlg
             this.tbDNI.Validating += (sender, cancelArgs) =>
             {
                 var btAccept = (Button)this.AcceptButton;
-                bool invalid = string.IsNullOrWhiteSpace(this.Tipo);
+                bool invalid = string.IsNullOrWhiteSpace(this.DNI);
 
                 invalid = invalid || this.tbDNI.Text == "";
 
@@ -292,7 +294,7 @@ namespace GestionReservas.GUI.Dlg
             this.tbNombre.Validating += (sender, cancelArgs) =>
             {
                 var btAccept = (Button)this.AcceptButton;
-                bool invalid = string.IsNullOrWhiteSpace(this.Tipo);
+                bool invalid = string.IsNullOrWhiteSpace(this.Nombre);
 
                 invalid = invalid || this.tbNombre.Text == "";
 
@@ -339,9 +341,30 @@ namespace GestionReservas.GUI.Dlg
                 Left = 0,
                 Width = 250,
                 Anchor = AnchorStyles.Bottom,
-                Mask = "000 000 000"
+                Mask = "000000000"
             };
+            //
 
+            //this.mtbTelef.Validating += (sender, cancelArgs) =>
+            //{
+            //    var btAccept = (Button)this.AcceptButton;
+            //    bool invalid = this.mtbTelef.Equals(null);
+
+            //    invalid = invalid || this.tbNombre.Text == "";
+
+            //    if (invalid || this.tbNombre.Text == "")
+            //    {
+
+            //        string mensaje = "El campo no puede estar vacio";
+            //        MessageBox.Show(mensaje, "Informacion", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            //        this.tbNombre.Focus();
+            //    }
+
+            //    btAccept.Enabled = !invalid;
+            //};
+
+            //
             pnlTelef.MaximumSize = new Size(int.MaxValue, mtbTelef.Height * 2);
 
             pnlTelef.Controls.Add(this.mtbTelef);
@@ -432,7 +455,7 @@ namespace GestionReservas.GUI.Dlg
             this.tbDirPostal.Validating += (sender, cancelArgs) =>
             {
                 var btAccept = (Button)this.AcceptButton;
-                bool invalid = string.IsNullOrWhiteSpace(this.Tipo);
+                bool invalid = string.IsNullOrWhiteSpace(this.DirPostal);
 
                 invalid = invalid || this.tbDirPostal.Text == "";
 
@@ -456,6 +479,12 @@ namespace GestionReservas.GUI.Dlg
             return pnlDirPostal;
         }
 
+        public void Salir()
+        {
+            Console.WriteLine("INSERTA CLIENTE guarda y sale");
+            this.Clientes.GuardarXml();
+            Application.Exit();
+        }
 
         private RegistroClientes Clientes;
 
@@ -468,8 +497,10 @@ namespace GestionReservas.GUI.Dlg
 
         private Panel pnlInserta;
 
-        public string Tipo => this.tbDNI.Text;
+        public string DNI => this.tbDNI.Text;
+        public string Nombre => this.tbNombre.Text;
 
+        public long Telefono => Convert.ToInt64(this.mtbTelef.Text);
         public string Email => this.tbEmail.Text;
 
         public string DirPostal => this.tbDirPostal.Text;

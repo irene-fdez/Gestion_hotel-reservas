@@ -3,4 +3,5 @@
   <cliente dni="12345678A" nombre="Carlos Perez" telefono="65698745" email="carlos@email.com" direccionPostal="av. Otero Pedrayo, 2. Ourense" />
   <cliente dni="23456789B" nombre="Juan Lopez" telefono="652369874" email="juan@email.com" direccionPostal="c/Rio Sil, 14. Ourense" />
   <cliente dni="34567890C" nombre="Maria Diaz" telefono="689546231" email="maria@email.com" direccionPostal="c/ Serrano, 28. MAdrid" />
+  <cliente dni="34524162A" nombre="Rep" telefono="644345243" email="def@es.es" direccionPostal="derp 21" />
 </clientes>

@@ -24,7 +24,7 @@ namespace GestionReservas.GUI.Dlg
 
             this.GrdLista.Click += (sender, e) => ClickLista();
 
-            this.opInsertar.Click += (sender, e) => this.InsertaCliente();
+            this.mInsertar.Click += (sender, e) => this.InsertaCliente();
             this.opGuardar.Click += (sender, e) => this.Guardar();
             this.opSalir.Click += (sender, e) => { this.DialogResult = DialogResult.Cancel; this.Salir(); };
             this.opVolver.Click += (sender, e) => this.DialogResult = DialogResult.Cancel;
@@ -70,7 +70,7 @@ namespace GestionReservas.GUI.Dlg
             this.opVolver = new MenuItem("&Volver");
             this.opSalir.Shortcut = Shortcut.CtrlQ;
             this.mBuscar = new MenuItem("&Buscar");
-            this.opInsertar = new MenuItem("Insertar");
+            this.mInsertar = new MenuItem("&Insertar");
 
             this.opBuscarAll = new MenuItem("&Buscar todos");
             this.opBuscarPendientes = new MenuItem("&Buscar pendientes");
@@ -79,12 +79,13 @@ namespace GestionReservas.GUI.Dlg
             this.mBuscar.MenuItems.Add(this.opBuscarAll);
             this.mBuscar.MenuItems.Add(this.opBuscarPendientes);
             this.mArchivo.MenuItems.Add(this.opVolver);
-            this.mArchivo.MenuItems.Add(this.opInsertar);
+            
             this.mArchivo.MenuItems.Add(this.opGuardar);
             this.mArchivo.MenuItems.Add(this.opSalir);
             
 
             this.mPpal.MenuItems.Add(this.mArchivo);
+            this.mPpal.MenuItems.Add(this.mInsertar);
             this.mPpal.MenuItems.Add(this.mBuscar);
 
             this.Menu = mPpal;
@@ -340,13 +341,21 @@ namespace GestionReservas.GUI.Dlg
 
         void InsertaCliente()
         {
-            Console.WriteLine("Inserta cliente");
+            Console.WriteLine("Inserta clienteeeeee");
             var dlgInsertaCliente = new DlgInsertaCliente(this.Clientes);
 
             //this.View.Hide();
 
             if (dlgInsertaCliente.ShowDialog() == DialogResult.OK)
             {
+                Console.WriteLine("dentro if insertaCliente");
+                Cliente c = new Cliente(
+                    dlgInsertaCliente.DNI, dlgInsertaCliente.Nombre, dlgInsertaCliente.Telefono, dlgInsertaCliente.Email, dlgInsertaCliente.DirPostal
+                    );
+                Console.WriteLine(c.ToString());
+                this.Clientes.Add(c);
+                Console.WriteLine("Dentro if insertaCliente pre guardar");
+                this.Clientes.GuardarXml();
                 this.Actualiza();
             }
         }
@@ -396,7 +405,7 @@ namespace GestionReservas.GUI.Dlg
 
 
             fila.Cells[0].Value = (numFila + 1).ToString().PadLeft(4, ' ');
-            fila.Cells[1].Value = cliente.DNI; //aaaammddhhh
+            fila.Cells[1].Value = cliente.DNI; 
             fila.Cells[2].Value = cliente.Email;
             fila.Cells[3].Value = cliente.Nombre;
             fila.Cells[4].Value = cliente.Telefono;
@@ -471,12 +480,13 @@ namespace GestionReservas.GUI.Dlg
 
         void Guardar()
         {
+            Console.WriteLine("CONSULTA CLIENTE GUARDAR");
             this.Clientes.GuardarXml();
         }
 
         public void Salir()
         {
-            Console.WriteLine("guarda y sale");
+            Console.WriteLine("CONSULTA CLIENTE  guarda y sale");
             this.Clientes.GuardarXml();
             Application.Exit();
         }
@@ -491,7 +501,7 @@ namespace GestionReservas.GUI.Dlg
         public MenuItem mBuscar;
         public MenuItem opBuscarAll;
         public MenuItem opBuscarPendientes;
-        public MenuItem opInsertar;
+        public MenuItem mInsertar;
 
 
 

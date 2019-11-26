@@ -19,6 +19,7 @@ namespace GestionReservas
             var mainForm = new MainWindowCore().View;
             Application.Run(mainForm);
 
+            /*
             var rc = new RegistroClientes();
             rc.Add(new Cliente("12345678A", "Carlos Perez", 65698745, "carlos@email.com", "av. Otero Pedrayo, 2. Ourense"));
             rc.Add(new Cliente("23456789B", "Juan Lopez", 652369874, "juan@email.com", "c/Rio Sil, 14. Ourense"));
@@ -33,8 +34,9 @@ namespace GestionReservas
             rh.Add(new Habitacion("003", "individuales", DateTime.Today, DateTime.Today));
 
             rh.GuardarXml();
-
+            
             Console.ReadLine();
+            */
         }
 
     }
