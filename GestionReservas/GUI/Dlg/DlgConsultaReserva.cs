@@ -341,23 +341,27 @@ namespace GestionReservas.GUI.Dlg
 
             try
             {
-                int fila = System.Math.Max(0, this.GrdLista.CurrentRow.Index);
-                int posicion = this.GrdLista.CurrentCellAddress.X;
+                var grdListaCurrentRow = this.GrdLista.CurrentRow;
+                if (grdListaCurrentRow != null)
+                {
+                    int fila = System.Math.Max(0, grdListaCurrentRow.Index);
+                    int posicion = this.GrdLista.CurrentCellAddress.X;
 
-                if (posicion == 7 && this.ReservasBuscar.Count > fila)
-                {
-                    this.edDetalle.Text = this.ReservasBuscar[fila].Cliente.ToString();
-                    this.edDetalle.SelectionStart = this.edDetalle.Text.Length;
-                    this.edDetalle.SelectionLength = 0;
-                }
-                else if(posicion < 7){
-                    this.edDetalle.Text = this.ReservasBuscar[fila].DatosEconomicosReserva();
-                    this.edDetalle.SelectionStart = this.edDetalle.Text.Length;
-                    this.edDetalle.SelectionLength = 0;
-                }
-                else 
-                {
-                    this.edDetalle.Clear();
+                    if (posicion == 7 && this.ReservasBuscar.Count > fila)
+                    {
+                        this.edDetalle.Text = this.ReservasBuscar[fila].Cliente.ToString();
+                        this.edDetalle.SelectionStart = this.edDetalle.Text.Length;
+                        this.edDetalle.SelectionLength = 0;
+                    }
+                    else if(posicion < 7){
+                        this.edDetalle.Text = this.ReservasBuscar[fila].DatosEconomicosReserva();
+                        this.edDetalle.SelectionStart = this.edDetalle.Text.Length;
+                        this.edDetalle.SelectionLength = 0;
+                    }
+                    else 
+                    {
+                        this.edDetalle.Clear();
+                    }
                 }
             }
             catch(Exception)
@@ -421,12 +425,30 @@ namespace GestionReservas.GUI.Dlg
             List<Reserva> prueba = this.ReservasBuscar.Where(element =>  element.FechaEntrada >= today && element.FechaEntrada <= finish).ToList();
             prueba.ForEach(Console.WriteLine);
             Console.WriteLine("entra");
+            Console.WriteLine(prueba);
             this.ReservasBuscar = new RegistroReserva(prueba,this.Clientes);
+            Console.WriteLine(this.ReservasBuscar.List);
             this.Actualiza();
         }
 
         void BuscarPorP()
         {
+            var dlgBuscarPorPersona = new DlgBuscarPorpersona();
+            this.Hide();
+            if (dlgBuscarPorPersona.ShowDialog() == DialogResult.OK)
+            {
+                RegistroClientes registroClientes = RegistroClientes.RecuperarXml();
+                Cliente c = registroClientes.getCliente(dlgBuscarPorPersona.Cliente);
+                DateTime today = DateTime.Today;
+                List<Reserva> reserv = Reservas.List.Where(element => element.Cliente.DNI.Equals(c.DNI) && !(element.FechaEntrada <= today && element.FechaSalida > today)).ToList();
+                
+                this.ReservasBuscar = new RegistroReserva(reserv,this.Clientes);
+                this.Actualiza();
+
+            }
+
+            if (!this.IsDisposed) { this.Show(); }
+            else { Application.Exit(); }
             
         }
         void Actualiza()
@@ -451,11 +473,12 @@ namespace GestionReservas.GUI.Dlg
             }
 
             // Eliminar filas sobrantes
-            int numExtra = this.GrdLista.Rows.Count - numElementos;
-            for (; numExtra > 0; --numExtra)
+            int numExtra = this.GrdLista.Rows.Count - numElementos - 1;
+            for (; numExtra >= 0; --numExtra)
             {
                 this.GrdLista.Rows.RemoveAt(numElementos);
             }
+            Console.WriteLine("fin");
         }
 
         private void ActualizaFilaDeLista(int numFila)
@@ -471,6 +494,7 @@ namespace GestionReservas.GUI.Dlg
 
             DataGridViewRow fila = this.GrdLista.Rows[numFila];
             Reserva reserva = this.ReservasBuscar[numFila];
+            Console.WriteLine(fila);
 
 
             fila.Cells[0].Value = (numFila + 1).ToString().PadLeft(4, ' ');

@@ -3,6 +3,7 @@
   <component name="ContentModelStore">
     <e p="$PROJECT_DIR$" t="IncludeFlat">
       <e p="GestionReservas" t="IncludeRecursive">
+        <e p=".gitignore" t="Include" />
         <e p="bin" t="ExcludeRecursive" />
         <e p="Core" t="Include">
           <e p="Cliente.cs" t="Include" />
@@ -15,7 +16,10 @@
         <e p="GestionReservas.csproj" t="IncludeRecursive" />
         <e p="GUI" t="Include">
           <e p="Dlg" t="Include">
+            <e p="DlgBuscarPorPersona.cs" t="Include" />
+            <e p="DlgBuscarVaciosPorPiso.cs" t="Include" />
             <e p="DlgConsultaCliente.cs" t="Include" />
+            <e p="DlgConsultaHabitacion.cs" t="Include" />
             <e p="DlgConsultaReserva.cs" t="Include" />
             <e p="DlgFacturaReserva.cs" t="Include" />
             <e p="DlgInsertaReserva.cs" t="Include" />

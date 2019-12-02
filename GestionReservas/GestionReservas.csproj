@@ -48,9 +48,14 @@
   <ItemGroup>
     <Compile Include="Core\RegistroClientes.cs" />
     <Compile Include="Core\RegistroHabitaciones.cs" />
+    <Compile Include="GUI\Dlg\DlgBuscarPorPersona.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\Dlg\DlgBuscarVaciosPorPiso.cs" />
     <Compile Include="GUI\Dlg\DlgConsultaCliente.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="GUI\Dlg\DlgConsultaHabitacion.cs" />
     <Compile Include="GUI\Dlg\DlgConsultaReserva.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -76,6 +81,8 @@
     <Compile Include="Core\Reserva.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include=".gitignore" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
