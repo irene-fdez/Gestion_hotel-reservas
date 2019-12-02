@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="$PROJECT_DIR$" t="IncludeFlat">
+      <e p="GestionReservas" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Core" t="Include">
+          <e p="Cliente.cs" t="Include" />
+          <e p="Habitacion.cs" t="Include" />
+          <e p="RegistroClientes.cs" t="Include" />
+          <e p="RegistroHabitaciones.cs" t="Include" />
+          <e p="RegistroReserva.cs" t="Include" />
+          <e p="Reserva.cs" t="Include" />
+        </e>
+        <e p="GestionReservas.csproj" t="IncludeRecursive" />
+        <e p="GUI" t="Include">
+          <e p="Dlg" t="Include">
+            <e p="DlgConsultaCliente.cs" t="Include" />
+            <e p="DlgConsultaReserva.cs" t="Include" />
+            <e p="DlgFacturaReserva.cs" t="Include" />
+            <e p="DlgInsertaReserva.cs" t="Include" />
+            <e p="DlgModificaReserva.cs" t="Include" />
+          </e>
+          <e p="MainWindowCore.cs" t="Include" />
+          <e p="MainWindowView.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive" />
+        <e p="Program.cs" t="Include" />
+        <e p="Properties" t="Include">
+          <e p="AssemblyInfo.cs" t="Include" />
+        </e>
+      </e>
+      <e p="GestionReservas.sln" t="IncludeFlat" />
+      <e p="packages" t="ExcludeRecursive" />
+    </e>
+    <e p="$USER_HOME$/Library/Caches/Rider2019.2/extResources" t="IncludeRecursive" />
+    <e p="$USER_HOME$/Library/Caches/Rider2019.2/resharper-host/local/Transient/ReSharperHost/v192/SolutionCaches/_GestionReservas.794547822.00" t="ExcludeRecursive" />
+  </component>
+</project>

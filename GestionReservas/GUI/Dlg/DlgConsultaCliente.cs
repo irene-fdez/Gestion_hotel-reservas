@@ -12,14 +12,12 @@ namespace GestionReservas.GUI.Dlg
     using System.Windows.Forms;
     using System.Drawing;
 
-    public class DlgConsultaReserva : Form
+    public class DlgConsultaCliente : Form
     {
 
-        public DlgConsultaReserva(RegistroReserva res, List<Cliente> cli)
+        public DlgConsultaCliente(RegistroClientes cli)
         {
             this.MVC = new MainWindowCore();
-            this.Reservas = res;
-            this.ReservasBuscar = this.Reservas;
             this.Clientes = cli;
             this.BuildGUI();
             this.CenterToScreen();
@@ -28,9 +26,7 @@ namespace GestionReservas.GUI.Dlg
             
             this.GrdLista.Click += (sender, e) => ClickLista();
 
-            this.opBuscarAll.Click += (sender, e) => this.BuscarTodos();
-            this.opBuscarPendientes.Click += (sender, e) => this.BuscarFiltrado();
-            this.opBuscarPorPersona.Click += (sender, e) => this.BuscarPorP();
+
             this.opGuardar.Click += (sender, e) => this.Guardar();
             this.opSalir.Click += (sender, e) => { this.DialogResult = DialogResult.Cancel; this.Salir(); };
             this.opVolver.Click += (sender, e) => this.DialogResult = DialogResult.Cancel;
@@ -59,7 +55,7 @@ namespace GestionReservas.GUI.Dlg
 
             this.MinimumSize = new Size(1000, 400);
             this.Resize += (obj, e) => this.ResizeWindow();
-            this.Text = "Gestion de un hotel - Consulta reservas";
+            this.Text = "Gestion de un hotel - Consulta Cliente";
 
             this.Actualiza();
             this.ResumeLayout(true);
@@ -77,14 +73,12 @@ namespace GestionReservas.GUI.Dlg
             this.opSalir.Shortcut = Shortcut.CtrlQ;
             this.mBuscar = new MenuItem("&Buscar");
             
-            this.opBuscarPorPersona = new MenuItem("&Buscar reserva por persona");
             this.opBuscarAll = new MenuItem("&Buscar todos");
             this.opBuscarPendientes = new MenuItem("&Buscar pendientes");
 
 
             this.mBuscar.MenuItems.Add(this.opBuscarAll);
             this.mBuscar.MenuItems.Add(this.opBuscarPendientes);
-            this.mBuscar.MenuItems.Add(this.opBuscarPorPersona);
             this.mArchivo.MenuItems.Add(this.opVolver);
             this.mArchivo.MenuItems.Add(this.opGuardar);
             this.mArchivo.MenuItems.Add(this.opSalir);
@@ -168,13 +162,11 @@ namespace GestionReservas.GUI.Dlg
             var textCellTemplate3 = new DataGridViewTextBoxCell();
             var textCellTemplate4 = new DataGridViewTextBoxCell();
             var textCellTemplate5 = new DataGridViewTextBoxCell();
-            var textCellTemplate6 = new DataGridViewTextBoxCell();
-            var textCellTemplate7 = new DataGridViewTextBoxCell();
+
 
             //botones
             var buttonCellTemplate8 = new DataGridViewButtonCell();
-            var buttonCellTemplate9 = new DataGridViewButtonCell();
-            var buttonCellTemplate10 = new DataGridViewButtonCell();
+
 
             //texto
             Color colorCeldasDatos = Color.PapayaWhip;
@@ -197,18 +189,11 @@ namespace GestionReservas.GUI.Dlg
             textCellTemplate4.Style.BackColor = colorCeldasDatos;
             textCellTemplate4.Style.ForeColor = Color.Black;
             textCellTemplate4.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-
+            
             textCellTemplate5.Style.BackColor = colorCeldasDatos;
             textCellTemplate5.Style.ForeColor = Color.Black;
             textCellTemplate5.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
-            textCellTemplate6.Style.BackColor = colorCeldasDatos;
-            textCellTemplate6.Style.ForeColor = Color.Black;
-            textCellTemplate6.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-
-            textCellTemplate7.Style.BackColor = colorCeldasDatos;
-            textCellTemplate7.Style.ForeColor = Color.Black;
-            textCellTemplate7.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
             //botones
             buttonCellTemplate8.Style.BackColor = colorCeldasDatos;
@@ -216,15 +201,7 @@ namespace GestionReservas.GUI.Dlg
             buttonCellTemplate8.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
             buttonCellTemplate8.Style.Font = new Font(FontFamily.GenericMonospace, 11, FontStyle.Regular);
 
-            buttonCellTemplate9.Style.BackColor = colorCeldasDatos;
-            buttonCellTemplate9.Style.ForeColor = Color.Black;
-            buttonCellTemplate9.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            buttonCellTemplate9.Style.Font = new Font(FontFamily.GenericMonospace, 11, FontStyle.Regular);
 
-            buttonCellTemplate10.Style.BackColor = colorCeldasDatos;
-            buttonCellTemplate10.Style.ForeColor = Color.Black;
-            buttonCellTemplate10.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            buttonCellTemplate10.Style.Font = new Font(FontFamily.GenericMonospace, 11, FontStyle.Regular);
 
             var column0 = new DataGridViewTextBoxColumn //numero de reparacion
             {
@@ -239,7 +216,7 @@ namespace GestionReservas.GUI.Dlg
             {
                 SortMode = DataGridViewColumnSortMode.NotSortable,
                 CellTemplate = textCellTemplate1,
-                HeaderText = "Id",
+                HeaderText = "DNI",
                 Width = 20,
                 ReadOnly = true
             };
@@ -248,7 +225,7 @@ namespace GestionReservas.GUI.Dlg
             {
                 SortMode = DataGridViewColumnSortMode.NotSortable,
                 CellTemplate = textCellTemplate2,
-                HeaderText = "Tipo",
+                HeaderText = "Email",
                 Width = 15,
                 ReadOnly = true
             };
@@ -257,7 +234,7 @@ namespace GestionReservas.GUI.Dlg
             {
                 SortMode = DataGridViewColumnSortMode.NotSortable,
                 CellTemplate = textCellTemplate3,
-                HeaderText = "Fecha Entrada",
+                HeaderText = "Nombre",
                 Width = 15,
                 ReadOnly = true
             };
@@ -266,67 +243,33 @@ namespace GestionReservas.GUI.Dlg
             {
                 SortMode = DataGridViewColumnSortMode.NotSortable,
                 CellTemplate = textCellTemplate4,
-                HeaderText = "Fecha salida",
+                HeaderText = "Numero telef",
                 Width = 15,
                 ReadOnly = true
             };
-
-            var column5 = new DataGridViewTextBoxColumn // garaje
+            
+            var column5 = new DataGridViewTextBoxColumn // fecha salida
             {
                 SortMode = DataGridViewColumnSortMode.NotSortable,
-                CellTemplate = textCellTemplate5,
-                HeaderText = "Garaje",
+                CellTemplate = textCellTemplate4,
+                HeaderText = "Calle",
                 Width = 15,
                 ReadOnly = true
             };
 
-            var column6 = new DataGridViewTextBoxColumn // total
-            { 
-                SortMode = DataGridViewColumnSortMode.NotSortable,
-                CellTemplate = textCellTemplate6,
-                HeaderText = "Total",
-                Width = 15,
-                ReadOnly = true
-            };
 
-            var column7 = new DataGridViewTextBoxColumn  //dni cliente
-            {
-                SortMode = DataGridViewColumnSortMode.NotSortable,
-                CellTemplate = textCellTemplate7,
-                HeaderText = "Cliente",
-                Width = 15,
-                ReadOnly = true
-            };
             var column8 = new DataGridViewButtonColumn  //modificar
             {
                 SortMode = DataGridViewColumnSortMode.NotSortable,
                 CellTemplate = buttonCellTemplate8,
-                HeaderText = "Modificar",
-                Width = 15,
+                HeaderText = "Mostrar reservas",
+                Width = 20,
                 ReadOnly = true,
             };
-
-            var column9 = new DataGridViewButtonColumn  //borrar
-            {
-                SortMode = DataGridViewColumnSortMode.NotSortable,
-                CellTemplate = buttonCellTemplate8,
-                HeaderText = "Eliminar",
-                Width = 15,
-                ReadOnly = true,
-            };
-
-
-            var column10 = new DataGridViewButtonColumn  //factura
-            {
-                SortMode = DataGridViewColumnSortMode.NotSortable,
-                CellTemplate = buttonCellTemplate10,
-                HeaderText = "Factura",
-                Width = 15,
-                ReadOnly = true
-            };
+            
 
             this.GrdLista.Columns.AddRange(new DataGridViewColumn[] {
-                column0, column1, column2, column3, column4, column5, column6, column7, column8, column9, column10
+                column0, column1, column2, column3, column4,column5,column8
             });
 
             this.GrdLista.SelectionChanged += (sender, e) => this.FilaSeleccionada();
@@ -344,14 +287,9 @@ namespace GestionReservas.GUI.Dlg
                 int fila = System.Math.Max(0, this.GrdLista.CurrentRow.Index);
                 int posicion = this.GrdLista.CurrentCellAddress.X;
 
-                if (posicion == 7 && this.ReservasBuscar.Count > fila)
+                if (posicion < 6 && this.Clientes.Count > fila)
                 {
-                    this.edDetalle.Text = this.ReservasBuscar[fila].Cliente.ToString();
-                    this.edDetalle.SelectionStart = this.edDetalle.Text.Length;
-                    this.edDetalle.SelectionLength = 0;
-                }
-                else if(posicion < 7){
-                    this.edDetalle.Text = this.ReservasBuscar[fila].DatosEconomicosReserva();
+                    this.edDetalle.Text = this.Clientes[fila].ToString();
                     this.edDetalle.SelectionStart = this.edDetalle.Text.Length;
                     this.edDetalle.SelectionLength = 0;
                 }
@@ -386,49 +324,19 @@ namespace GestionReservas.GUI.Dlg
             this.GrdLista.Columns[1].Width =
                                 (int)System.Math.Floor(width * .10); // id
             this.GrdLista.Columns[2].Width =
-                                (int)System.Math.Floor(width * .07); // tipo
+                                (int)System.Math.Floor(width * .20); // tipo
             this.GrdLista.Columns[3].Width =
                                 (int)System.Math.Floor(width * .14); // Fecha entrada
             this.GrdLista.Columns[4].Width =
                                 (int)System.Math.Floor(width * .14); // Fecha salida
             this.GrdLista.Columns[5].Width =
-                               (int)System.Math.Floor(width * .06); // garaje
+                (int)System.Math.Floor(width * .23); // Fecha salida
             this.GrdLista.Columns[6].Width =
-                               (int)System.Math.Floor(width * .10); // Precio total
-            this.GrdLista.Columns[7].Width =
-                               (int)System.Math.Floor(width * .09); // DNI Cliente
-            this.GrdLista.Columns[8].Width =
-                               (int)System.Math.Floor(width * .09); // btn modificar
-            this.GrdLista.Columns[9].Width =
-                               (int)System.Math.Floor(width * .09); // btn borrar
-            this.GrdLista.Columns[10].Width =
-                               (int)System.Math.Floor(width * .09); // btn factura
+                               (int)System.Math.Floor(width * .14); // btn modificar
+
         }
 
-        void BuscarTodos()
-        {
-
-                Console.WriteLine("holaaa");
-                this.ReservasBuscar = this.Reservas;
-                this.Actualiza();
-        }
-
-        void BuscarFiltrado()
-        {
-            DateTime today = DateTime.Today;
-            DateTime finish = today.AddDays(5);
-            Console.WriteLine("AQUII");
-            List<Reserva> prueba = this.ReservasBuscar.Where(element =>  element.FechaEntrada >= today && element.FechaEntrada <= finish).ToList();
-            prueba.ForEach(Console.WriteLine);
-            Console.WriteLine("entra");
-            this.ReservasBuscar = new RegistroReserva(prueba,this.Clientes);
-            this.Actualiza();
-        }
-
-        void BuscarPorP()
-        {
-            
-        }
+        
         void Actualiza()
         {
             Console.WriteLine("dentro actualiza");
@@ -436,10 +344,10 @@ namespace GestionReservas.GUI.Dlg
             // var consultRes = new DlgConsultaReserva();
 
 
-            int numElementos = this.ReservasBuscar.Count;
-            Console.WriteLine("NUMERO DE RESERVAS: " + numElementos);
+            int numElementos = this.Clientes.Count;
+            Console.WriteLine("NUMERO DE Clientes: " + numElementos);
 
-            this.SbStatus.Text = ("Numero de reservas: " + numElementos);
+            this.SbStatus.Text = ("Numero de Clientes: " + numElementos);
 
             for (int i = 0; i < numElementos; i++)
             {
@@ -470,31 +378,24 @@ namespace GestionReservas.GUI.Dlg
             }
 
             DataGridViewRow fila = this.GrdLista.Rows[numFila];
-            Reserva reserva = this.ReservasBuscar[numFila];
+            Cliente cliente = this.Clientes[numFila];
 
 
             fila.Cells[0].Value = (numFila + 1).ToString().PadLeft(4, ' ');
-            fila.Cells[1].Value = reserva.Id; //aaaammddhhh
-            fila.Cells[2].Value = reserva.Tipo; 
-            fila.Cells[3].Value = reserva.FechaEntrada.ToString("dd/MM/yyyy");
-            fila.Cells[4].Value = reserva.FechaSalida.ToString("dd/MM/yyyy");
-            fila.Cells[5].Value = reserva.Garaje;
-            fila.Cells[6].Value = reserva.TotalConIva();
-            fila.Cells[7].Value = reserva.Cliente.DNI;
-            fila.Cells[8].Value = "*";
-            fila.Cells[9].Value = "*";
-            fila.Cells[10].Value = "*";
+            fila.Cells[1].Value = cliente.DNI; //aaaammddhhh
+            fila.Cells[2].Value = cliente.Email; 
+            fila.Cells[3].Value = cliente.Nombre;
+            fila.Cells[4].Value = cliente.Telefono;
+            fila.Cells[5].Value = cliente.DireccionPostal;
+            fila.Cells[6].Value = "*";
+
 
 
             foreach (DataGridViewCell celda in fila.Cells)
             {
-                if (celda.ColumnIndex < 7)
+                if (celda.ColumnIndex < 6)
                 {
-                    celda.ToolTipText = reserva.ToString();
-                }
-                else if(celda.ColumnIndex == 7)
-                {
-                    celda.ToolTipText = reserva.Cliente.ToString();
+                    celda.ToolTipText = cliente.ToString();
                 }
             }
         }
@@ -507,19 +408,10 @@ namespace GestionReservas.GUI.Dlg
             {
                 Console.WriteLine("clickLista : " + this.GrdLista.CurrentCell.ColumnIndex);
 
-                if (this.GrdLista.CurrentCell.ColumnIndex == 8)
+                if (this.GrdLista.CurrentCell.ColumnIndex == 6)
                 {
                     int fila = this.GrdLista.CurrentCell.RowIndex;
-                    this.Modificar((string)this.GrdLista.Rows[fila].Cells[1].Value);
-                }
-                else if (this.GrdLista.CurrentCell.ColumnIndex == 9)
-                {
-                    this.Eliminar();
-                }
-                else if (this.GrdLista.CurrentCell.ColumnIndex == 10)
-                {
-                    int fila = this.GrdLista.CurrentCell.RowIndex;
-                    this.Factura((string)this.GrdLista.Rows[fila].Cells[1].Value);
+                    this.Mostrar((string)this.GrdLista.Rows[fila].Cells[1].Value);
                 }
 
                 this.Actualiza();
@@ -528,29 +420,15 @@ namespace GestionReservas.GUI.Dlg
         }
 
 
-        public void Eliminar()
+         
+
+        public void Mostrar(string id)
         {
-
-            Console.WriteLine("dentro eliminar");
-            var id = (string)this.GrdLista.CurrentRow.Cells[1].Value;
-
-            //Dialogo de confirmación de eiminación
-            DialogResult result;
-            string mensaje = "¿Está seguro de que desea eliminar la reserva con ID(" + id + "), del registro de reservas?";
-            string tittle = "Eliminar reserva";
-
-            result = MessageBox.Show(mensaje, tittle, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-            if (result == DialogResult.Yes)
-            {
-                this.Reservas.Remove(this.Reservas.getReserva(id));
-                this.ReservasBuscar.Remove(this.ReservasBuscar.getReserva(id));
-            }
-        }
-
-        public void Modificar(string id)
-        {
-            //A partir de la clave de la entidad Reserva, obtenemos la reserva a modificar
+            Cliente cliente = this.Clientes.getCliente(id);
+            Reservas = new RegistroReserva(Clientes.List);
+            Console.WriteLine(cliente);
+            /*//A partir de la clave de la entidad Reserva, obtenemos la reserva a modificar
+            
             Reserva ResModif = this.Reservas.getReserva(id);
             Cliente c = ResModif.Cliente;
 
@@ -577,40 +455,21 @@ namespace GestionReservas.GUI.Dlg
 
             if (!this.IsDisposed) { this.Show(); }
             else { Application.Exit(); }
-
+*/
         }
 
-        public void Factura(string id)
-        {
-            //A partir de la clave de la entidad Reserva, obtenemos la reserva a modificar
-            Reserva reservaFactura = this.Reservas.getReserva(id);
-            var numRegRes = int.Parse((string)this.GrdLista.CurrentRow.Cells[0].Value);
 
-            
-            var dlgFactura = new DlgFacturaReserva(reservaFactura, this.Clientes, numRegRes);
-
-            this.Hide();
-
-            if (dlgFactura.ShowDialog() == DialogResult.OK)
-            {
-            
-            }
-
-            if (!this.IsDisposed) { this.Show(); }
-            else { Application.Exit(); }
-        }
 
 
         void Guardar()
         {
-            // this.regRes.GuardarXml();
-            this.Reservas.GuardarXml();
+            this.Clientes.GuardarXml();
         }
 
         public void Salir()
         {
             Console.WriteLine("guarda y sale");
-            this.Reservas.GuardarXml();
+            this.Clientes.GuardarXml();
             Application.Exit();
         }
 
@@ -624,7 +483,7 @@ namespace GestionReservas.GUI.Dlg
         public MenuItem mBuscar;
         public MenuItem opBuscarAll;
         public MenuItem opBuscarPendientes;
-        public MenuItem opBuscarPorPersona;
+
 
 
         public StatusBar SbStatus;
@@ -633,10 +492,9 @@ namespace GestionReservas.GUI.Dlg
         public DataGridView GrdLista;
 
 
-        private readonly List<Cliente> Clientes;
-
+        private  RegistroClientes Clientes;
         private RegistroReserva Reservas;
-        private RegistroReserva ReservasBuscar;
+
         private MainWindowCore MVC;
 
     }

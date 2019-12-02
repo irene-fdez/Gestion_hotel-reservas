@@ -46,8 +46,11 @@ namespace GestionReservas.Core
             this.RecuperarXml();
         }
 
-        public RegistroReserva(IEnumerable<Reserva> reservas, List<Cliente> client) : this(client)
+
+        public RegistroReserva(IEnumerable<Reserva> reservas, List<Cliente> client)
         {
+            this.reservas = new List<Reserva>();
+            this.clientes = client;
             this.reservas.AddRange(reservas);
         }
 
