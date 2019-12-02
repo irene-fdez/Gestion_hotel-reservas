@@ -7,7 +7,7 @@ namespace GestionReservas.Core
 {
     public class Cliente
     {
-        public Cliente(string dni, string nombre, double telefono, string email, string direccionPostal)
+        public Cliente(string dni, string nombre, long telefono, string email, string direccionPostal)
         {
             this.DNI = dni;
             this.Nombre = nombre;
@@ -26,7 +26,7 @@ namespace GestionReservas.Core
             get; private set;
         }
 
-        public double Telefono
+        public long Telefono
         {
             get; private set;
         }

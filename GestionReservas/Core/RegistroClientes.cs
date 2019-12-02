@@ -7,6 +7,7 @@
     using System.Collections;
     using System.Xml.Linq;
     using System.Collections.Generic;
+    using System.Diagnostics;
 
     public class RegistroClientes : ICollection<Cliente>
     {
@@ -121,13 +122,18 @@
             this.GuardarXml(ArchivoXML);
         }
 
+        StackTrace stackTrace = new StackTrace();
         public void GuardarXml(String n)
         {
+
+            Console.WriteLine(stackTrace.GetFrame(1).GetMethod().Name);
             var doc = new XDocument();
             var root = new XElement(EtqClientes);
 
+            
             foreach (Cliente c in clientes)
             {
+                Console.WriteLine(c.Nombre.ToString());
                 XElement cliente = new XElement(EtqCliente,
                                             new XAttribute(EtqDni, c.DNI),
                                             new XAttribute(EtqNombre, c.Nombre),
@@ -136,10 +142,11 @@
                                             new XAttribute(EtqDireccionPostal, c.DireccionPostal)
 
                                             );
-
+                //Console.WriteLine(cliente.ToString());
                 root.Add(cliente);
             }
             doc.Add(root);
+            //Console.WriteLine(root.ToString());
             doc.Save(n);
         }
 
@@ -182,7 +189,7 @@
             return new Cliente(
                 (string)c.Attribute(EtqDni),
                 (string)c.Attribute(EtqNombre),
-                (int)c.Attribute(EtqTelefono),
+                Convert.ToInt64(c.Attribute(EtqTelefono).Value),
                 (string)c.Attribute(EtqEmail),
                 (string)c.Attribute(EtqDireccionPostal)
             );

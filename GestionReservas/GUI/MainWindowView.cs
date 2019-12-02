@@ -75,7 +75,7 @@ namespace GestionReservas.GUI
             this.mBuscar = new MenuItem("&Buscar");
 
             this.mCliente = new MenuItem("&Cliente");
-            this.opInsertarC = new MenuItem("&Insertar");
+            //this.opInsertarC = new MenuItem("&Insertar");
             this.opConsultaC = new MenuItem("&Consulta");
 
 
@@ -86,7 +86,7 @@ namespace GestionReservas.GUI
             this.mArchivo.MenuItems.Add(this.opGuardar);
             this.mArchivo.MenuItems.Add(this.opSalir);
 
-            this.mCliente.MenuItems.Add(this.opInsertarC);
+            //this.mCliente.MenuItems.Add(this.opInsertarC);
             this.mCliente.MenuItems.Add(this.opConsultaC);
 
             this.mHabitaciones.MenuItems.Add(this.opInsertarH);

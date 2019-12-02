@@ -287,22 +287,21 @@ namespace GestionReservas.GUI.Dlg
                         cbNumHabitacionList.Items.Add(h.Numero);
                     }
                 }
-
-                if(cbTipoHabitacion.Text == "matrimoniales")
-                {
-                    numPrecioDia.Value = 42;
-                }
-                else if (cbTipoHabitacion.Text == "doble")
-                {
-                    numPrecioDia.Value = 38;
-                }
-                else
-                {
-                    numPrecioDia.Value = 31;
-                }
             };
-            
 
+            if(cbTipoHabitacion.Text == "matrimoniales")
+            {
+                numPrecioDia.Value = 42;
+            }
+            else if (cbTipoHabitacion.Text == "doble")
+            {
+                numPrecioDia.Value = 38;
+            }
+            else
+            {
+                numPrecioDia.Value = 31;
+            }
+           
             this.cbTipoHabitacion.Validating += (sender, cancelArgs) =>
             {
                 bool invalid = false;

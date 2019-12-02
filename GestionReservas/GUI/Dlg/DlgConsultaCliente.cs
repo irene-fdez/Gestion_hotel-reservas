@@ -25,8 +25,7 @@ namespace GestionReservas.GUI.Dlg
 
             
             this.GrdLista.Click += (sender, e) => ClickLista();
-
-
+            this.mInsertar.Click += (sender, e) => this.InsertaCliente();
             this.opGuardar.Click += (sender, e) => this.Guardar();
             this.opSalir.Click += (sender, e) => { this.DialogResult = DialogResult.Cancel; this.Salir(); };
             this.opVolver.Click += (sender, e) => this.DialogResult = DialogResult.Cancel;
@@ -73,6 +72,8 @@ namespace GestionReservas.GUI.Dlg
             this.opSalir.Shortcut = Shortcut.CtrlQ;
             this.mBuscar = new MenuItem("&Buscar");
             
+            this.mInsertar = new MenuItem("&Insertar");
+
             this.opBuscarAll = new MenuItem("&Buscar todos");
             this.opBuscarPendientes = new MenuItem("&Buscar pendientes");
 
@@ -84,6 +85,8 @@ namespace GestionReservas.GUI.Dlg
             this.mArchivo.MenuItems.Add(this.opSalir);
 
             this.mPpal.MenuItems.Add(this.mArchivo);
+
+            this.mPpal.MenuItems.Add(this.mInsertar);
             this.mPpal.MenuItems.Add(this.mBuscar);
 
             this.Menu = mPpal;
@@ -165,6 +168,13 @@ namespace GestionReservas.GUI.Dlg
 
 
             //botones
+            //var textCellTemplate5 = new DataGridViewTextBoxCell();    //Direccion Postal
+
+
+
+            //botones
+            var buttonCellTemplate6 = new DataGridViewButtonCell();
+            var buttonCellTemplate7 = new DataGridViewButtonCell();
             var buttonCellTemplate8 = new DataGridViewButtonCell();
 
 
@@ -196,6 +206,25 @@ namespace GestionReservas.GUI.Dlg
 
 
             //botones
+
+            /*
+             * //Direccion Postal
+            textCellTemplate5.Style.BackColor = colorCeldasDatos;
+            textCellTemplate5.Style.ForeColor = Color.Black;
+            textCellTemplate5.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            */
+
+            //botones
+            buttonCellTemplate6.Style.BackColor = colorCeldasDatos;
+            buttonCellTemplate6.Style.ForeColor = Color.Black;
+            buttonCellTemplate6.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            buttonCellTemplate6.Style.Font = new Font(FontFamily.GenericMonospace, 11, FontStyle.Regular);
+
+            buttonCellTemplate7.Style.BackColor = colorCeldasDatos;
+            buttonCellTemplate7.Style.ForeColor = Color.Black;
+            buttonCellTemplate7.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            buttonCellTemplate7.Style.Font = new Font(FontFamily.GenericMonospace, 11, FontStyle.Regular);
+
             buttonCellTemplate8.Style.BackColor = colorCeldasDatos;
             buttonCellTemplate8.Style.ForeColor = Color.Black;
             buttonCellTemplate8.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
@@ -248,6 +277,9 @@ namespace GestionReservas.GUI.Dlg
                 ReadOnly = true
             };
             
+
+            /*
+            //Direccion Postal
             var column5 = new DataGridViewTextBoxColumn // fecha salida
             {
                 SortMode = DataGridViewColumnSortMode.NotSortable,
@@ -257,6 +289,25 @@ namespace GestionReservas.GUI.Dlg
                 ReadOnly = true
             };
 
+            */
+
+            var column6 = new DataGridViewButtonColumn  //modificar
+            {
+                SortMode = DataGridViewColumnSortMode.NotSortable,
+                CellTemplate = buttonCellTemplate6,
+                HeaderText = "Modificar",
+                Width = 20,
+                ReadOnly = true,
+            };
+
+            var column7 = new DataGridViewButtonColumn  //modificar
+            {
+                SortMode = DataGridViewColumnSortMode.NotSortable,
+                CellTemplate = buttonCellTemplate7,
+                HeaderText = "Eliminar",
+                Width = 20,
+                ReadOnly = true,
+            };
 
             var column8 = new DataGridViewButtonColumn  //modificar
             {
@@ -266,10 +317,16 @@ namespace GestionReservas.GUI.Dlg
                 Width = 20,
                 ReadOnly = true,
             };
-            
+
+            /*
+             //Descomentar si se desea mostrar Dir.Postal
+            this.GrdLista.Columns.AddRange(new DataGridViewColumn[] {
+                column0, column1, column2, column3, column4,column5,column6,column7,column8
+            });
+            */
 
             this.GrdLista.Columns.AddRange(new DataGridViewColumn[] {
-                column0, column1, column2, column3, column4,column5,column8
+                column0, column1, column2, column3, column4,column6,column7,column8
             });
 
             this.GrdLista.SelectionChanged += (sender, e) => this.FilaSeleccionada();
@@ -287,13 +344,14 @@ namespace GestionReservas.GUI.Dlg
                 int fila = System.Math.Max(0, this.GrdLista.CurrentRow.Index);
                 int posicion = this.GrdLista.CurrentCellAddress.X;
 
-                if (posicion < 6 && this.Clientes.Count > fila)
+                //if (posicion < 6 && this.Clientes.Count > fila)   //Descomentar si se desea mostrar Dir.Postal
+                if (posicion < 5 && this.Clientes.Count > fila)
                 {
                     this.edDetalle.Text = this.Clientes[fila].ToString();
                     this.edDetalle.SelectionStart = this.edDetalle.Text.Length;
                     this.edDetalle.SelectionLength = 0;
                 }
-                else 
+                else
                 {
                     this.edDetalle.Clear();
                 }
@@ -317,26 +375,59 @@ namespace GestionReservas.GUI.Dlg
             this.GrdLista.Width = width;
             this.GrdLista.Height = 15;
 
-          
+
 
             this.GrdLista.Columns[0].Width =
-                                (int)System.Math.Floor(width * .03); // Num reserva
+                                (int)System.Math.Floor(width * .03); // Num cliente
             this.GrdLista.Columns[1].Width =
-                                (int)System.Math.Floor(width * .10); // id
+                                (int)System.Math.Floor(width * .10); // DNI
             this.GrdLista.Columns[2].Width =
                                 (int)System.Math.Floor(width * .20); // tipo
             this.GrdLista.Columns[3].Width =
                                 (int)System.Math.Floor(width * .14); // Fecha entrada
             this.GrdLista.Columns[4].Width =
                                 (int)System.Math.Floor(width * .14); // Fecha salida
+        
+            /*
             this.GrdLista.Columns[5].Width =
-                (int)System.Math.Floor(width * .23); // Fecha salida
+                (int)System.Math.Floor(width * .23); // Dir.Postal
+            
             this.GrdLista.Columns[6].Width =
                                (int)System.Math.Floor(width * .14); // btn modificar
-
+            this.GrdLista.Columns[7].Width =
+                               (int)System.Math.Floor(width * .14); // btn borrar
+            this.GrdLista.Columns[8].Width =
+                               (int)System.Math.Floor(width * .14); // btn modificar reserv
+            */
+            this.GrdLista.Columns[5].Width =
+                               (int)System.Math.Floor(width * .12); // btn modificar
+            this.GrdLista.Columns[6].Width =
+                               (int)System.Math.Floor(width * .12); // btn borrar
+            this.GrdLista.Columns[7].Width =
+                               (int)System.Math.Floor(width * .15); // btn modificar reserv
         }
 
-        
+        void InsertaCliente()
+        {
+            Console.WriteLine("Inserta clienteeeeee");
+            var dlgInsertaCliente = new DlgInsertaCliente(this.Clientes);
+
+            //this.View.Hide();
+
+            if (dlgInsertaCliente.ShowDialog() == DialogResult.OK)
+            {
+                Console.WriteLine("dentro if insertaCliente");
+                Cliente c = new Cliente(
+                    dlgInsertaCliente.DNI, dlgInsertaCliente.Nombre, dlgInsertaCliente.Telefono, dlgInsertaCliente.Email, dlgInsertaCliente.DirPostal
+                    );
+                Console.WriteLine(c.ToString());
+                this.Clientes.Add(c);
+                Console.WriteLine("Dentro if insertaCliente pre guardar");
+                this.Clientes.GuardarXml();
+                this.Actualiza();
+            }
+        }
+
         void Actualiza()
         {
             Console.WriteLine("dentro actualiza");
@@ -390,7 +481,6 @@ namespace GestionReservas.GUI.Dlg
             fila.Cells[6].Value = "*";
 
 
-
             foreach (DataGridViewCell celda in fila.Cells)
             {
                 if (celda.ColumnIndex < 6)
@@ -402,6 +492,7 @@ namespace GestionReservas.GUI.Dlg
 
 
 
+        /*
         public void ClickLista()
         {
             try
@@ -421,6 +512,32 @@ namespace GestionReservas.GUI.Dlg
 
 
          
+            catch (Exception) { }
+        }
+        */
+        public void ClickLista()
+        {
+            try
+            {
+                Console.WriteLine("clickLista : " + this.GrdLista.CurrentCell.ColumnIndex);
+
+                if (this.GrdLista.CurrentCell.ColumnIndex == 5)
+                {
+                    int fila = this.GrdLista.CurrentCell.RowIndex;
+                    Console.WriteLine("clickModificar  DNI: " + (string)this.GrdLista.Rows[fila].Cells[1].Value);
+                    this.ModificaCliente((string)this.GrdLista.Rows[fila].Cells[1].Value);
+                }
+                else if (this.GrdLista.CurrentCell.ColumnIndex == 6)
+                {
+                    this.EliminaCliente();
+                }
+
+                this.Actualiza();
+            }
+            catch (Exception) { }
+        }
+
+
 
         public void Mostrar(string id)
         {
@@ -433,7 +550,6 @@ namespace GestionReservas.GUI.Dlg
             Cliente c = ResModif.Cliente;
 
             var dlgModificar = new DlgModificaReserva(ResModif, this.Clientes);
-
             this.Hide();
             if (dlgModificar.ShowDialog() == DialogResult.OK)
             {
@@ -453,22 +569,78 @@ namespace GestionReservas.GUI.Dlg
 
             }
 
+            }
             if (!this.IsDisposed) { this.Show(); }
             else { Application.Exit(); }
 */
         }
 
 
+        public void EliminaCliente()
+        {
+            Console.WriteLine("Eliminar Cliente");
+            var dni = (string)this.GrdLista.CurrentRow.Cells[1].Value;
 
+            //Dialogo de confirmación de eiminación
+            DialogResult result;
+            string mensaje = "¿Está seguro de que desea eliminar el cliente con DNI(" + dni + "), del registro de clientes?";
+            string tittle = "Eliminar cliente";
+
+            result = MessageBox.Show(mensaje, tittle, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (result == DialogResult.Yes)
+            {
+                this.Clientes.Remove(this.Clientes.getCliente(dni));
+            }
+        }
+
+        public void ModificaCliente(String dni)
+        {
+            Console.WriteLine("Modifica Cliente");
+            Cliente CliModif = this.Clientes.getCliente(dni);
+            Console.WriteLine("Cliente borrado: " + CliModif.ToString());
+
+            var dlgModificar = new DlgModificaCliente(CliModif);
+
+            this.Hide();
+            if (dlgModificar.ShowDialog() == DialogResult.OK)
+            {
+                Console.WriteLine("PRE-BORRADO MODIF");
+                this.Clientes.Remove(CliModif);
+                Console.WriteLine("HOLAAA");
+                string DNI = dlgModificar.DNI;
+                Console.WriteLine("11111111");
+                string Nombre = dlgModificar.Nombre;
+                Console.WriteLine("2222222");
+                long Telefono = dlgModificar.Telefono;
+                Console.WriteLine("33333333");
+                string Email = dlgModificar.Email;
+                Console.WriteLine("4444444");
+                string DireccionPostal = dlgModificar.DirPostal;
+                Console.WriteLine("55555555");
+
+                Console.WriteLine("PRE CREACION");
+
+                Cliente c = new Cliente(DNI, Nombre, Telefono, Email, DireccionPostal);
+                Console.WriteLine("Cliente modificado: " + c.ToString());
+                this.Clientes.Add(c);
+                this.Actualiza();
+
+            }
+
+            if (!this.IsDisposed) { this.Show(); }
+            else { Application.Exit(); }
+        }
 
         void Guardar()
         {
+            Console.WriteLine("CONSULTA CLIENTE GUARDAR");
             this.Clientes.GuardarXml();
         }
 
         public void Salir()
         {
-            Console.WriteLine("guarda y sale");
+            Console.WriteLine("CONSULTA CLIENTE  guarda y sale");
             this.Clientes.GuardarXml();
             Application.Exit();
         }
@@ -483,6 +655,7 @@ namespace GestionReservas.GUI.Dlg
         public MenuItem mBuscar;
         public MenuItem opBuscarAll;
         public MenuItem opBuscarPendientes;
+        public MenuItem mInsertar;
 
 
 
@@ -492,7 +665,7 @@ namespace GestionReservas.GUI.Dlg
         public DataGridView GrdLista;
 
 
-        private  RegistroClientes Clientes;
+        private RegistroClientes Clientes;
         private RegistroReserva Reservas;
 
         private MainWindowCore MVC;

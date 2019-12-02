@@ -33,8 +33,32 @@ namespace GestionReservas.GUI
 
             this.View.btnAddReserva.Click += (sender, e) => this.InsertaReserva();
             this.View.btnConsultaReserva.Click += (sender, e) => this.ConsultaReserva();
-           
+            this.View.opConsultaC.Click += (sender, e) => this.ConsultaCliente();
+
         }
+        /*
+        void InsertaCliente()
+        {
+            Console.WriteLine("Inserta clienteeeeeee");
+            var dlgInsertaCliente = new DlgInsertaCliente(this.Clientes);
+
+            this.View.Hide();
+            Console.WriteLine("pre if insertaCliente");
+            if (dlgInsertaCliente.ShowDialog() == DialogResult.OK)
+            {
+                Console.WriteLine("dentro if insertaCliente");
+                Cliente c = new Cliente(
+                    dlgInsertaCliente.DNI, dlgInsertaCliente.Nombre, dlgInsertaCliente.Telefono, dlgInsertaCliente.Email, dlgInsertaCliente.DirPostal
+                    );
+                Console.WriteLine(c.ToString());
+                this.Clientes.Add(c);
+                this.Clientes.GuardarXml();
+            }
+            Console.WriteLine("DialogResult= " + DialogResult);
+            if (!this.View.IsDisposed) { this.View.Show(); }
+            else { Application.Exit(); }
+        }
+        */
 
         void InsertaReserva()
         {
@@ -76,8 +100,23 @@ namespace GestionReservas.GUI
             else { Application.Exit(); }
         }
 
-        
         void ConsultaCliente()
+        {
+            Console.WriteLine("Consulta Clientes");
+            var dlgConsultaCliente = new DlgConsultaCliente(this.Clientes);
+
+
+            this.View.Hide();
+
+            if (dlgConsultaCliente.ShowDialog() == DialogResult.OK) { }
+
+            if (!this.View.IsDisposed) { this.View.Show(); }
+            else { Application.Exit(); }
+
+        }
+
+        
+    /*    void ConsultaCliente()
         {
             Console.WriteLine("Consulta Clientes");
             var dlgConsultaCliente = new DlgConsultaCliente(this.Clientes);
@@ -90,7 +129,7 @@ namespace GestionReservas.GUI
             if (!this.View.IsDisposed) { this.View.Show(); }
             else{  Application.Exit();  }
 
-        }
+        }*/
         void ConsultaReserva()
         {
             Console.WriteLine("Consulta reservas");
@@ -109,16 +148,18 @@ namespace GestionReservas.GUI
 
         public void Salir()
         {
-            Console.WriteLine("guarda y sale");
+            Console.WriteLine("MAINCORE guarda y sale");
             this.Reservas.GuardarXml();
+            this.Clientes.GuardarXml();
             Application.Exit();
         }
 
         void Guardar()
         {
-            Console.WriteLine("dentro guardar");
+            Console.WriteLine("MAIN CORE dentro guardar");
 
             this.Reservas.GuardarXml();
+            this.Clientes.GuardarXml();
         }
 
         void OnQuit()
