@@ -29,36 +29,12 @@ namespace GestionReservas.GUI
             this.View.opGuardar.Click += (sender, e) => this.Guardar();
             this.View.opSalir.Click += (sender, e) => this.Salir();
 
-            this.View.opConsultaC.Click += (sender, e) => this.ConsultaCliente();
-
             this.View.btnAddReserva.Click += (sender, e) => this.InsertaReserva();
             this.View.btnConsultaReserva.Click += (sender, e) => this.ConsultaReserva();
             this.View.opConsultaC.Click += (sender, e) => this.ConsultaCliente();
 
         }
-        /*
-        void InsertaCliente()
-        {
-            Console.WriteLine("Inserta clienteeeeeee");
-            var dlgInsertaCliente = new DlgInsertaCliente(this.Clientes);
-
-            this.View.Hide();
-            Console.WriteLine("pre if insertaCliente");
-            if (dlgInsertaCliente.ShowDialog() == DialogResult.OK)
-            {
-                Console.WriteLine("dentro if insertaCliente");
-                Cliente c = new Cliente(
-                    dlgInsertaCliente.DNI, dlgInsertaCliente.Nombre, dlgInsertaCliente.Telefono, dlgInsertaCliente.Email, dlgInsertaCliente.DirPostal
-                    );
-                Console.WriteLine(c.ToString());
-                this.Clientes.Add(c);
-                this.Clientes.GuardarXml();
-            }
-            Console.WriteLine("DialogResult= " + DialogResult);
-            if (!this.View.IsDisposed) { this.View.Show(); }
-            else { Application.Exit(); }
-        }
-        */
+   
 
         void InsertaReserva()
         {
@@ -72,7 +48,12 @@ namespace GestionReservas.GUI
             {
 
                 Habitacion h = this.Habitaciones.getHabitacion(dlgInsertaReserva.NumHabitacion);
+
+                this.Clientes = RegistroClientes.RecuperarXml();
                 Cliente c = this.Clientes.getCliente(dlgInsertaReserva.DniCliente);
+
+                Console.WriteLine("----------->" + c.ToString());
+                Console.Read();
 
                 //obtener el cliente a partir del DNI con getCliente(DNI) del registro de clientes
                    Reserva newReserva =  new Reserva(
@@ -115,21 +96,6 @@ namespace GestionReservas.GUI
 
         }
 
-        
-    /*    void ConsultaCliente()
-        {
-            Console.WriteLine("Consulta Clientes");
-            var dlgConsultaCliente = new DlgConsultaCliente(this.Clientes);
-
-
-            this.View.Hide();
-
-            if(dlgConsultaCliente.ShowDialog() == DialogResult.OK) { }
-
-            if (!this.View.IsDisposed) { this.View.Show(); }
-            else{  Application.Exit();  }
-
-        }*/
         void ConsultaReserva()
         {
             Console.WriteLine("Consulta reservas");

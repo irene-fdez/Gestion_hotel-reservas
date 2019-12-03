@@ -25,14 +25,43 @@ namespace GestionReservas.GUI.Dlg
             var MVC = new MainWindowCore();
 
             this.Reservas = Reservas;
-            this.rgCli = clientesList;
+            this.listClientes = clientesList;
             this.rgHab = habitacionesList;
             this.Build();
             this.CenterToScreen();
+            this.RegCli = RegistroClientes.RecuperarXml();
 
 
             this.opSalir.Click += (sender, e) => { this.DialogResult = DialogResult.Cancel; MVC.Salir(); };
             this.opVolver.Click += (sender, e) => this.DialogResult = DialogResult.Cancel;
+
+            
+
+            this.btnAddCliente.Click += (sender, e) =>
+            {
+
+                var dlgIC = new DlgConsultaCliente(this.RegCli);
+
+                this.Hide();
+
+                dlgIC.InsertaClienteFromReserva();
+                this.listClientes = this.RegCli.List;
+
+                cbDniClienteList.Items.Clear();
+                string[] op = new string[this.listClientes != null ? this.listClientes.Count : 0];
+                for (int i = 0; i < op.Length; i++)
+                {
+                    Cliente cliente = this.listClientes[i];
+                    op[i] = cliente.DNI;
+                }
+                cbDniClienteList.Items.AddRange(op);
+
+
+                if (!this.IsDisposed) { this.Show(); }
+                else { Application.Exit(); }
+
+            };
+
         }
 
         void Build()
@@ -70,10 +99,6 @@ namespace GestionReservas.GUI.Dlg
             //Cliente
             var pnldniCliente = this.BuildCliente();
             pnlInserta.Controls.Add(pnldniCliente);
-
-            //Tipo reserva
-         /*   var pnlTipo = this.BuilTipo();
-            pnlInserta.Controls.Add(pnlTipo);*/
 
             //F_entrada
             var pnlDateIn = this.BuildFechaEntrada();
@@ -146,7 +171,6 @@ namespace GestionReservas.GUI.Dlg
             this.Menu = mPpal;
 
         }
-
 
 
         Panel BuildBotonesPanel()
@@ -287,21 +311,23 @@ namespace GestionReservas.GUI.Dlg
                         cbNumHabitacionList.Items.Add(h.Numero);
                     }
                 }
-            };
+            
 
-            if(cbTipoHabitacion.Text == "matrimoniales")
-            {
-                numPrecioDia.Value = 42;
-            }
-            else if (cbTipoHabitacion.Text == "doble")
-            {
-                numPrecioDia.Value = 38;
-            }
-            else
-            {
-                numPrecioDia.Value = 31;
-            }
-           
+                if(cbTipoHabitacion.Text == "matrimoniales")
+                {
+                    numPrecioDia.Value = 42;
+                }
+                else if (cbTipoHabitacion.Text == "doble")
+                {
+                    numPrecioDia.Value = 38;
+                }
+                else
+                {
+                    numPrecioDia.Value = 31;
+                }
+            };
+            
+
             this.cbTipoHabitacion.Validating += (sender, cancelArgs) =>
             {
                 bool invalid = false;
@@ -408,11 +434,22 @@ namespace GestionReservas.GUI.Dlg
                 DropDownWidth = 20,
             };
 
+            this.btnAddCliente = new Button
+            {
+                Text = "+",
+                Font = new Font(FontFamily.GenericMonospace, 10, FontStyle.Bold, GraphicsUnit.Point),
+                TextAlign = ContentAlignment.MiddleCenter,
+                Left = cbDniClienteList.Left + cbDniClienteList.Width + 20,
+                Width = 25,
+                Anchor = AnchorStyles.Bottom,
+                BackColor = Color.White,
+            };
+
             
-            string[] op = new string[this.rgCli != null ? this.rgCli.Count : 0];
+            string[] op = new string[this.listClientes != null ? this.listClientes.Count : 0];
             for (int i = 0; i < op.Length; i++)
             {
-                Cliente cliente = this.rgCli[i];
+                Cliente cliente = this.listClientes[i];
                 op[i] = cliente.DNI ;
             }
             cbDniClienteList.Items.AddRange(op);
@@ -438,6 +475,7 @@ namespace GestionReservas.GUI.Dlg
 
             pnlDniCliente.Controls.Add(cbDniClienteList);
             pnlDniCliente.Controls.Add(lblCliente);
+            pnlDniCliente.Controls.Add(btnAddCliente);
 
             return pnlDniCliente;
 
@@ -592,7 +630,7 @@ namespace GestionReservas.GUI.Dlg
             cbGaraje.Items.Add("SI");
             cbGaraje.Items.Add("NO");
 
-            this.cbGaraje.Validating += (sender, cancelArgs) =>
+           this.cbGaraje.Validating += (sender, cancelArgs) =>
             {
                 bool invalid = false;
                 var btAccept = (Button)this.AcceptButton;
@@ -713,6 +751,8 @@ namespace GestionReservas.GUI.Dlg
             };
         }
 
+
+        
         private ComboBox cbTipoHabitacion;
         private ComboBox cbNumHabitacionList;
         private ComboBox cbDniClienteList;
@@ -721,6 +761,7 @@ namespace GestionReservas.GUI.Dlg
         private ComboBox cbGaraje;
         private NumericUpDown numPrecioDia;
         private NumericUpDown numIva;
+        private Button btnAddCliente;
 
         private Panel pnlReserva;
         private Panel pnlEspacio;
@@ -734,7 +775,7 @@ namespace GestionReservas.GUI.Dlg
         private Panel pnlDniCliente;
         private Panel pnlInserta;
 
-        public string TipoHabitacion => this.cbNumHabitacionList.Text;
+        public string TipoHabitacion => this.cbTipoHabitacion.Text;
         public string DniCliente => this.cbDniClienteList.Text;
         public string NumHabitacion => this.cbNumHabitacionList.Text;
         public DateTime FechaEntrada => this.dtpDateIn.Value;
@@ -749,9 +790,10 @@ namespace GestionReservas.GUI.Dlg
         public MenuItem opVolver;
         public MenuItem opSalir;
         public MenuItem mBuscar;
-        public List<Cliente> rgCli = null;
+        public List<Cliente> listClientes = null;
         public List<Habitacion> rgHab = null;
         private RegistroReserva Reservas;
+        private RegistroClientes RegCli;
 
     }
 }

@@ -21,6 +21,7 @@ namespace GestionReservas.GUI.Dlg
             this.Clientes = cli;
             this.BuildGUI();
             this.CenterToScreen();
+            this.Reservas = new RegistroReserva(cli.List);
 
 
             
@@ -412,7 +413,29 @@ namespace GestionReservas.GUI.Dlg
             Console.WriteLine("Inserta clienteeeeee");
             var dlgInsertaCliente = new DlgInsertaCliente(this.Clientes);
 
-            //this.View.Hide();
+            this.Hide();
+
+            if (dlgInsertaCliente.ShowDialog() == DialogResult.OK)
+            {
+                Console.WriteLine("dentro if insertaCliente");
+                Cliente c = new Cliente(
+                    dlgInsertaCliente.DNI, dlgInsertaCliente.Nombre, dlgInsertaCliente.Telefono, dlgInsertaCliente.Email, dlgInsertaCliente.DirPostal
+                    );
+                Console.WriteLine(c.ToString());
+                this.Clientes.Add(c);
+                Console.WriteLine("Dentro if insertaCliente pre guardar");
+                this.Clientes.GuardarXml();
+                this.Actualiza();
+            }
+
+
+            if (!this.IsDisposed) { this.Show(); }
+            else { Application.Exit(); }
+        }
+
+        public void InsertaClienteFromReserva()
+        {
+            var dlgInsertaCliente = new DlgInsertaCliente(this.Clientes);
 
             if (dlgInsertaCliente.ShowDialog() == DialogResult.OK)
             {
@@ -477,8 +500,10 @@ namespace GestionReservas.GUI.Dlg
             fila.Cells[2].Value = cliente.Email; 
             fila.Cells[3].Value = cliente.Nombre;
             fila.Cells[4].Value = cliente.Telefono;
-            fila.Cells[5].Value = cliente.DireccionPostal;
+           // fila.Cells[5].Value = cliente.DireccionPostal;
+            fila.Cells[5].Value = "*";
             fila.Cells[6].Value = "*";
+            fila.Cells[7].Value = "*";
 
 
             foreach (DataGridViewCell celda in fila.Cells)
@@ -544,35 +569,7 @@ namespace GestionReservas.GUI.Dlg
             Cliente cliente = this.Clientes.getCliente(id);
             Reservas = new RegistroReserva(Clientes.List);
             Console.WriteLine(cliente);
-            /*//A partir de la clave de la entidad Reserva, obtenemos la reserva a modificar
-            
-            Reserva ResModif = this.Reservas.getReserva(id);
-            Cliente c = ResModif.Cliente;
 
-            var dlgModificar = new DlgModificaReserva(ResModif, this.Clientes);
-            this.Hide();
-            if (dlgModificar.ShowDialog() == DialogResult.OK)
-            {
-                this.Reservas.Remove(ResModif);
-                this.ReservasBuscar.Remove(ResModif);
-
-                string tipo = dlgModificar.Tipo;
-                DateTime fechaEntrada = dlgModificar.FechaEntrada;
-                DateTime fechaSalida = dlgModificar.FechaSalida;
-                string garaje = dlgModificar.Garaje;
-
-                Reserva r = new Reserva(id, tipo, c, fechaEntrada, fechaSalida, garaje, ResModif.PrecioDia, ResModif.IVA, ResModif.Total);
-                
-                this.Reservas.Add(r);
-                this.ReservasBuscar.Add(r);
-                this.Actualiza();
-
-            }
-
-            }
-            if (!this.IsDisposed) { this.Show(); }
-            else { Application.Exit(); }
-*/
         }
 
 
@@ -580,6 +577,8 @@ namespace GestionReservas.GUI.Dlg
         {
             Console.WriteLine("Eliminar Cliente");
             var dni = (string)this.GrdLista.CurrentRow.Cells[1].Value;
+            Console.WriteLine(dni);
+
 
             //Dialogo de confirmación de eiminación
             DialogResult result;
@@ -587,10 +586,26 @@ namespace GestionReservas.GUI.Dlg
             string tittle = "Eliminar cliente";
 
             result = MessageBox.Show(mensaje, tittle, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            
 
             if (result == DialogResult.Yes)
             {
-                this.Clientes.Remove(this.Clientes.getCliente(dni));
+               
+                if (!this.Reservas.ExisteReservaCliente(dni))
+                {
+                    Console.WriteLine("Elimina el cliente "+dni);
+                    this.Clientes.Remove(this.Clientes.getCliente(dni));
+                    this.Clientes.GuardarXml();
+                }
+                else
+                {
+                    Console.WriteLine("NO elimina el cliente " + dni);
+                    DialogResult msgbox;
+                    var msg = "No se puede eliminar un cliente con reservas";
+                    var text = "Eliminar cliente";
+                    msgbox = MessageBox.Show(msg, text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                }
+              
             }
         }
 
@@ -656,7 +671,6 @@ namespace GestionReservas.GUI.Dlg
         public MenuItem opBuscarAll;
         public MenuItem opBuscarPendientes;
         public MenuItem mInsertar;
-
 
 
         public StatusBar SbStatus;

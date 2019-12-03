@@ -363,7 +363,7 @@ namespace GestionReservas.GUI.Dlg
             };
             var lblDatosConcepto = new Label
             {
-                Text = "\nReserva " +this.reserva.Tipo + garaje,
+                Text = "\nHabitacion " +this.reserva.Tipo + garaje,
                 Dock = DockStyle.Left,
                 ForeColor = Color.Black,
                 TextAlign = ContentAlignment.TopLeft,

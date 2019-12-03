@@ -361,6 +361,11 @@ namespace GestionReservas.GUI.Dlg
                 Width = 250,
                 Anchor = AnchorStyles.Bottom,
                 Text = this.reserva.Tipo,
+                ReadOnly = true,
+                BackColor = Color.FromArgb(185, 216, 244),
+                Enabled = false,
+                ForeColor = Color.Black,
+                TextAlign = HorizontalAlignment.Center,
             };
 
             this.tbTipo.Validating += (sender, cancelArgs) =>

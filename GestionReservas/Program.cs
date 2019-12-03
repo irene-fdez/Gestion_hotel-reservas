@@ -24,7 +24,7 @@ namespace GestionReservas
             rc.Add(new Cliente("12345678A", "Carlos Perez", 65698745, "carlos@email.com", "av. Otero Pedrayo, 2. Ourense"));
             rc.Add(new Cliente("23456789B", "Juan Lopez", 652369874, "juan@email.com", "c/Rio Sil, 14. Ourense"));
             rc.Add(new Cliente("34567890C", "Maria Diaz", 689546231, "maria@email.com", "c/ Serrano, 28. MAdrid"));
-
+            */
             
             var rh = new RegistroHabitaciones();
             rh.Add(new Habitacion("001", "matrimoniales", DateTime.Today, DateTime.Today));
@@ -33,13 +33,11 @@ namespace GestionReservas
             rh.Add(new Habitacion("004", "individuales", DateTime.Today, DateTime.Today));
 
 
-            rc.GuardarXml();
+           // rc.GuardarXml();
             rh.GuardarXml();
             
             Console.ReadLine();
-            */
+            
         }
-
     }
-
 }

@@ -18,6 +18,11 @@ namespace GestionReservas.GUI.Dlg
             this.Cli = cli;
             this.Build();
             this.CenterToScreen();
+
+            var RegClientes = RegistroClientes.RecuperarXml();
+            var DCC = new DlgConsultaCliente(RegClientes);
+            this.opSalir.Click += (sender, e) => { this.DialogResult = DialogResult.Cancel; DCC.Salir(); };
+            this.opVolver.Click += (sender, e) => this.DialogResult = DialogResult.Cancel;
         }
 
         void Build()
@@ -76,11 +81,11 @@ namespace GestionReservas.GUI.Dlg
             Console.WriteLine(pnlCliente.Height);
 
             this.Size = new Size(600,
-                      100 + pnlCliente.Height + pnlEspacio.Height + pnlDNI.Height + pnlNombre.Height + pnlTelef.Height +
+                      60 + pnlCliente.Height + pnlEspacio.Height + pnlDNI.Height + pnlNombre.Height + pnlTelef.Height +
                       pnlEmail.Height + pnlDirPostal.Height + pnlBotones.Height);
 
             this.MinimumSize = new Size(600,
-                      100 + pnlCliente.Height + pnlEspacio.Height + pnlDNI.Height + pnlNombre.Height + pnlTelef.Height +
+                      60 + pnlCliente.Height + pnlEspacio.Height + pnlDNI.Height + pnlNombre.Height + pnlTelef.Height +
                       pnlEmail.Height + pnlDirPostal.Height + pnlBotones.Height);
 
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
@@ -498,6 +503,9 @@ namespace GestionReservas.GUI.Dlg
 
         private MaskedTextBox mtbTelef;
         public string Mask { get; set; }
+
+        private RegistroClientes RegClientes;
+
     }
 }
 

@@ -23,9 +23,10 @@ namespace GestionReservas.GUI.Dlg
             this.Clientes = cli;
             this.BuildGUI();
             this.CenterToScreen();
+            this.RegClientes = RegistroClientes.RecuperarXml();
 
 
-            
+
             this.GrdLista.Click += (sender, e) => ClickLista();
 
             this.opBuscarAll.Click += (sender, e) => this.BuscarTodos();
@@ -34,6 +35,10 @@ namespace GestionReservas.GUI.Dlg
             this.opGuardar.Click += (sender, e) => this.Guardar();
             this.opSalir.Click += (sender, e) => { this.DialogResult = DialogResult.Cancel; this.Salir(); };
             this.opVolver.Click += (sender, e) => this.DialogResult = DialogResult.Cancel;
+
+            this.opConsultaC.Click += (sender, e) => this.ConsultaCliente();
+
+
         }
 
         private void BuildGUI()
@@ -81,6 +86,25 @@ namespace GestionReservas.GUI.Dlg
             this.opBuscarAll = new MenuItem("&Buscar todos");
             this.opBuscarPendientes = new MenuItem("&Buscar pendientes");
 
+            this.mCliente = new MenuItem("&Cliente");
+            //this.opInsertarC = new MenuItem("&Insertar");
+            this.opConsultaC = new MenuItem("&Consulta");
+
+
+            this.mHabitaciones = new MenuItem("&Habitacion");
+            this.opInsertarH = new MenuItem("&Insertar");
+            this.opConsultaH = new MenuItem("&Consulta");
+
+            this.mArchivo.MenuItems.Add(this.opGuardar);
+            this.mArchivo.MenuItems.Add(this.opSalir);
+
+            //this.mCliente.MenuItems.Add(this.opInsertarC);
+            this.mCliente.MenuItems.Add(this.opConsultaC);
+
+            this.mHabitaciones.MenuItems.Add(this.opInsertarH);
+            this.mHabitaciones.MenuItems.Add(this.opConsultaH);
+
+     
 
             this.mBuscar.MenuItems.Add(this.opBuscarAll);
             this.mBuscar.MenuItems.Add(this.opBuscarPendientes);
@@ -90,7 +114,10 @@ namespace GestionReservas.GUI.Dlg
             this.mArchivo.MenuItems.Add(this.opSalir);
 
             this.mPpal.MenuItems.Add(this.mArchivo);
+            this.mPpal.MenuItems.Add(this.mCliente);
+            this.mPpal.MenuItems.Add(this.mHabitaciones);
             this.mPpal.MenuItems.Add(this.mBuscar);
+
 
             this.Menu = mPpal;
         }
@@ -386,15 +413,15 @@ namespace GestionReservas.GUI.Dlg
             this.GrdLista.Columns[1].Width =
                                 (int)System.Math.Floor(width * .10); // id
             this.GrdLista.Columns[2].Width =
-                                (int)System.Math.Floor(width * .07); // tipo
+                                (int)System.Math.Floor(width * .10); // tipo
             this.GrdLista.Columns[3].Width =
-                                (int)System.Math.Floor(width * .14); // Fecha entrada
+                                (int)System.Math.Floor(width * .13); // Fecha entrada
             this.GrdLista.Columns[4].Width =
-                                (int)System.Math.Floor(width * .14); // Fecha salida
+                                (int)System.Math.Floor(width * .13); // Fecha salida
             this.GrdLista.Columns[5].Width =
                                (int)System.Math.Floor(width * .06); // garaje
             this.GrdLista.Columns[6].Width =
-                               (int)System.Math.Floor(width * .10); // Precio total
+                               (int)System.Math.Floor(width * .09); // Precio total
             this.GrdLista.Columns[7].Width =
                                (int)System.Math.Floor(width * .09); // DNI Cliente
             this.GrdLista.Columns[8].Width =
@@ -405,6 +432,21 @@ namespace GestionReservas.GUI.Dlg
                                (int)System.Math.Floor(width * .09); // btn factura
         }
 
+
+        void ConsultaCliente()
+        {
+            Console.WriteLine("Consulta Clientes");
+            var dlgConsultaCliente = new DlgConsultaCliente(this.RegClientes);
+
+
+            this.Hide();
+
+            if (dlgConsultaCliente.ShowDialog() == DialogResult.OK) { }
+
+            if (!this.IsDisposed) { this.Show(); }
+            else { Application.Exit(); }
+
+        }
         void BuscarTodos()
         {
 
@@ -480,7 +522,15 @@ namespace GestionReservas.GUI.Dlg
             fila.Cells[4].Value = reserva.FechaSalida.ToString("dd/MM/yyyy");
             fila.Cells[5].Value = reserva.Garaje;
             fila.Cells[6].Value = reserva.TotalConIva();
-            fila.Cells[7].Value = reserva.Cliente.DNI;
+
+            try
+            {
+                fila.Cells[7].Value = reserva.Cliente.DNI;
+            }
+            catch (NullReferenceException) {
+                fila.Cells[7].Value = " ";
+            }
+
             fila.Cells[8].Value = "*";
             fila.Cells[9].Value = "*";
             fila.Cells[10].Value = "*";
@@ -494,7 +544,11 @@ namespace GestionReservas.GUI.Dlg
                 }
                 else if(celda.ColumnIndex == 7)
                 {
-                    celda.ToolTipText = reserva.Cliente.ToString();
+                    try
+                    {
+                        celda.ToolTipText = reserva.Cliente.ToString();
+                    }
+                    catch (NullReferenceException) { }
                 }
             }
         }
@@ -614,6 +668,8 @@ namespace GestionReservas.GUI.Dlg
             Application.Exit();
         }
 
+      
+
 
 
         private MainMenu mPpal;
@@ -625,6 +681,12 @@ namespace GestionReservas.GUI.Dlg
         public MenuItem opBuscarAll;
         public MenuItem opBuscarPendientes;
         public MenuItem opBuscarPorPersona;
+        public MenuItem mCliente;
+        public MenuItem opInsertarC;
+        public MenuItem opConsultaC;
+        public MenuItem mHabitaciones;
+        public MenuItem opInsertarH;
+        public MenuItem opConsultaH;
 
 
         public StatusBar SbStatus;
@@ -637,6 +699,7 @@ namespace GestionReservas.GUI.Dlg
 
         private RegistroReserva Reservas;
         private RegistroReserva ReservasBuscar;
+        private RegistroClientes RegClientes;
         private MainWindowCore MVC;
 
     }

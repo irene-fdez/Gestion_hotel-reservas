@@ -82,6 +82,22 @@ namespace GestionReservas.Core
             return null;
         }
 
+        public Boolean ExisteReservaCliente(string dni)
+        {
+            Console.WriteLine("dentro EcisteReservaCliente");
+            foreach (Reserva r in this.reservas)
+            {
+                if (r.Cliente.DNI == dni)
+                {
+                    Console.WriteLine("true");
+                    return true;
+                }
+            }
+            Console.WriteLine("false");
+
+            return false;
+        }
+
         public List<String> getIds()
         {
             List<String> ids = new List<string>();

@@ -93,8 +93,8 @@ namespace GestionReservas.GUI
             this.mHabitaciones.MenuItems.Add(this.opConsultaH);
 
             this.mPpal.MenuItems.Add(this.mArchivo);
-            this.mPpal.MenuItems.Add(this.mCliente);
-            this.mPpal.MenuItems.Add(this.mHabitaciones);
+        //    this.mPpal.MenuItems.Add(this.mCliente);
+        //    this.mPpal.MenuItems.Add(this.mHabitaciones);
             this.mPpal.MenuItems.Add(this.mBuscar);
 
             this.Menu = mPpal;
