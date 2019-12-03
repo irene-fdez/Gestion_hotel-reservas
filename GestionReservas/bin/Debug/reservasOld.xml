@@ -52,4 +52,56 @@
     <IVA>21</IVA>
     <total>13.31</total>
   </reserva>
+  <reserva>
+    <id>20191123002</id>
+    <tipo>002</tipo>
+    <cliente>
+      <clienteDNI>23456789B</clienteDNI>
+    </cliente>
+    <fechaEntrada>2019-11-24T00:00:00+01:00</fechaEntrada>
+    <fechaSalida>2019-11-26T00:00:00+01:00</fechaSalida>
+    <garaje>SI</garaje>
+    <precioDia>38</precioDia>
+    <IVA>21</IVA>
+    <total>91.96</total>
+  </reserva>
+  <reserva>
+    <id>20191123001</id>
+    <tipo>001</tipo>
+    <cliente>
+      <clienteDNI>23456789B</clienteDNI>
+    </cliente>
+    <fechaEntrada>2019-11-22T00:00:00+01:00</fechaEntrada>
+    <fechaSalida>2019-11-24T00:00:00+01:00</fechaSalida>
+    <garaje>NO</garaje>
+    <precioDia>42</precioDia>
+    <IVA>21</IVA>
+    <total>101.64</total>
+  </reserva>
+  <reserva>
+    <id>20191127001</id>
+    <tipo>001</tipo>
+    <cliente>
+      <clienteDNI>12345678A</clienteDNI>
+    </cliente>
+    <fechaEntrada>2019-11-27T00:00:00+01:00</fechaEntrada>
+    <fechaSalida>2019-11-27T00:00:00+01:00</fechaSalida>
+    <garaje>SI</garaje>
+    <precioDia>42</precioDia>
+    <IVA>21</IVA>
+    <total>50.82</total>
+  </reserva>
+  <reserva>
+    <id>20191127004</id>
+    <tipo>004</tipo>
+    <cliente>
+      <clienteDNI>23456789B</clienteDNI>
+    </cliente>
+    <fechaEntrada>2019-11-28T00:00:00+01:00</fechaEntrada>
+    <fechaSalida>2019-11-30T00:00:00+01:00</fechaSalida>
+    <garaje>SI</garaje>
+    <precioDia>31</precioDia>
+    <IVA>21</IVA>
+    <total>37.51</total>
+  </reserva>
 </reservas>

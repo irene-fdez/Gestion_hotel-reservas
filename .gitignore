@@ -1,18 +1,19 @@
 
-.vs/GestionReservas/v16/Server/sqlite3/storage.ide-shm
+.vs/GestionReservas/*/Server/sqlite3/storage.ide-shm
 
-.vs/GestionReservas/v16/Server/sqlite3/storage.ide-wal
+.vs/GestionReservas/*/Server/sqlite3/*
 
-GestionReservas/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
+GestionReservas/obj/*/DesignTimeResolveAssemblyReferencesInput.cache
 
-GestionReservas/obj/Debug/GestionReservas.csproj.CoreCompileInputs.cache
+GestionReservas/obj/*/GestionReservas.csproj.CoreCompileInputs.cache
 
-GestionReservas/obj/Debug/GestionReservas.csprojAssemblyReference.cache
+GestionReservas/obj/*/GestionReservas.csprojAssemblyReference.cache
 
 *.cache
 
-.vs/GestionReservas/v16/.suo
-
+.vs/*
+.vs/*/*
+.vs/*/*/*
 *.exe
 
 *.pdb
@@ -21,4 +22,7 @@ GestionReservas/obj/Debug/gestionReservas.csproj.FileListAbsolute.txt
 
 GestionReservas/GestionReservas.csproj
 
-.vs/GestionReservas/v16/Server/sqlite3/storage.ide
+GestionReservas/*/.DS_Store
+GestionReservas/*/*/.DS_Store
+.vs/GestionReservas/*/.suo
+GestionReservas/bin/*/*

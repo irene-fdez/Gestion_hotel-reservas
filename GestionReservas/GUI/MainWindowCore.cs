@@ -29,6 +29,9 @@ namespace GestionReservas.GUI
             this.View.opGuardar.Click += (sender, e) => this.Guardar();
             this.View.opSalir.Click += (sender, e) => this.Salir();
 
+            this.View.opConsultaC.Click += (sender, e) => this.ConsultaCliente();
+            this.View.opConsultaH.Click += (sender, e) => this.ConsultaHabitacion();
+
             this.View.btnAddReserva.Click += (sender, e) => this.InsertaReserva();
             this.View.btnConsultaReserva.Click += (sender, e) => this.ConsultaReserva();
             this.View.opConsultaC.Click += (sender, e) => this.ConsultaCliente();
@@ -52,8 +55,7 @@ namespace GestionReservas.GUI
                 this.Clientes = RegistroClientes.RecuperarXml();
                 Cliente c = this.Clientes.getCliente(dlgInsertaReserva.DniCliente);
 
-                Console.WriteLine("----------->" + c.ToString());
-                Console.Read();
+
 
                 //obtener el cliente a partir del DNI con getCliente(DNI) del registro de clientes
                    Reserva newReserva =  new Reserva(
@@ -96,6 +98,21 @@ namespace GestionReservas.GUI
 
         }
 
+        
+        void ConsultaHabitacion()
+        {
+            Console.WriteLine("Consulta Habitaciones");
+            var dlgConsultaHabitacion = new DlgConsultaHabitacion(this.Reservas,this.Clientes.List);
+
+
+            this.View.Hide();
+
+            if(dlgConsultaHabitacion.ShowDialog() == DialogResult.OK) { }
+
+            if (!this.View.IsDisposed) { this.View.Show(); }
+            else{  Application.Exit();  }
+
+        }
         void ConsultaReserva()
         {
             Console.WriteLine("Consulta reservas");
