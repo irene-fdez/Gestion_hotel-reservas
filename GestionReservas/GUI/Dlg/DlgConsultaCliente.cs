@@ -26,7 +26,6 @@ namespace GestionReservas.GUI.Dlg
 
             
             this.GrdLista.Click += (sender, e) => ClickLista();
-            this.mInsertar.Click += (sender, e) => this.InsertaCliente();
             this.opGuardar.Click += (sender, e) => this.Guardar();
             this.opSalir.Click += (sender, e) => { this.DialogResult = DialogResult.Cancel; this.Salir(); };
             this.opVolver.Click += (sender, e) => this.DialogResult = DialogResult.Cancel;
@@ -36,8 +35,6 @@ namespace GestionReservas.GUI.Dlg
         {
             this.BuildStatus();
             this.BuildMenu();
-
-            // this.BuildPanelLista();
 
             this.SuspendLayout();
             this.pnlPpal = new Panel()
@@ -73,8 +70,6 @@ namespace GestionReservas.GUI.Dlg
             this.opSalir.Shortcut = Shortcut.CtrlQ;
             this.mBuscar = new MenuItem("&Buscar");
             
-            this.mInsertar = new MenuItem("&Insertar");
-
             this.opBuscarAll = new MenuItem("&Buscar todos");
             this.opBuscarPendientes = new MenuItem("&Buscar pendientes");
 
@@ -86,8 +81,6 @@ namespace GestionReservas.GUI.Dlg
             this.mArchivo.MenuItems.Add(this.opSalir);
 
             this.mPpal.MenuItems.Add(this.mArchivo);
-
-            this.mPpal.MenuItems.Add(this.mInsertar);
             this.mPpal.MenuItems.Add(this.mBuscar);
 
             this.Menu = mPpal;
@@ -670,7 +663,6 @@ namespace GestionReservas.GUI.Dlg
         public MenuItem mBuscar;
         public MenuItem opBuscarAll;
         public MenuItem opBuscarPendientes;
-        public MenuItem mInsertar;
 
 
         public StatusBar SbStatus;
