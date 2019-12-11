@@ -66,6 +66,30 @@ namespace GestionReservas.GUI
 
         private void BuildMenu()
         {
+            
+            // View chart
+            this.opOcupacionCliente = new MenuItem("&Ocupación por cliente") {
+                Shortcut = Shortcut.CtrlF6
+            };
+            
+            // View chart
+            this.opOcupacionHabitacion = new MenuItem("&Ocupación por habitación") {
+                Shortcut = Shortcut.CtrlF7
+            };
+            
+            // View chart
+            this.opComodidadesHabitacion = new MenuItem("&Comodidades por habitación") {
+                Shortcut = Shortcut.CtrlF8
+            };
+            
+            this.mView = new MenuItem( "&Graficos" );
+
+            
+            mView.MenuItems.Add( opOcupacionGeneral );
+            mView.MenuItems.Add( opOcupacionCliente );
+            mView.MenuItems.Add( opOcupacionHabitacion );
+            mView.MenuItems.Add( opComodidadesHabitacion );
+            
             this.mPpal = new MainMenu();
 
             this.mArchivo = new MenuItem("&Archivo");
@@ -96,6 +120,7 @@ namespace GestionReservas.GUI
             this.mPpal.MenuItems.Add(this.mCliente);
             this.mPpal.MenuItems.Add(this.mHabitaciones);
             this.mPpal.MenuItems.Add(this.mBuscar);
+            this.mPpal.MenuItems.Add(this.mView);
 
             this.Menu = mPpal;
 
@@ -201,7 +226,11 @@ namespace GestionReservas.GUI
         }
 
 
-
+        public MenuItem opOcupacionGeneral { get; private set; }
+        public MenuItem opOcupacionCliente { get; private set; }
+        public MenuItem opOcupacionHabitacion { get; private set; }
+        public MenuItem opComodidadesHabitacion { get; private set; }
+        public MenuItem mView { get; private set; }
 
         public Button btnAddReserva;
         public Button btnConsultaReserva;

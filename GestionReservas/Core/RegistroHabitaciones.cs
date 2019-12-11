@@ -17,6 +17,12 @@
         public const string EtqTipo = "tipo";
         public const string EtqFechaRenova = "fechaRenovacion";
         public const string EtqUltimaRenov = "fechaUltimaReserva";
+        public const string EtqWifi = "wifi";
+        public const string EtqCajaFuerte = "cajaFuerte";
+        public const string EtqMiniBar = "miniBar";
+        public const string EtqBaño = "baño";
+        public const string EtqCocina = "cocina";
+        public const string EtqTv = "tv";
 
 
         private List<Habitacion> habitaciones;
@@ -140,7 +146,13 @@
                                             new XAttribute(EtqNumero, h.Numero),
                                             new XAttribute(EtqTipo, h.Tipo),
                                             new XAttribute(EtqFechaRenova, h.FechaRenova),
-                                            new XAttribute(EtqUltimaRenov, h.UltimaReserva)
+                                            new XAttribute(EtqUltimaRenov, h.UltimaReserva),
+                                            new XAttribute(EtqWifi, h.Wifi),
+                                            new XAttribute(EtqCajaFuerte, h.CajaFuerte),
+                                            new XAttribute(EtqMiniBar, h.MiniBar),
+                                            new XAttribute(EtqBaño, h.Baño),
+                                            new XAttribute(EtqCocina, h.Cocina),
+                                            new XAttribute(EtqTv, h.Tv)
                                             );
 
                 root.Add(habitacion);
@@ -185,12 +197,81 @@
 
         public static Habitacion GetHabitacionXML(XElement h)
         {
+            Habitacion.Tipos parsedTipo = default(Habitacion.Tipos);
+            var element = h.Attribute(EtqTipo);
+            if(element != null)
+            {
+                // Try to parse
+                Enum.TryParse<Habitacion.Tipos>(element.Value, out parsedTipo);
+            }
+            
             return new Habitacion(
                 (string)h.Attribute(EtqNumero),
-                (string)h.Attribute(EtqTipo),
+                 parsedTipo,
                 (DateTime)h.Attribute(EtqFechaRenova),
-                (DateTime)h.Attribute(EtqUltimaRenov)
+                (DateTime)h.Attribute(EtqUltimaRenov),
+                (bool) h.Attribute(EtqWifi),
+                (bool) h.Attribute(EtqCajaFuerte),
+                (bool) h.Attribute(EtqMiniBar),
+                (bool) h.Attribute(EtqBaño),
+                (bool) h.Attribute(EtqCocina),
+                (bool) h.Attribute(EtqTv)
             );
+        }
+        
+        public Dictionary<string, int> getHabitacionesComodidad()
+        {
+            Dictionary<string, int> valores = new Dictionary<string, int>();
+            
+            valores.Add("Wifi", 0);
+            valores.Add("Caja", 0);
+            valores.Add("MiniBar", 0);
+            valores.Add("Baño", 0);
+            valores.Add("Cocina", 0);
+            valores.Add("Tv", 0);
+
+            foreach (Habitacion h in habitaciones)
+            {
+                if (h.Tv)
+                {
+                    var value = valores["Tv"];
+                    value++;
+                    valores["Tv"] = value;
+                }
+                if (h.Cocina)
+                {
+                    var value = valores["Cocina"];
+                    value++;
+                    valores["Cocina"] = value;
+                }
+                if (h.Baño)
+                {
+                    var value = valores["Baño"];
+                    value++;
+                    valores["Baño"] = value;
+                }
+                if (h.MiniBar)
+                {
+                    var value = valores["MiniBar"];
+                    value++;
+                    valores["MiniBar"] = value;
+                }
+                if (h.CajaFuerte)
+                {
+                    var value = valores["Caja"];
+                    value++;
+                    valores["Caja"] = value;
+                }
+                if (h.Wifi)
+                {
+                    var value = valores["Wifi"];
+                    value++;
+                    valores["Wifi"] = value;
+                }
+
+            }
+
+            return valores;
         }
     }
 }

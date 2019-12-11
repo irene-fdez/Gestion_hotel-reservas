@@ -52,4 +52,17 @@
     <IVA>21</IVA>
     <total>13.31</total>
   </reserva>
+  <reserva>
+    <id>20191125140</id>
+    <tipo>140</tipo>
+    <cliente>
+      <clienteDNI>12345678A</clienteDNI>
+    </cliente>
+    <fechaEntrada>2019-11-25T00:00:00+01:00</fechaEntrada>
+    <fechaSalida>2019-11-25T00:00:00+01:00</fechaSalida>
+    <garaje>SI</garaje>
+    <precioDia>38</precioDia>
+    <IVA>21</IVA>
+    <total>45.98</total>
+  </reserva>
 </reservas>

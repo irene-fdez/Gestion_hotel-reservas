@@ -1,4 +1,6 @@
 ﻿
+using System.Linq;
+
 namespace GestionReservas.Core
 {
 
@@ -252,6 +254,209 @@ namespace GestionReservas.Core
         {
             throw new NotImplementedException();
         }
+        
+          //Devuelve el número de reservas por mes
+        public List<int> getReservasPorMes()
+        {
+            int[] valores = new int[12];
+            var añoActual = DateTime.Today.Year.ToString();
+
+            foreach (Reserva r in reservas)
+            {
+                var id = r.Id;
+                var añoReserva = id.Substring(0, 4);
+
+                if (añoReserva.Equals(añoActual))
+                {
+                    int mesReserva = int.Parse(id.Substring(4, 2));
+                    valores[mesReserva-1]++;
+                }
+
+            }
+
+            return valores.ToList();
+        }
+        
+        //Devuelve un diccionario con clave año y valor el número de reservas de ese año
+        public List<int> getReservasPorAño()
+        {
+            Dictionary<string, int> valores = new Dictionary<string, int>();
+            List<int> valoresFinales = new List<int>();
+            var añoActual = DateTime.Today.Year;
+            for (var i = añoActual - 4; i < añoActual ; i++)
+            {
+                valores.Add(i.ToString(), 0);
+            }
+
+            foreach (Reserva r in reservas)
+            {
+                var id = r.Id;
+                var añoReserva = id.Substring(0, 4);
+
+                if (!valores.ContainsKey(añoReserva))
+                {
+                    valores.Add(añoReserva, 1);
+                }
+                else
+                {
+                    var value = valores[añoReserva];
+                    value++;
+                    valores[añoReserva] = value;
+                }
+
+            }
+            foreach(KeyValuePair<string,int> p in valores)
+            {
+                valoresFinales.Add(p.Value);
+            }
+
+            return valoresFinales;
+        }
+        
+        public Dictionary<string, int> getReservasPorClienteMes()
+        {
+            Dictionary<string, int> valores = new Dictionary<string, int>();
+
+            foreach (Reserva r in reservas)
+            {
+                var id = r.Id;
+                var dni = r.Cliente.DNI;
+                int mesReserva = int.Parse(id.Substring(4, 2));
+                int mesActual = DateTime.Today.Month;
+                if (!valores.ContainsKey(dni))
+                {
+                    if (mesReserva.Equals(mesActual))
+                    {
+                        valores.Add(dni, 1); 
+                    }
+                    else
+                    {
+                        valores.Add(dni, 0);
+                    }
+                }
+                else
+                {
+                    var value = valores[dni];
+                    if (mesReserva.Equals(mesActual))
+                    {
+                        value++;   
+                    }
+                    valores[dni] = value;
+                }
+
+            }
+
+            return valores;
+        }
+        
+        public Dictionary<string, int> getReservasPorClienteAño()
+        {
+            Dictionary<string, int> valores = new Dictionary<string, int>();
+
+            foreach (Reserva r in reservas)
+            {
+                var id = r.Id;
+                var dni = r.Cliente.DNI;
+                int añoReserva = int.Parse(id.Substring(0, 4));
+                int añoActual = DateTime.Today.Year;
+                if (!valores.ContainsKey(dni))
+                {
+                    if (añoReserva.Equals(añoActual))
+                    {
+                        valores.Add(dni, 1); 
+                    }
+                    else
+                    {
+                        valores.Add(dni, 0);
+                    }
+                }
+                else
+                {
+                    var value = valores[dni];
+                    if (añoReserva.Equals(añoActual))
+                    {
+                        value++;   
+                    }
+                    valores[dni] = value;
+                }
+
+            }
+
+            return valores;
+        }
+        
+        public Dictionary<string, int> getReservasPorHabitacionMes()
+        {
+            Dictionary<string, int> valores = new Dictionary<string, int>();
+
+            foreach (Reserva r in reservas)
+            {
+                var id = r.Id;
+                var hab = id.Substring(8, 3);
+                int mesReserva = int.Parse(id.Substring(4, 2));
+                int mesActual = DateTime.Today.Month;
+                if (!valores.ContainsKey(hab))
+                {
+                    if (mesReserva.Equals(mesActual))
+                    {
+                        valores.Add(hab, 1); 
+                    }
+                    else
+                    {
+                        valores.Add(hab, 0);
+                    }
+                }
+                else
+                {
+                    var value = valores[hab];
+                    if (mesReserva.Equals(mesActual))
+                    {
+                        value++;   
+                    }
+                    valores[hab] = value;
+                }
+
+            }
+
+            return valores;
+        }
+        
+        public Dictionary<string, int> getReservasPorHabitacionAño()
+        {
+            Dictionary<string, int> valores = new Dictionary<string, int>();
+
+            foreach (Reserva r in reservas)
+            {
+                var id = r.Id;
+                var hab = id.Substring(8, 3);
+                int añoReserva = int.Parse(id.Substring(0, 4));
+                int añoActual = DateTime.Today.Year;
+                if (!valores.ContainsKey(hab))
+                {
+                    if (añoReserva.Equals(añoActual))
+                    {
+                        valores.Add(hab, 1); 
+                    }
+                    else
+                    {
+                        valores.Add(hab, 0);
+                    }
+                }
+                else
+                {
+                    var value = valores[hab];
+                    if (añoReserva.Equals(añoActual))
+                    {
+                        value++;   
+                    }
+                    valores[hab] = value;
+                }
+
+            }
+
+            return valores;
+        }
+
 
         private List<Cliente> clientes;
 
