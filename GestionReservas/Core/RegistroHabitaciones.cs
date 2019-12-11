@@ -17,6 +17,12 @@
         public const string EtqTipo = "tipo";
         public const string EtqFechaRenova = "fechaRenovacion";
         public const string EtqUltimaRenov = "fechaUltimaReserva";
+        public const string EtqWifi = "wifi";
+        public const string EtqCajaFuerte = "cajaFuerte";
+        public const string EtqMiniBar = "miniBar";
+        public const string EtqBaño = "baño";
+        public const string EtqCocina = "cocina";
+        public const string EtqTv = "tv";
 
 
         private List<Habitacion> habitaciones;
@@ -140,7 +146,13 @@
                                             new XAttribute(EtqNumero, h.Numero),
                                             new XAttribute(EtqTipo, h.Tipo),
                                             new XAttribute(EtqFechaRenova, h.FechaRenova),
-                                            new XAttribute(EtqUltimaRenov, h.UltimaReserva)
+                                            new XAttribute(EtqUltimaRenov, h.UltimaReserva),
+                                            new XAttribute(EtqWifi, h.Wifi),
+                                            new XAttribute(EtqCajaFuerte, h.CajaFuerte),
+                                            new XAttribute(EtqMiniBar, h.MiniBar),
+                                            new XAttribute(EtqBaño, h.Baño),
+                                            new XAttribute(EtqCocina, h.Cocina),
+                                            new XAttribute(EtqTv, h.Tv)
                                             );
 
                 root.Add(habitacion);
@@ -185,11 +197,25 @@
 
         public static Habitacion GetHabitacionXML(XElement h)
         {
+            Habitacion.Tipos parsedTipo = default(Habitacion.Tipos);
+            var element = h.Attribute(EtqTipo);
+            if(element != null)
+            {
+                // Try to parse
+                Enum.TryParse<Habitacion.Tipos>(element.Value, out parsedTipo);
+            }
+            
             return new Habitacion(
                 (string)h.Attribute(EtqNumero),
-                (string)h.Attribute(EtqTipo),
+                 parsedTipo,
                 (DateTime)h.Attribute(EtqFechaRenova),
-                (DateTime)h.Attribute(EtqUltimaRenov)
+                (DateTime)h.Attribute(EtqUltimaRenov),
+                (bool) h.Attribute(EtqWifi),
+                (bool) h.Attribute(EtqCajaFuerte),
+                (bool) h.Attribute(EtqMiniBar),
+                (bool) h.Attribute(EtqBaño),
+                (bool) h.Attribute(EtqCocina),
+                (bool) h.Attribute(EtqTv)
             );
         }
     }

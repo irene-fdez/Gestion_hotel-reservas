@@ -1,7 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <habitaciones>
-  <habitacion numero="001" tipo="matrimoniales" fechaRenovacion="2019-11-20T00:00:00+01:00" fechaUltimaReserva="2019-11-20T00:00:00+01:00" />
-  <habitacion numero="002" tipo="doble" fechaRenovacion="2019-11-20T00:00:00+01:00" fechaUltimaReserva="2019-11-20T00:00:00+01:00" />
-  <habitacion numero="003" tipo="individuales" fechaRenovacion="2019-11-20T00:00:00+01:00" fechaUltimaReserva="2019-11-20T00:00:00+01:00" />
-  <habitacion numero="004" tipo="individuales" fechaRenovacion="2019-11-20T00:00:00+01:00" fechaUltimaReserva="2019-11-20T00:00:00+01:00" />
+  <habitacion numero="001" tipo="matrimoniales" fechaRenovacion="2019-11-25T00:00:00+01:00" fechaUltimaReserva="2019-11-25T00:00:00+01:00" wifi="true" cajaFuerte="true" miniBar="true" baño="true" cocina="true" tv="true" />
+  <habitacion numero="002" tipo="doble" fechaRenovacion="2019-11-25T00:00:00+01:00" fechaUltimaReserva="2019-11-25T00:00:00+01:00" wifi="true" cajaFuerte="false" miniBar="true" baño="true" cocina="true" tv="true" />
+  <habitacion numero="003" tipo="individuales" fechaRenovacion="2019-11-25T00:00:00+01:00" fechaUltimaReserva="2019-11-25T00:00:00+01:00" wifi="true" cajaFuerte="true" miniBar="false" baño="true" cocina="true" tv="true" />
+  <habitacion numero="004" tipo="individuales" fechaRenovacion="2019-11-25T00:00:00+01:00" fechaUltimaReserva="2019-11-25T00:00:00+01:00" wifi="true" cajaFuerte="true" miniBar="true" baño="false" cocina="true" tv="true" />
+  <habitacion numero="101" tipo="doble" fechaRenovacion="2019-11-27T00:00:00+01:00" fechaUltimaReserva="2019-11-27T00:00:00+01:00" wifi="true" cajaFuerte="false" miniBar="true" baño="false" cocina="true" tv="false" />
+  <habitacion numero="102" tipo="matrimoniales" fechaRenovacion="2019-11-27T00:00:00+01:00" fechaUltimaReserva="2019-11-27T00:00:00+01:00" wifi="true" cajaFuerte="false" miniBar="false" baño="true" cocina="true" tv="false" />
+  <habitacion numero="101" tipo="doble" fechaRenovacion="2019-11-27T00:00:00+01:00" fechaUltimaReserva="2019-11-27T00:00:00+01:00" wifi="true" cajaFuerte="true" miniBar="false" baño="true" cocina="false" tv="false" />
 </habitaciones>

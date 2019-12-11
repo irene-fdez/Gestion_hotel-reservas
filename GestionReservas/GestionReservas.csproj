@@ -48,6 +48,9 @@
   <ItemGroup>
     <Compile Include="Core\RegistroClientes.cs" />
     <Compile Include="Core\RegistroHabitaciones.cs" />
+    <Compile Include="GUI\Dlg\DIgConsiultaHabitacion.cs" />
+    <Compile Include="GUI\Dlg\DIgInsertaHabitaciones.cs" />
+    <Compile Include="GUI\Dlg\DIgModificaHabitacion.cs" />
     <Compile Include="GUI\Dlg\DlgConsultaReserva.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -73,6 +76,5 @@
     <Compile Include="Core\Reserva.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
