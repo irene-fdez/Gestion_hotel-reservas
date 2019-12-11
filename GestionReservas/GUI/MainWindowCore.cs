@@ -33,9 +33,7 @@ namespace GestionReservas.GUI
             
             this.View.opConsultaC.Click += (sender, e) => this.ConsultaCliente();
 
-            
-            this.View.opInsertarH.Click += (sender, e) => this.InsertaHabitacion();
-            this.View.opConsultaH.Click += (sender, e) => this.ConsultaHabitaciones();
+
             
             this.View.btnAddReserva.Click += (sender, e) => this.InsertaReserva();
             this.View.btnConsultaReserva.Click += (sender, e) => this.ConsultaReserva();
@@ -157,7 +155,9 @@ namespace GestionReservas.GUI
         void InsertaReserva()
         {
             Console.WriteLine("Inserta reserva");
-            var dlgInsertaReserva = new DlgInsertaReserva(this.Reservas, Clientes.List, Habitaciones.List);
+            var Habita = RegistroHabitaciones.RecuperarXml();
+
+            var dlgInsertaReserva = new DlgInsertaReserva(this.Reservas, Clientes.List, Habita.List);
             
 
             this.View.Hide();
@@ -214,78 +214,7 @@ namespace GestionReservas.GUI
         }
 
         
-        void InsertaHabitacion()
-        {
-            Console.WriteLine("Inserta Habitacion");
-            var dlgInsertaHabitacion = new DIgInsertaHabitaciones(this.Habitaciones, Habitaciones.List);
-            
-
-            this.View.Hide();
-
-            if (dlgInsertaHabitacion.ShowDialog() == DialogResult.OK)
-            {
-
-                Habitacion h = this.Habitaciones.getHabitacion(dlgInsertaHabitacion.NumHabitacion);
-
-                // obtener a apartir de un string un enum
-                Habitacion.Tipos parsedTipo = default(Habitacion.Tipos);
-                var element =dlgInsertaHabitacion.TipoHabitacion;
-                if(element != null)
-                {
-                    // Try to parse
-                    Enum.TryParse<Habitacion.Tipos>(element, out parsedTipo);
-                }
-                 
-                Console.WriteLine("Numero de habitacion " + dlgInsertaHabitacion.NumHabitacion + "\ntipo " +parsedTipo  + "\n Wfi " + dlgInsertaHabitacion.Wifi 
-                                  + "\n cj " + dlgInsertaHabitacion.CajaFuerte + "\n minib " + dlgInsertaHabitacion.MiniBar + "\n Baño " + dlgInsertaHabitacion.Baño + "\n Cocina " + dlgInsertaHabitacion.Cocina
-                                  + "\n Tv " );
-                //obtener el cliente a partir del DNI con getCliente(DNI) del registro de clientes
-                Habitacion newHabitacion =  new Habitacion(
-                    dlgInsertaHabitacion.NumHabitacion , parsedTipo , 
-                     dlgInsertaHabitacion.FechaRenova, 
-                    dlgInsertaHabitacion.UltimaReserva, Convert.ToBoolean(dlgInsertaHabitacion.Wifi), 
-                     Convert.ToBoolean(dlgInsertaHabitacion.CajaFuerte),
-                     Convert.ToBoolean(dlgInsertaHabitacion.MiniBar),
-                     Convert.ToBoolean(dlgInsertaHabitacion.Baño),
-                     Convert.ToBoolean(dlgInsertaHabitacion.Cocina),
-                     Convert.ToBoolean( dlgInsertaHabitacion.Tv)
-                );
-
-                if (this.Reservas.comprobarId(newHabitacion.Numero))
-                {
-                    string mensaje = "No se ha insertado la reserva, porque el ID ya pertenece a una reserva del registro";
-                    string tittle = "Error al insertar";
-                    MessageBox.Show(mensaje, tittle, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-
-                }
-                else
-                {
-                    this.Habitaciones.Add(newHabitacion);
-
-                    this.Habitaciones.GuardarXml();
-                }
-                
-            }
-
-            if (!this.View.IsDisposed) { this.View.Show(); }
-            else { Application.Exit(); }
-        }
-        
-        
-        void ConsultaHabitaciones()
-        {
-            Console.WriteLine("Consulta Habitaciones");
-            var dlgConsultaHabitaicon= new DIgConsiultaHabitacion(this.Habitaciones);
-
-
-            this.View.Hide();
-
-            if(dlgConsultaHabitaicon.ShowDialog() == DialogResult.OK) { }
-
-            if (!this.View.IsDisposed) { this.View.Show(); }
-            else{  Application.Exit();  }
-
-        }
+       
         
         void ConsultaReserva()
         {

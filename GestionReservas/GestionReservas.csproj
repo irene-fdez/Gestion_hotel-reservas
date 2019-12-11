@@ -39,6 +39,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Forms.DataVisualization" />
+    <Reference Include="System.Windows.Forms.DataVisualization.Design" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -63,7 +64,9 @@
     </Compile>
     <Compile Include="GUI\Chart.cs" />
     <Compile Include="GUI\DemoChart.cs" />
-    <Compile Include="GUI\Dlg\DIgConsiultaHabitacion.cs" />
+    <Compile Include="GUI\Dlg\DIgConsultaHabitacion.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="GUI\Dlg\DIgInsertaHabitaciones.cs" />
     <Compile Include="GUI\Dlg\DIgModificaHabitacion.cs" />
     <Compile Include="GUI\Dlg\DlgConsultaReserva.cs">

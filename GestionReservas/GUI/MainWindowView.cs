@@ -81,7 +81,14 @@ namespace GestionReservas.GUI
             this.opComodidadesHabitacion = new MenuItem("&Comodidades por habitación") {
                 Shortcut = Shortcut.CtrlF8
             };
-            
+
+            // View chart
+            this.opOcupacionGeneral = new MenuItem("&Ocupacion general")
+            {
+                Shortcut = Shortcut.CtrlF11
+            };
+
+
             this.mView = new MenuItem( "&Graficos" );
 
             

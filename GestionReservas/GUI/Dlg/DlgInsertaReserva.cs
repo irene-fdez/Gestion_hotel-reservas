@@ -32,6 +32,7 @@ namespace GestionReservas.GUI.Dlg
             this.RegCli = RegistroClientes.RecuperarXml();
 
 
+
             this.opSalir.Click += (sender, e) => { this.DialogResult = DialogResult.Cancel; MVC.Salir(); };
             this.opVolver.Click += (sender, e) => this.DialogResult = DialogResult.Cancel;
 

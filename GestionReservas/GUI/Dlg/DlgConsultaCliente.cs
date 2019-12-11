@@ -52,7 +52,7 @@ namespace GestionReservas.GUI.Dlg
 
             this.MinimumSize = new Size(1000, 400);
             this.Resize += (obj, e) => this.ResizeWindow();
-            this.Text = "Gestion de un hotel - Consulta Cliente";
+            this.Text = "Gestion de un hotel - Consulta Clientes";
 
             this.Actualiza();
             this.ResumeLayout(true);

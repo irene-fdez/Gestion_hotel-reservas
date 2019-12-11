@@ -8,7 +8,7 @@
     using System.Xml.Linq;
     using System.Collections.Generic;
 
-    public class RegistroHabitaciones : ICollection<Habitacion>
+    public class RegistroHabitaciones : ICollection<Habitacion> , IFormatProvider
     {
         public const string ArchivoXML = "habitaciones.xml";
         public const string EtqHabitaciones = "habitaciones";
@@ -204,9 +204,14 @@
                 // Try to parse
                 Enum.TryParse<Habitacion.Tipos>(element.Value, out parsedTipo);
             }
+
+            var numero3DigitosProvisional = (String)h.Attribute(EtqNumero);
+
+            string numero3Digitos = numero3DigitosProvisional.ToString().PadLeft(3, '0');
+            Console.WriteLine(numero3Digitos);
             
             return new Habitacion(
-                (string)h.Attribute(EtqNumero),
+               numero3Digitos,
                  parsedTipo,
                 (DateTime)h.Attribute(EtqFechaRenova),
                 (DateTime)h.Attribute(EtqUltimaRenov),
@@ -272,6 +277,11 @@
             }
 
             return valores;
+        }
+
+        public object GetFormat(Type formatType)
+        {
+            throw new NotImplementedException();
         }
     }
 }

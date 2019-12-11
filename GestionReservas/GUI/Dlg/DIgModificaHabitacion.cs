@@ -24,7 +24,7 @@ namespace GestionReservas.GUI.Dlg
             this.Build();
             this.CenterToScreen();
 
-            var DCR = new DIgConsiultaHabitacion(this.Habitaciones);
+            var DCR = new DIgConsultaHabitacion(this.Habitaciones);
             this.opSalir.Click += (sender, e) => { this.DialogResult = DialogResult.Cancel; DCR.Salir(); };
             this.opVolver.Click += (sender, e) => this.DialogResult = DialogResult.Cancel;
 

@@ -24,6 +24,7 @@ namespace GestionReservas.GUI.Dlg
             this.BuildGUI();
             this.CenterToScreen();
             this.RegClientes = RegistroClientes.RecuperarXml();
+            this.Habitaciones = RegistroHabitaciones.RecuperarXml();
 
 
 
@@ -35,6 +36,9 @@ namespace GestionReservas.GUI.Dlg
             this.opGuardar.Click += (sender, e) => this.Guardar();
             this.opSalir.Click += (sender, e) => { this.DialogResult = DialogResult.Cancel; this.Salir(); };
             this.opVolver.Click += (sender, e) => this.DialogResult = DialogResult.Cancel;
+
+            this.opInsertarH.Click += (sender, e) => this.InsertaHabitacion();
+            this.opConsultaH.Click += (sender, e) => this.ConsultaHabitaciones();
 
             this.opConsultaC.Click += (sender, e) => this.ConsultaCliente();
 
@@ -678,6 +682,81 @@ namespace GestionReservas.GUI.Dlg
             else { Application.Exit(); }
         }
 
+        public void InsertaHabitacion()
+        {
+            Console.WriteLine("Inserta Habitacion");
+            var dlgInsertaHabitacion = new DIgInsertaHabitaciones(this.Habitaciones, Habitaciones.List);
+
+
+            this.Hide();
+
+            if (dlgInsertaHabitacion.ShowDialog() == DialogResult.OK)
+            {
+
+                // obtener a apartir de un string un enum
+                Habitacion.Tipos parsedTipo = default(Habitacion.Tipos);
+                var element = dlgInsertaHabitacion.TipoHabitacion;
+                if (element != null)
+                {
+                    // Try to parse
+                    Enum.TryParse<Habitacion.Tipos>(element, out parsedTipo);
+                }
+
+                string numero3DigitosProvisional = (String)dlgInsertaHabitacion.NumHabitacion;
+                string numero3Digitos = numero3DigitosProvisional.ToString().PadLeft(3, '0');
+
+                Console.WriteLine("---------------->"+numero3Digitos);
+
+                Console.WriteLine("Numero de habitacion " + numero3Digitos + "\ntipo " + parsedTipo + "\n Wfi " + dlgInsertaHabitacion.Wifi
+                                  + "\n cj " + dlgInsertaHabitacion.CajaFuerte + "\n minib " + dlgInsertaHabitacion.MiniBar + "\n Baño " + dlgInsertaHabitacion.Baño + "\n Cocina " + dlgInsertaHabitacion.Cocina
+                                  + "\n Tv ");
+                //obtener el cliente a partir del DNI con getCliente(DNI) del registro de clientes
+                Habitacion newHabitacion = new Habitacion(
+                     numero3Digitos, parsedTipo,
+                     dlgInsertaHabitacion.FechaRenova,
+                     dlgInsertaHabitacion.UltimaReserva, Convert.ToBoolean(dlgInsertaHabitacion.Wifi),
+                     Convert.ToBoolean(dlgInsertaHabitacion.CajaFuerte),
+                     Convert.ToBoolean(dlgInsertaHabitacion.MiniBar),
+                     Convert.ToBoolean(dlgInsertaHabitacion.Baño),
+                     Convert.ToBoolean(dlgInsertaHabitacion.Cocina),
+                     Convert.ToBoolean(dlgInsertaHabitacion.Tv)
+                );
+
+                if (this.Reservas.comprobarId(newHabitacion.Numero))
+                {
+                    string mensaje = "No se ha insertado la reserva, porque el ID ya pertenece a una reserva del registro";
+                    string tittle = "Error al insertar";
+                    MessageBox.Show(mensaje, tittle, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
+                }
+                else
+                {
+                    this.Habitaciones.Add(newHabitacion);
+
+                    this.Habitaciones.GuardarXml();
+                }
+
+            }
+
+            if (!this.IsDisposed) { this.Show(); }
+            else { Application.Exit(); }
+        }
+
+
+        public void ConsultaHabitaciones()
+        {
+            Console.WriteLine("Consulta Habitaciones");
+            var dlgConsultaHabitaicon = new DIgConsultaHabitacion(this.Habitaciones);
+
+
+            this.Hide();
+
+            if (dlgConsultaHabitaicon.ShowDialog() == DialogResult.OK) { }
+
+            if (!this.IsDisposed) { this.Show(); }
+            else { Application.Exit(); }
+
+        }
 
         void Guardar()
         {
@@ -724,6 +803,7 @@ namespace GestionReservas.GUI.Dlg
         private RegistroReserva Reservas;
         private RegistroReserva ReservasBuscar;
         private RegistroClientes RegClientes;
+        private RegistroHabitaciones Habitaciones;
         private MainWindowCore MVC;
 
     }
