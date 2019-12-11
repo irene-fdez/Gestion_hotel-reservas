@@ -27,15 +27,14 @@ namespace GestionReservas
             */
             
             var rh = new RegistroHabitaciones();
-            rh.Add(new Habitacion("001", "matrimoniales", DateTime.Today, DateTime.Today));
-            rh.Add(new Habitacion("002", "doble", DateTime.Today, DateTime.Today));
-            rh.Add(new Habitacion("003", "individuales", DateTime.Today, DateTime.Today));
-            rh.Add(new Habitacion("004", "individuales", DateTime.Today, DateTime.Today));
+            rh.Add(new Habitacion("001", Habitacion.Tipos.matrimoniales, DateTime.Today, DateTime.Today ,true,true,true,true,true,true));
+            rh.Add(new Habitacion("002", Habitacion.Tipos.doble, DateTime.Today, DateTime.Today,true,false,true,true,true,true));
+            rh.Add(new Habitacion("003", Habitacion.Tipos.individuales, DateTime.Today, DateTime.Today,true,true,false,true,true,true));
+            rh.Add(new Habitacion("004", Habitacion.Tipos.individuales, DateTime.Today, DateTime.Today,true,true,true,false,true,true));
 
 
            // rc.GuardarXml();
-            rh.GuardarXml();
-            
+             //rh.GuardarXml();
             Console.ReadLine();
             
         }

@@ -306,7 +306,16 @@ namespace GestionReservas.GUI.Dlg
                 Console.WriteLine("tipo habita select" + cbTipoHabitacion.Text);
                 foreach (Habitacion h in this.rgHab)
                 {
-                    if (h.Tipo == cbTipoHabitacion.Text)
+                    //parseo combobox text to tipos enum 
+                    Habitacion.Tipos parsedTipo = default(Habitacion.Tipos);
+                    var element = cbTipoHabitacion.Text;
+                    if(element != null)
+                    {
+                        // Try to parse
+                        Enum.TryParse<Habitacion.Tipos>(element, out parsedTipo);
+                    }
+
+                    if (h.Tipo == parsedTipo)
                     {
                         cbNumHabitacionList.Items.Add(h.Numero);
                     }

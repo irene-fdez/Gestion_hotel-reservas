@@ -14,7 +14,7 @@ namespace GestionReservas.GUI
 
     public class MainWindowCore: Form
     {
-
+        public enum ViewChart {Months, Years, ClientesMes, ClientesAño, HabMes, HabAño, Comodidades};
         public MainWindowCore()
         {
 
@@ -29,13 +29,128 @@ namespace GestionReservas.GUI
             this.View.opGuardar.Click += (sender, e) => this.Guardar();
             this.View.opSalir.Click += (sender, e) => this.Salir();
 
+            
+            
             this.View.opConsultaC.Click += (sender, e) => this.ConsultaCliente();
-            this.View.opConsultaH.Click += (sender, e) => this.ConsultaHabitacion();
 
+            
+            this.View.opInsertarH.Click += (sender, e) => this.InsertaHabitacion();
+            this.View.opConsultaH.Click += (sender, e) => this.ConsultaHabitaciones();
+            
             this.View.btnAddReserva.Click += (sender, e) => this.InsertaReserva();
             this.View.btnConsultaReserva.Click += (sender, e) => this.ConsultaReserva();
-            this.View.opConsultaC.Click += (sender, e) => this.ConsultaCliente();
+           
+            
+            this.View.opOcupacionGeneral.Click += (sender, e) => this.ViewChartOcupacionGeneral();
+            this.View.opComodidadesHabitacion.Click += (sender, e) => this.ViewChartComodidadesHabitacion();
+            this.View.opOcupacionCliente.Click += (sender, e) => this.ViewChartOcupacionCliente();
+            this.View.opOcupacionHabitacion.Click += (sender, e) => this.ViewChartOcupacionHab();
+        }
 
+        
+         private void ViewChartOcupacionGeneral()
+        {
+            this.ChartView = ViewChart.Months;
+            List<int> valoresMes = this.Reservas.getReservasPorMes();
+            DemoChart demoMonths = new DemoChart(valoresMes, this.ChartView.ToString());
+            demoMonths.Show();
+
+            demoMonths.Chart.Button.Click += (sender, e) => demoMonths.Close();
+            demoMonths.Chart.Button.Click += (sender, e) => this.ViewYears();
+        }
+
+        private void ViewYears()
+        {
+            this.ChartView = ViewChart.Years;
+            List<int> valoresAño = this.Reservas.getReservasPorAño();
+            DemoChart demoYears = new DemoChart(valoresAño, this.ChartView.ToString());
+            demoYears.Show();
+            
+            demoYears.Chart.Button.Click += (sender, e) => demoYears.Close();
+            demoYears.Chart.Button.Click += (sender, e) => this.ViewChartOcupacionGeneral();
+        }
+
+        private void ViewChartComodidadesHabitacion()
+        {
+            this.ChartView = ViewChart.Comodidades;
+            Dictionary<string, int> habitacionesPorComodidad = this.Habitaciones.getHabitacionesComodidad();
+            List<string> comodidades = new List<string>();
+            List<int> valores = new List<int>();
+            foreach (var h in habitacionesPorComodidad)
+            {
+                comodidades.Add(h.Key);
+                valores.Add(h.Value);
+            }
+            DemoChart demoComodidades = new DemoChart(valores, this.ChartView.ToString(), comodidades);
+            demoComodidades.Show();
+        }
+
+        private void ViewChartOcupacionCliente()
+        {
+            this.ChartView = ViewChart.ClientesMes;
+            Dictionary<string, int> ocupacionCliente = this.Reservas.getReservasPorClienteMes();
+            List<string> clientes = new List<string>();
+            List<int> valores = new List<int>();
+            foreach (var c in ocupacionCliente)
+            {
+                clientes.Add(c.Key);
+                valores.Add(c.Value);
+            }
+            DemoChart demoClientes = new DemoChart(valores, this.ChartView.ToString(), clientes);
+            demoClientes.Show();
+            demoClientes.Chart.Button.Click += (sender, e) => demoClientes.Close();
+            demoClientes.Chart.Button.Click += (sender, e) => this.ViewChartOcupacionClienteAño();
+        }
+        
+        private void ViewChartOcupacionClienteAño()
+        {
+            this.ChartView = ViewChart.ClientesAño;
+            Dictionary<string, int> ocupacionCliente = this.Reservas.getReservasPorClienteAño();
+            List<string> clientes = new List<string>();
+            List<int> valores = new List<int>();
+            foreach (var c in ocupacionCliente)
+            {
+                clientes.Add(c.Key);
+                valores.Add(c.Value);
+            }
+            DemoChart demoClientes = new DemoChart(valores, this.ChartView.ToString(), clientes);
+            demoClientes.Show();
+            demoClientes.Chart.Button.Click += (sender, e) => demoClientes.Close();
+            demoClientes.Chart.Button.Click += (sender, e) => this.ViewChartOcupacionCliente();
+        }
+        
+        private void ViewChartOcupacionHab()
+        {
+            this.ChartView = ViewChart.HabMes;
+            Dictionary<string, int> ocupacionHab = this.Reservas.getReservasPorHabitacionMes();
+            List<string> hab = new List<string>();
+            List<int> valores = new List<int>();
+            foreach (var h in ocupacionHab)
+            {
+                hab.Add(h.Key);
+                valores.Add(h.Value);
+            }
+            DemoChart demoHabitaciones = new DemoChart(valores, this.ChartView.ToString(), hab);
+            demoHabitaciones.Show();
+            demoHabitaciones.Chart.Button.Click += (sender, e) => demoHabitaciones.Close();
+            demoHabitaciones.Chart.Button.Click += (sender, e) => this.ViewChartOcupacionHabAño();
+        }
+        
+        private void ViewChartOcupacionHabAño()
+        {
+            this.ChartView = ViewChart.HabAño;
+            Dictionary<string, int> ocupacionHab = this.Reservas.getReservasPorHabitacionAño();
+            List<string> hab = new List<string>();
+            List<int> valores = new List<int>();
+            foreach (var h in ocupacionHab)
+            {
+                hab.Add(h.Key);
+                valores.Add(h.Value);
+            }
+            DemoChart demoHab = new DemoChart(valores, this.ChartView.ToString(), hab);
+            demoHab.Show();
+            demoHab.Chart.Button.Click += (sender, e) => demoHab.Close();
+            demoHab.Chart.Button.Click += (sender, e) => this.ViewChartOcupacionHab();
         }
    
 
@@ -99,20 +214,79 @@ namespace GestionReservas.GUI
         }
 
         
-        void ConsultaHabitacion()
+        void InsertaHabitacion()
+        {
+            Console.WriteLine("Inserta Habitacion");
+            var dlgInsertaHabitacion = new DIgInsertaHabitaciones(this.Habitaciones, Habitaciones.List);
+            
+
+            this.View.Hide();
+
+            if (dlgInsertaHabitacion.ShowDialog() == DialogResult.OK)
+            {
+
+                Habitacion h = this.Habitaciones.getHabitacion(dlgInsertaHabitacion.NumHabitacion);
+
+                // obtener a apartir de un string un enum
+                Habitacion.Tipos parsedTipo = default(Habitacion.Tipos);
+                var element =dlgInsertaHabitacion.TipoHabitacion;
+                if(element != null)
+                {
+                    // Try to parse
+                    Enum.TryParse<Habitacion.Tipos>(element, out parsedTipo);
+                }
+                 
+                Console.WriteLine("Numero de habitacion " + dlgInsertaHabitacion.NumHabitacion + "\ntipo " +parsedTipo  + "\n Wfi " + dlgInsertaHabitacion.Wifi 
+                                  + "\n cj " + dlgInsertaHabitacion.CajaFuerte + "\n minib " + dlgInsertaHabitacion.MiniBar + "\n Baño " + dlgInsertaHabitacion.Baño + "\n Cocina " + dlgInsertaHabitacion.Cocina
+                                  + "\n Tv " );
+                //obtener el cliente a partir del DNI con getCliente(DNI) del registro de clientes
+                Habitacion newHabitacion =  new Habitacion(
+                    dlgInsertaHabitacion.NumHabitacion , parsedTipo , 
+                     dlgInsertaHabitacion.FechaRenova, 
+                    dlgInsertaHabitacion.UltimaReserva, Convert.ToBoolean(dlgInsertaHabitacion.Wifi), 
+                     Convert.ToBoolean(dlgInsertaHabitacion.CajaFuerte),
+                     Convert.ToBoolean(dlgInsertaHabitacion.MiniBar),
+                     Convert.ToBoolean(dlgInsertaHabitacion.Baño),
+                     Convert.ToBoolean(dlgInsertaHabitacion.Cocina),
+                     Convert.ToBoolean( dlgInsertaHabitacion.Tv)
+                );
+
+                if (this.Reservas.comprobarId(newHabitacion.Numero))
+                {
+                    string mensaje = "No se ha insertado la reserva, porque el ID ya pertenece a una reserva del registro";
+                    string tittle = "Error al insertar";
+                    MessageBox.Show(mensaje, tittle, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
+                }
+                else
+                {
+                    this.Habitaciones.Add(newHabitacion);
+
+                    this.Habitaciones.GuardarXml();
+                }
+                
+            }
+
+            if (!this.View.IsDisposed) { this.View.Show(); }
+            else { Application.Exit(); }
+        }
+        
+        
+        void ConsultaHabitaciones()
         {
             Console.WriteLine("Consulta Habitaciones");
-            var dlgConsultaHabitacion = new DlgConsultaHabitacion(this.Reservas,this.Clientes.List);
+            var dlgConsultaHabitaicon= new DIgConsiultaHabitacion(this.Habitaciones);
 
 
             this.View.Hide();
 
-            if(dlgConsultaHabitacion.ShowDialog() == DialogResult.OK) { }
+            if(dlgConsultaHabitaicon.ShowDialog() == DialogResult.OK) { }
 
             if (!this.View.IsDisposed) { this.View.Show(); }
             else{  Application.Exit();  }
 
         }
+        
         void ConsultaReserva()
         {
             Console.WriteLine("Consulta reservas");
@@ -155,6 +329,7 @@ namespace GestionReservas.GUI
         private RegistroReserva Reservas { get; set; }
         private RegistroClientes Clientes { get; set; }
         private RegistroHabitaciones Habitaciones { get; set; }
+        private ViewChart ChartView { get; set; }
 
     }
 }
