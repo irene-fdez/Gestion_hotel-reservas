@@ -103,7 +103,7 @@ namespace GestionReservas.GUI
             this.opGuardar = new MenuItem("&Guardar");
             this.opSalir = new MenuItem("&Salir");
             this.opSalir.Shortcut = Shortcut.CtrlQ;
-            this.mBuscar = new MenuItem("&Buscar");
+            
 
             this.mCliente = new MenuItem("&Cliente");
             //this.opInsertarC = new MenuItem("&Insertar");
@@ -126,7 +126,7 @@ namespace GestionReservas.GUI
             this.mPpal.MenuItems.Add(this.mArchivo);
         //    this.mPpal.MenuItems.Add(this.mCliente);
         //    this.mPpal.MenuItems.Add(this.mHabitaciones);
-            this.mPpal.MenuItems.Add(this.mBuscar);
+           
             this.mPpal.MenuItems.Add(this.mView);
 
             this.Menu = mPpal;
@@ -249,7 +249,7 @@ namespace GestionReservas.GUI
         public MenuItem mArchivo;
         public MenuItem opGuardar;
         public MenuItem opSalir;
-        public MenuItem mBuscar;
+
         public MenuItem mCliente;
         public MenuItem opInsertarC;
         public MenuItem opConsultaC;

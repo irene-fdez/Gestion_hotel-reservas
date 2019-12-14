@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
-    <e p="$PROJECT_DIR$" t="IncludeFlat">
+    <e p="C:\Users\albov\.Rider2019.2\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\albov\.Rider2019.2\system\resharper-host\local\Transient\ReSharperHost\v192\SolutionCaches\_GestionReservas.-811033979.00" t="ExcludeRecursive" />
+    <e p="C:\Users\albov\RiderProjects\Gestion_hotel-reservas" t="IncludeFlat">
       <e p="GestionReservas" t="IncludeRecursive">
         <e p=".gitignore" t="Include" />
         <e p="bin" t="ExcludeRecursive" />
@@ -15,14 +17,21 @@
         </e>
         <e p="GestionReservas.csproj" t="IncludeRecursive" />
         <e p="GUI" t="Include">
+          <e p="Chart.cs" t="Include" />
+          <e p="DemoChart.cs" t="Include" />
           <e p="Dlg" t="Include">
+            <e p="DIgConsultaHabitacion.cs" t="Include" />
+            <e p="DIgInsertaHabitaciones.cs" t="Include" />
+            <e p="DIgModificaHabitacion.cs" t="Include" />
             <e p="DlgBuscarPorPersona.cs" t="Include" />
             <e p="DlgBuscarVaciosPorPiso.cs" t="Include" />
             <e p="DlgConsultaCliente.cs" t="Include" />
             <e p="DlgConsultaHabitacion.cs" t="Include" />
             <e p="DlgConsultaReserva.cs" t="Include" />
             <e p="DlgFacturaReserva.cs" t="Include" />
+            <e p="DlgInsertaCliente.cs" t="Include" />
             <e p="DlgInsertaReserva.cs" t="Include" />
+            <e p="DlgModificaCliente.cs" t="Include" />
             <e p="DlgModificaReserva.cs" t="Include" />
           </e>
           <e p="MainWindowCore.cs" t="Include" />
@@ -37,7 +46,5 @@
       <e p="GestionReservas.sln" t="IncludeFlat" />
       <e p="packages" t="ExcludeRecursive" />
     </e>
-    <e p="$USER_HOME$/Library/Caches/Rider2019.2/extResources" t="IncludeRecursive" />
-    <e p="$USER_HOME$/Library/Caches/Rider2019.2/resharper-host/local/Transient/ReSharperHost/v192/SolutionCaches/_GestionReservas.794547822.00" t="ExcludeRecursive" />
   </component>
 </project>

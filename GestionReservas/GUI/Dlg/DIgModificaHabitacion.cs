@@ -14,23 +14,26 @@ namespace GestionReservas.GUI.Dlg
      
     public class DIgModificaHabitacion : Form
     {
-        public DIgModificaHabitacion(Habitacion habitacion)
+        public DIgModificaHabitacion(Habitacion habitacion,RegistroReserva reservas)
         {
             
             this.Habitaciones = new RegistroHabitaciones();
             this.habitacion = habitacion;
+            this.Reservas = reservas;
             
 
             this.Build();
             this.CenterToScreen();
 
-            var DCR = new DIgConsultaHabitacion(this.Habitaciones);
+            var DCR = new DIgConsultaHabitacion(this.Habitaciones,this.Reservas);
             this.opSalir.Click += (sender, e) => { this.DialogResult = DialogResult.Cancel; DCR.Salir(); };
             this.opVolver.Click += (sender, e) => this.DialogResult = DialogResult.Cancel;
 
 
         }
-        
+
+        public RegistroReserva Reservas { get; set; }
+
         void Build()
         {
            /* this.BuildStatus();*/

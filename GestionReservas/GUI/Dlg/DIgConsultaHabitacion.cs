@@ -13,14 +13,18 @@ namespace GestionReservas.GUI.Dlg
 
     public class DIgConsultaHabitacion :Form
     {
-        public DIgConsultaHabitacion(RegistroHabitaciones habi)
+        public DIgConsultaHabitacion(RegistroHabitaciones habi,RegistroReserva reservas)
         {
             this.MVC = new MainWindowCore();
             this.Habitaciones = habi;
+            this.HabitacionesBuscar = this.Habitaciones;
+            this.Reservas = reservas;
             this.BuildGUI();
             this.CenterToScreen();
 
             this.GrdLista.Click += (sender, e) => ClickLista();
+
+            this.mBuscar.Click += (sender, e) => this.BuscarVacios();
 
             this.opGuardar.Click += (sender, e) => this.Guardar();
             this.opSalir.Click += (sender, e) => { this.DialogResult = DialogResult.Cancel; this.Salir(); };
@@ -92,7 +96,7 @@ namespace GestionReservas.GUI.Dlg
             this.opSalir = new MenuItem("&Salir");
             this.opVolver = new MenuItem("&Volver");
             this.opSalir.Shortcut = Shortcut.CtrlQ;
-            this.mBuscar = new MenuItem("&Buscar");
+            this.mBuscar = new MenuItem("&Buscar vacios");
 
 
             this.mArchivo.MenuItems.Add(this.opVolver);
@@ -306,7 +310,58 @@ namespace GestionReservas.GUI.Dlg
             return pnlLista;
         }
 
-        
+         void BuscarVacios()
+        {
+            Console.WriteLine("HOMNREEEE");
+            var dlgBuscarVaciosPorPiso = new DlgBuscarVaciosPorPiso();
+            this.Hide();
+            if (dlgBuscarVaciosPorPiso.ShowDialog() == DialogResult.OK)
+            {
+                List<Habitacion> habitacionesVacias = new List<Habitacion>();
+                var piso = dlgBuscarVaciosPorPiso.Piso;
+                if (piso == "")
+                {
+                   
+                    this.HabitacionesBuscar.List.ForEach(habitacion =>
+                    {
+                     DateTime today = DateTime.Today;
+                     List<Reserva> reservas = Reservas.List
+                         .Where(element => element.NumeroHabitacion == habitacion.Numero
+                                           && element.FechaEntrada <= today && element.FechaSalida >= today).ToList();
+                     if (reservas.Count == 0)
+                     {
+                         habitacionesVacias.Add(habitacion);
+                     }
+                    });
+                    this.HabitacionesBuscar = new RegistroHabitaciones(habitacionesVacias);
+                    this.Actualiza();
+                }
+                else
+                {
+                    this.HabitacionesBuscar.List.ForEach(habitacion =>
+                    {
+                        if (habitacion.Numero.Substring(0, 1) == piso)
+                        {
+                            DateTime today = DateTime.Today;
+                            List<Reserva> reservas = Reservas.List
+                                .Where(element => element.NumeroHabitacion == habitacion.Numero
+                                                  && element.FechaEntrada <= today && element.FechaSalida >= today)
+                                .ToList();
+                            if (reservas.Count == 0)
+                            {
+                                habitacionesVacias.Add(habitacion);
+                            }
+                        }
+                    });
+                }
+                this.HabitacionesBuscar = new RegistroHabitaciones(habitacionesVacias);
+                this.Actualiza();
+ 
+            }
+ 
+            if (!this.IsDisposed) { this.Show(); }
+            else { Application.Exit(); }
+        }
  private void FilaSeleccionada()
  {
 
@@ -315,9 +370,9 @@ namespace GestionReservas.GUI.Dlg
          int fila = System.Math.Max(0, this.GrdLista.CurrentRow.Index);
          int posicion = this.GrdLista.CurrentCellAddress.X;
 
-         if (posicion == 7 && this.Habitaciones.Count > fila)
+         if (posicion == 7 && this.HabitacionesBuscar.Count > fila)
          {
-             this.edDetalle.Text = this.Habitaciones[fila].ToString();
+             this.edDetalle.Text = this.HabitacionesBuscar[fila].ToString();
              this.edDetalle.SelectionStart = this.edDetalle.Text.Length;
              this.edDetalle.SelectionLength = 0;
          }
@@ -344,7 +399,7 @@ namespace GestionReservas.GUI.Dlg
      // var consultRes = new DlgConsultaReserva();
 
 
-     int numElementos = this.Habitaciones.Count;
+     int numElementos = this.HabitacionesBuscar.Count;
      Console.WriteLine("nº Habitaciones: " + numElementos);
 
      this.SbStatus.Text = ("Numero de Habitaciones: " + numElementos);
@@ -380,7 +435,7 @@ namespace GestionReservas.GUI.Dlg
      }
 
      DataGridViewRow fila = this.GrdLista.Rows[numFila];
-     Habitacion habitacion = this.Habitaciones[numFila];
+     Habitacion habitacion = this.HabitacionesBuscar[numFila];
 
 
      fila.Cells[0].Value = (numFila + 1).ToString().PadLeft(4, ' ');
@@ -446,7 +501,9 @@ namespace GestionReservas.GUI.Dlg
 
      if (result == DialogResult.Yes)
      {
+         this.HabitacionesBuscar.Remove(this.HabitacionesBuscar.getHabitacion(id));
          this.Habitaciones.Remove(this.Habitaciones.getHabitacion(id));
+         
      }
  }
  
@@ -459,12 +516,13 @@ namespace GestionReservas.GUI.Dlg
      Habitacion HabitaModif = this.Habitaciones.getHabitacion(id);
 
      Console.WriteLine("numero de habitacion a modificar" + HabitaModif);
-     var dlgModificar = new DIgModificaHabitacion(HabitaModif);
+     var dlgModificar = new DIgModificaHabitacion(HabitaModif,Reservas);
 
      this.Hide();
      if (dlgModificar.ShowDialog() == DialogResult.OK)
      {
          this.Habitaciones.Remove(HabitaModif);
+         this.HabitacionesBuscar.Remove(HabitaModif);
 
          
          DateTime fechaRenova = dlgModificar.FechaRenova;
@@ -483,6 +541,8 @@ namespace GestionReservas.GUI.Dlg
              HabitaModif.Wifi, HabitaModif.CajaFuerte, HabitaModif.MiniBar, HabitaModif.Baño, HabitaModif.Cocina,HabitaModif.Tv);
                 
          this.Habitaciones.Add(Habi);
+         this.HabitacionesBuscar.Add(Habi);
+         
          this.Actualiza();
 
      }
@@ -522,8 +582,10 @@ namespace GestionReservas.GUI.Dlg
         public DataGridView GrdLista;
 
 
-      
+
+        private RegistroReserva Reservas;
         private RegistroHabitaciones Habitaciones;
+        private RegistroHabitaciones HabitacionesBuscar;
         private MainWindowCore MVC;
 
     }

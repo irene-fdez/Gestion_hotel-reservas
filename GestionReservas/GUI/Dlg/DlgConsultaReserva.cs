@@ -746,7 +746,7 @@ namespace GestionReservas.GUI.Dlg
         public void ConsultaHabitaciones()
         {
             Console.WriteLine("Consulta Habitaciones");
-            var dlgConsultaHabitaicon = new DIgConsultaHabitacion(this.Habitaciones);
+            var dlgConsultaHabitaicon = new DIgConsultaHabitacion(this.Habitaciones,this.Reservas);
 
 
             this.Hide();
