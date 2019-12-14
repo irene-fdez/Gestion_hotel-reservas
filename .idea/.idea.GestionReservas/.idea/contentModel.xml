@@ -26,7 +26,6 @@
             <e p="DlgBuscarPorPersona.cs" t="Include" />
             <e p="DlgBuscarVaciosPorPiso.cs" t="Include" />
             <e p="DlgConsultaCliente.cs" t="Include" />
-            <e p="DlgConsultaHabitacion.cs" t="Include" />
             <e p="DlgConsultaReserva.cs" t="Include" />
             <e p="DlgFacturaReserva.cs" t="Include" />
             <e p="DlgInsertaCliente.cs" t="Include" />

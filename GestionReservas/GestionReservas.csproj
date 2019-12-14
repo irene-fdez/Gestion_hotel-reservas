@@ -59,9 +59,6 @@
     <Compile Include="GUI\Dlg\DlgConsultaCliente.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GUI\Dlg\DlgConsultaHabitacion.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="GUI\Chart.cs" />
     <Compile Include="GUI\DemoChart.cs" />
     <Compile Include="GUI\Dlg\DIgConsultaHabitacion.cs">
