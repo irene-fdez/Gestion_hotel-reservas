@@ -52,7 +52,6 @@ namespace GestionReservas.GUI
             List<int> valoresMes = this.Reservas.getReservasPorMes();
             DemoChart demoMonths = new DemoChart(valoresMes, this.ChartView.ToString());
             demoMonths.Show();
-
             demoMonths.Chart.Button.Click += (sender, e) => demoMonths.Close();
             demoMonths.Chart.Button.Click += (sender, e) => this.ViewYears();
         }
@@ -87,68 +86,126 @@ namespace GestionReservas.GUI
         {
             this.ChartView = ViewChart.ClientesMes;
             Dictionary<string, int> ocupacionCliente = this.Reservas.getReservasPorClienteMes();
-            List<string> clientes = new List<string>();
-            List<int> valores = new List<int>();
-            foreach (var c in ocupacionCliente)
+            if (ocupacionCliente.Count == 0)
             {
-                clientes.Add(c.Key);
-                valores.Add(c.Value);
+                DialogResult result;
+                string mensaje = "Actualmente no hay ningún cliente con reservas este mes\n Puede consultar este gráfico para el año actual";
+                string tittle = "Gráfico ocupación clientes";
+
+                result = MessageBox.Show(mensaje, tittle, MessageBoxButtons.YesNo);
+
+                if (result == DialogResult.Yes)
+                {
+                    this.ViewChartOcupacionClienteAño();
+                }
             }
-            DemoChart demoClientes = new DemoChart(valores, this.ChartView.ToString(), clientes);
-            demoClientes.Show();
-            demoClientes.Chart.Button.Click += (sender, e) => demoClientes.Close();
-            demoClientes.Chart.Button.Click += (sender, e) => this.ViewChartOcupacionClienteAño();
+            else
+            {
+                List<string> clientes = new List<string>();
+                List<int> valores = new List<int>();
+                foreach (var c in ocupacionCliente)
+                {
+                    clientes.Add(c.Key);
+                    valores.Add(c.Value);
+                }
+
+                DemoChart demoClientes = new DemoChart(valores, this.ChartView.ToString(), clientes);
+                demoClientes.Show();
+                demoClientes.Chart.Button.Click += (sender, e) => demoClientes.Close();
+                demoClientes.Chart.Button.Click += (sender, e) => this.ViewChartOcupacionClienteAño();
+            }
         }
         
         private void ViewChartOcupacionClienteAño()
         {
             this.ChartView = ViewChart.ClientesAño;
             Dictionary<string, int> ocupacionCliente = this.Reservas.getReservasPorClienteAño();
-            List<string> clientes = new List<string>();
-            List<int> valores = new List<int>();
-            foreach (var c in ocupacionCliente)
+            if (ocupacionCliente.Count == 0)
             {
-                clientes.Add(c.Key);
-                valores.Add(c.Value);
+                DialogResult result;
+                string mensaje = "Actualmente no hay ningún cliente con reservas este año";
+                string tittle = "Gráfico ocupación clientes";
+
+                result = MessageBox.Show(mensaje, tittle, MessageBoxButtons.OK);
             }
-            DemoChart demoClientes = new DemoChart(valores, this.ChartView.ToString(), clientes);
-            demoClientes.Show();
-            demoClientes.Chart.Button.Click += (sender, e) => demoClientes.Close();
-            demoClientes.Chart.Button.Click += (sender, e) => this.ViewChartOcupacionCliente();
+            else
+            {
+                List<string> clientes = new List<string>();
+                List<int> valores = new List<int>();
+                foreach (var c in ocupacionCliente)
+                {
+                    clientes.Add(c.Key);
+                    valores.Add(c.Value);
+                }
+
+                DemoChart demoClientes = new DemoChart(valores, this.ChartView.ToString(), clientes);
+                demoClientes.Show();
+                demoClientes.Chart.Button.Click += (sender, e) => demoClientes.Close();
+                demoClientes.Chart.Button.Click += (sender, e) => this.ViewChartOcupacionCliente();
+            }
         }
         
         private void ViewChartOcupacionHab()
         {
             this.ChartView = ViewChart.HabMes;
             Dictionary<string, int> ocupacionHab = this.Reservas.getReservasPorHabitacionMes();
-            List<string> hab = new List<string>();
-            List<int> valores = new List<int>();
-            foreach (var h in ocupacionHab)
+            if (ocupacionHab.Count == 0)
             {
-                hab.Add(h.Key);
-                valores.Add(h.Value);
+                DialogResult result;
+                string mensaje = "Actualmente no hay ninguna habitación con reservas este mes\n Puede consultar este gráfico para el año actual";
+                string tittle = "Gráfico ocupación habitaciones";
+
+                result = MessageBox.Show(mensaje, tittle, MessageBoxButtons.YesNo);
+
+                if (result == DialogResult.Yes)
+                {
+                    this.ViewChartOcupacionHabAño();
+                }
             }
-            DemoChart demoHabitaciones = new DemoChart(valores, this.ChartView.ToString(), hab);
-            demoHabitaciones.Show();
-            demoHabitaciones.Chart.Button.Click += (sender, e) => demoHabitaciones.Close();
-            demoHabitaciones.Chart.Button.Click += (sender, e) => this.ViewChartOcupacionHabAño();
+            else
+            {
+                List<string> hab = new List<string>();
+                List<int> valores = new List<int>();
+                foreach (var h in ocupacionHab)
+                {
+                    hab.Add(h.Key);
+                    valores.Add(h.Value);
+                }
+
+                DemoChart demoHabitaciones = new DemoChart(valores, this.ChartView.ToString(), hab);
+                demoHabitaciones.Show();
+                demoHabitaciones.Chart.Button.Click += (sender, e) => demoHabitaciones.Close();
+                demoHabitaciones.Chart.Button.Click += (sender, e) => this.ViewChartOcupacionHabAño();
+            }
         }
         
         private void ViewChartOcupacionHabAño()
         {
             this.ChartView = ViewChart.HabAño;
             Dictionary<string, int> ocupacionHab = this.Reservas.getReservasPorHabitacionAño();
-            List<string> hab = new List<string>();
-            List<int> valores = new List<int>();
-            foreach (var h in ocupacionHab)
+            if (ocupacionHab.Count == 0)
             {
-                hab.Add(h.Key);
-                valores.Add(h.Value);
+                DialogResult result;
+                string mensaje = "Actualmente no hay ninguna habitación con reservas este año";
+                string tittle = "Gráfico ocupación habitaciones";
+
+                result = MessageBox.Show(mensaje, tittle, MessageBoxButtons.OK);
             }
-            DemoChart demoHab = new DemoChart(valores, this.ChartView.ToString(), hab);
-            demoHab.Show();
-            demoHab.Chart.Button.Click += (sender, e) => demoHab.Close();
-            demoHab.Chart.Button.Click += (sender, e) => this.ViewChartOcupacionHab();
+            else
+            {
+                List<string> hab = new List<string>();
+                List<int> valores = new List<int>();
+                foreach (var h in ocupacionHab)
+                {
+                    hab.Add(h.Key);
+                    valores.Add(h.Value);
+                }
+
+                DemoChart demoHab = new DemoChart(valores, this.ChartView.ToString(), hab);
+                demoHab.Show();
+                demoHab.Chart.Button.Click += (sender, e) => demoHab.Close();
+                demoHab.Chart.Button.Click += (sender, e) => this.ViewChartOcupacionHab();
+            }
         }
    
 

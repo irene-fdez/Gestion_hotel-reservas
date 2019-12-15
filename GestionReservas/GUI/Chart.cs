@@ -218,8 +218,15 @@ namespace GestionReservas.GUI {
             this.normalizedData = this.values.ToArray();
 
             for(int i = 0; i < this.normalizedData.Length; ++i) {
-                this.normalizedData[ i ] =
-                                    ( this.values[ i ] * maxHeight ) / maxValue;
+                if (maxValue != 0)
+                {
+                    this.normalizedData[i] =
+                        (this.values[i] * maxHeight) / maxValue;
+                }
+                else
+                {
+                    this.normalizedData[i] = this.values[i] * maxHeight;
+                }
             }
             
             return;
