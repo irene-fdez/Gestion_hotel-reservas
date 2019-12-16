@@ -32,6 +32,7 @@ namespace GestionReservas.GUI.Dlg
 
             this.opBuscarAll.Click += (sender, e) => this.BuscarTodos();
             this.opBuscarPendientes.Click += (sender, e) => this.BuscarFiltrado();
+            this.opBuscarPasadas.Click += (sender, e) => this.BusquedaPasadasHotel();
             this.opBuscarPorPersona.Click += (sender, e) => this.BuscarPorP();
             this.opGuardar.Click += (sender, e) => this.Guardar();
             this.opSalir.Click += (sender, e) => { this.DialogResult = DialogResult.Cancel; this.Salir(); };
@@ -39,6 +40,7 @@ namespace GestionReservas.GUI.Dlg
 
             this.opInsertarH.Click += (sender, e) => this.InsertaHabitacion();
             this.opConsultaH.Click += (sender, e) => this.ConsultaHabitaciones();
+            this.opBuscarPorHabitacion.Click += (sender, e) => this.BusquedaPorHabitacion();
 
             this.opConsultaC.Click += (sender, e) => this.ConsultaCliente();
 
@@ -89,6 +91,8 @@ namespace GestionReservas.GUI.Dlg
             this.opBuscarPorPersona = new MenuItem("&Buscar reserva por persona");
             this.opBuscarAll = new MenuItem("&Buscar todos");
             this.opBuscarPendientes = new MenuItem("&Buscar pendientes");
+            this.opBuscarPasadas = new MenuItem("&Buscar pasadas");
+            this.opBuscarPorHabitacion = new MenuItem("&Buscar por habitacion");
 
             this.mCliente = new MenuItem("&Cliente");
             //this.opInsertarC = new MenuItem("&Insertar");
@@ -111,8 +115,10 @@ namespace GestionReservas.GUI.Dlg
      
 
             this.mBuscar.MenuItems.Add(this.opBuscarAll);
+            this.mBuscar.MenuItems.Add(this.opBuscarPasadas);
             this.mBuscar.MenuItems.Add(this.opBuscarPendientes);
             this.mBuscar.MenuItems.Add(this.opBuscarPorPersona);
+            this.mBuscar.MenuItems.Add(this.opBuscarPorHabitacion);
             this.mArchivo.MenuItems.Add(this.opVolver);
             this.mArchivo.MenuItems.Add(this.opGuardar);
             this.mArchivo.MenuItems.Add(this.opSalir);
@@ -746,7 +752,7 @@ namespace GestionReservas.GUI.Dlg
         public void ConsultaHabitaciones()
         {
             Console.WriteLine("Consulta Habitaciones");
-            var dlgConsultaHabitaicon = new DIgConsultaHabitacion(this.Habitaciones,this.Reservas);
+            var dlgConsultaHabitaicon = new DIgConsultaHabitacion(this.Habitaciones,this.Reservas,0);
 
 
             this.Hide();
@@ -771,7 +777,36 @@ namespace GestionReservas.GUI.Dlg
             Application.Exit();
         }
 
-      
+        void BusquedaPasadasHotel()
+        {
+            DateTime today = DateTime.Today;
+            Console.WriteLine("BusquedaPasadasHotel");
+            List<Reserva> reservas = new List<Reserva>();
+            foreach (Reserva r in Reservas)
+            {
+                if (r.FechaSalida<today)
+                {
+                    reservas.Add(r);
+                }
+            }
+
+            this.ReservasBuscar = new RegistroReserva(new RegistroReserva(reservas, Clientes),this.Clientes);
+            this.Actualiza();
+        }
+        
+        void BusquedaPorHabitacion()
+        {
+            Console.WriteLine("Consulta por habitaciones");
+            var dlgConsultaHabitacion= new DIgConsultaHabitacion(Habitaciones,Reservas,1);
+
+
+            this.Hide();
+
+            if(dlgConsultaHabitacion.ShowDialog() == DialogResult.OK) { }
+
+            if (!this.IsDisposed) { this.Show(); }
+            else{  Application.Exit();  }
+        }
 
 
 
@@ -783,7 +818,9 @@ namespace GestionReservas.GUI.Dlg
         public MenuItem mBuscar;
         public MenuItem opBuscarAll;
         public MenuItem opBuscarPendientes;
+        public MenuItem opBuscarPasadas;
         public MenuItem opBuscarPorPersona;
+        public MenuItem opBuscarPorHabitacion;
         public MenuItem mCliente;
         public MenuItem opInsertarC;
         public MenuItem opConsultaC;

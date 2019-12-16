@@ -548,6 +548,10 @@ namespace GestionReservas.GUI.Dlg
                 else if (this.GrdLista.CurrentCell.ColumnIndex == 6)
                 {
                     this.EliminaCliente();
+                }else if (this.GrdLista.CurrentCell.ColumnIndex == 7)
+                    this.reservasCliente();
+                {
+                    
                 }
 
                 this.Actualiza();
@@ -651,6 +655,38 @@ namespace GestionReservas.GUI.Dlg
             Console.WriteLine("CONSULTA CLIENTE  guarda y sale");
             this.Clientes.GuardarXml();
             Application.Exit();
+        }
+        
+        
+        public void reservasCliente()
+        {
+            Console.WriteLine("dentro reservas cliente");
+            //IDHABITACION
+            var idCliente = (string)this.GrdLista.CurrentRow.Cells[1].Value;
+            List<Reserva> reservas = new List<Reserva>();
+            List<Cliente> clientes = new List<Cliente>();
+
+            foreach (Reserva r in Reservas)
+            {
+                var idUsuarioReserva = r.Cliente.DNI;
+                if (idUsuarioReserva == idCliente)
+                {
+                    reservas.Add(r);
+
+                    if (!clientes.Contains(r.Cliente))
+                    {
+                        clientes.Add(r.Cliente);
+                    }
+                    
+                }
+            }
+            
+            var dlgConsultaReserva = new DlgConsultaReserva(new RegistroReserva(reservas,clientes ), clientes);
+            this.Hide();
+            if(dlgConsultaReserva.ShowDialog() == DialogResult.OK) { }
+
+            if (!this.IsDisposed) { this.Show(); }
+            else{  Application.Exit();  }
         }
 
 

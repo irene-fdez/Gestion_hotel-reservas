@@ -13,19 +13,20 @@ namespace GestionReservas.GUI.Dlg
 
     public class DIgConsultaHabitacion :Form
     {
-        public DIgConsultaHabitacion(RegistroHabitaciones habi,RegistroReserva reservas)
+        public DIgConsultaHabitacion(RegistroHabitaciones habi,RegistroReserva reservas, int op)
         {
+            this.op = op;
             this.MVC = new MainWindowCore();
             this.Habitaciones = habi;
             this.HabitacionesBuscar = this.Habitaciones;
+            this.Clientes = RegistroClientes.RecuperarXml().ToList();
             this.Reservas = reservas;
             this.BuildGUI();
             this.CenterToScreen();
-
+            
             this.GrdLista.Click += (sender, e) => ClickLista();
 
             this.mBuscar.Click += (sender, e) => this.BuscarVacios();
-
             this.opGuardar.Click += (sender, e) => this.Guardar();
             this.opSalir.Click += (sender, e) => { this.DialogResult = DialogResult.Cancel; this.Salir(); };
             this.opVolver.Click += (sender, e) => this.DialogResult = DialogResult.Cancel;
@@ -48,6 +49,8 @@ namespace GestionReservas.GUI.Dlg
 
             this.pnlPpal.SuspendLayout();
             this.Controls.Add(this.pnlPpal);
+            Console.WriteLine("noelia");
+            Console.WriteLine(this.op);
             this.pnlPpal.Controls.Add(this.BuildPanelLista());
             this.pnlPpal.Controls.Add(this.BuildPanelDetalle());
             this.pnlPpal.ResumeLayout(false);
@@ -97,6 +100,7 @@ namespace GestionReservas.GUI.Dlg
             this.opVolver = new MenuItem("&Volver");
             this.opSalir.Shortcut = Shortcut.CtrlQ;
             this.mBuscar = new MenuItem("&Buscar vacios");
+            this.mOcupadas = new MenuItem("&Buscar ocupadas");
 
 
             this.mArchivo.MenuItems.Add(this.opVolver);
@@ -105,6 +109,7 @@ namespace GestionReservas.GUI.Dlg
 
             this.mPpal.MenuItems.Add(this.mArchivo);
             this.mPpal.MenuItems.Add(this.mBuscar);
+            this.mPpal.MenuItems.Add(this.mOcupadas);
 
             this.Menu = mPpal;
         }
@@ -142,6 +147,8 @@ namespace GestionReservas.GUI.Dlg
             this.SbStatus.Dock = DockStyle.Bottom;
             this.Controls.Add(this.SbStatus);
         }
+        DataGridViewButtonColumn column5;
+        DataGridViewButtonColumn column6;
  private Panel BuildPanelLista()
         {
             var pnlLista = new Panel();
@@ -277,26 +284,49 @@ namespace GestionReservas.GUI.Dlg
                 Width = 15,
                 ReadOnly = true
             };
-
-           
-            var column5 = new DataGridViewButtonColumn  //modificar
+            //Console.WriteLine("noelia");
+            // Console.WriteLine(this.op);
+            if (this.op == 0)
             {
-                SortMode = DataGridViewColumnSortMode.NotSortable,
-                CellTemplate = buttonCellTemplate8,
-                HeaderText = "Modificar",
-                Width = 15,
-                ReadOnly = true,
-            };
+                
+                 column5 = new DataGridViewButtonColumn //modificar
+                {
+                    SortMode = DataGridViewColumnSortMode.NotSortable,
+                    CellTemplate = buttonCellTemplate8,
+                    HeaderText = "Modificar",
+                    Width = 15,
+                    ReadOnly = true,
+                };
 
-            var column6 = new DataGridViewButtonColumn  //borrar
+                column6 = new DataGridViewButtonColumn //borrar
+                {
+                    SortMode = DataGridViewColumnSortMode.NotSortable,
+                    CellTemplate = buttonCellTemplate8,
+                    HeaderText = "Eliminar",
+                    Width = 15,
+                    ReadOnly = true,
+                };
+            }
+            else
             {
-                SortMode = DataGridViewColumnSortMode.NotSortable,
-                CellTemplate = buttonCellTemplate8,
-                HeaderText = "Eliminar",
-                Width = 15,
-                ReadOnly = true,
-            };
+                 column5 = new DataGridViewButtonColumn //modificar
+                {
+                    SortMode = DataGridViewColumnSortMode.NotSortable,
+                    CellTemplate = buttonCellTemplate8,
+                    HeaderText = "Reservas pasadas",
+                    Width = 15,
+                    ReadOnly = true,
+                };
 
+                column6 = new DataGridViewButtonColumn //borrar
+                {
+                    SortMode = DataGridViewColumnSortMode.NotSortable,
+                    CellTemplate = buttonCellTemplate8,
+                    HeaderText = "Reservas pendientes",
+                    Width = 15,
+                    ReadOnly = true,
+                };
+            }
 
             
             this.GrdLista.Columns.AddRange(new DataGridViewColumn[] {
@@ -467,18 +497,35 @@ namespace GestionReservas.GUI.Dlg
      try
      {
          Console.WriteLine("clickLista : " + this.GrdLista.CurrentCell.ColumnIndex);
+         if (this.op == 0)
+         {
+             if (this.GrdLista.CurrentCell.ColumnIndex == 5 )
+             {
+                 int fila = this.GrdLista.CurrentCell.RowIndex;
+                 this.Modificar((string)this.GrdLista.Rows[fila].Cells[1].Value);
+             }
+             else if (this.GrdLista.CurrentCell.ColumnIndex == 6)
+             {
+                 this.Eliminar();
+             }
+             this.Actualiza();
+         }
+         else
+         {
+             if (this.GrdLista.CurrentCell.ColumnIndex == 5 )
+             {
+                 this.reservasPasadas();
+             }
+             else if (this.GrdLista.CurrentCell.ColumnIndex == 6)
+             {
+                 this.reservasPendientes();
+             }
+             
+         }
 
-         if (this.GrdLista.CurrentCell.ColumnIndex == 5)
-         {
-             int fila = this.GrdLista.CurrentCell.RowIndex;
-             this.Modificar((string)this.GrdLista.Rows[fila].Cells[1].Value);
-         }
-         else if (this.GrdLista.CurrentCell.ColumnIndex == 6)
-         {
-             this.Eliminar();
-         }
+         
         
-         this.Actualiza();
+         
      }
      catch(Exception) { }
  }
@@ -566,6 +613,69 @@ namespace GestionReservas.GUI.Dlg
      Application.Exit();
  }
  
+         public void reservasPasadas()
+        {
+            //return this.Id.Substring(8, 3);
+            Console.WriteLine("dentro reservas pasadas");
+            //IDHABITACION
+            var idHabitacion = (string)this.GrdLista.CurrentRow.Cells[1].Value;
+            List<Reserva> reservas = new List<Reserva>();
+            
+            //CONSEGUIR ID RESERVA
+            //CONSEGUIMOS EL DIA
+            DateTime today = DateTime.Today;
+            
+            //BUSCAR EN REPARACIONES LAS QUE TIENEN EN SU ID EL ID DE LAS HABITACIONES
+            //Y QUE A LA VEZ SU FECHA ES MENOR QUE LA DE HOY
+            foreach (Reserva r in Reservas)
+            {
+                var idHabitacionReserva = r.NumeroHabitacion;
+                if (idHabitacionReserva == idHabitacion &&  r.FechaSalida<today)
+                {
+                    reservas.Add(r);
+                }
+            }
+            
+            var dlgConsultaReserva = new DlgConsultaReserva(new RegistroReserva(reservas, Clientes), Clientes);
+            this.Hide();
+            if(dlgConsultaReserva.ShowDialog() == DialogResult.OK) { }
+
+            if (!this.IsDisposed) { this.Show(); }
+            else{  Application.Exit();  }
+        }
+        
+        public void reservasPendientes()
+        {
+            //return this.Id.Substring(8, 3);
+            Console.WriteLine("dentro reservas pasadas");
+            //IDHABITACION
+            var idHabitacion = (string)this.GrdLista.CurrentRow.Cells[1].Value;
+            List<Reserva> reservas = new List<Reserva>();
+            
+            //CONSEGUIR ID RESERVA
+            //CONSEGUIMOS EL DIA
+            DateTime today = DateTime.Today;
+            
+            //BUSCAR EN REPARACIONES LAS QUE TIENEN EN SU ID EL ID DE LAS HABITACIONES
+            //Y QUE A LA VEZ SU FECHA ES MENOR QUE LA DE HOY
+            foreach (Reserva r in Reservas)
+            {
+                var idHabitacionReserva = r.NumeroHabitacion;
+                if (idHabitacionReserva == idHabitacion &&  r.FechaEntrada>today)
+                {
+                    reservas.Add(r);
+                }
+            }
+            
+            var dlgConsultaReserva = new DlgConsultaReserva(new RegistroReserva(reservas, Clientes), Clientes);
+            this.Hide();
+            if(dlgConsultaReserva.ShowDialog() == DialogResult.OK) { }
+
+            if (!this.IsDisposed) { this.Show(); }
+            else{  Application.Exit();  }
+        }
+        
+ 
  
  
         private MainMenu mPpal;
@@ -574,6 +684,7 @@ namespace GestionReservas.GUI.Dlg
         public MenuItem opSalir;
         public MenuItem opVolver;
         public MenuItem mBuscar;
+        public MenuItem mOcupadas;
 
 
         public StatusBar SbStatus;
@@ -582,10 +693,11 @@ namespace GestionReservas.GUI.Dlg
         public DataGridView GrdLista;
 
 
-
+        private int op;
         private RegistroReserva Reservas;
         private RegistroHabitaciones Habitaciones;
         private RegistroHabitaciones HabitacionesBuscar;
+        private readonly List<Cliente> Clientes;
         private MainWindowCore MVC;
 
     }

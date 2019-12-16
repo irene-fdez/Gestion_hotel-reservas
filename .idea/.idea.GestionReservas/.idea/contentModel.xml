@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
-    <e p="C:\Users\albov\.Rider2019.2\system\extResources" t="IncludeRecursive" />
-    <e p="C:\Users\albov\.Rider2019.2\system\resharper-host\local\Transient\ReSharperHost\v192\SolutionCaches\_GestionReservas.-811033979.00" t="ExcludeRecursive" />
-    <e p="C:\Users\albov\RiderProjects\Gestion_hotel-reservas" t="IncludeFlat">
+    <e p="C:\Users\Noelia\.Rider2019.2\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\Noelia\.Rider2019.2\system\resharper-host\local\Transient\ReSharperHost\v192\SolutionCaches\_GestionReservas.1855641254.00" t="ExcludeRecursive" />
+    <e p="C:\Users\Noelia\Desktop\PROYECTO DIA" t="IncludeFlat">
       <e p="GestionReservas" t="IncludeRecursive">
         <e p=".gitignore" t="Include" />
         <e p="bin" t="ExcludeRecursive" />
