@@ -634,6 +634,8 @@ namespace GestionReservas.GUI.Dlg
                 this.Reservas.Remove(this.Reservas.getReserva(id));
                 this.ReservasBuscar.Remove(this.ReservasBuscar.getReserva(id));
             }
+
+            this.Reservas.GuardarXml();
         }
 
         public void Modificar(string id)
