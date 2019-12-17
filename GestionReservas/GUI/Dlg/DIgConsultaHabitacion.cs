@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Channels;
 using System.Text;
 using System.Threading.Tasks;
 using GestionReservas.Core;
@@ -27,6 +28,7 @@ namespace GestionReservas.GUI.Dlg
             this.GrdLista.Click += (sender, e) => ClickLista();
 
             this.mBuscar.Click += (sender, e) => this.BuscarVacios();
+            this.mOcupadas.Click += (sender, e) => BusquedaHabitacioOcupada();
             this.opGuardar.Click += (sender, e) => this.Guardar();
             this.opSalir.Click += (sender, e) => { this.DialogResult = DialogResult.Cancel; this.Salir(); };
             this.opVolver.Click += (sender, e) => this.DialogResult = DialogResult.Cancel;
@@ -670,6 +672,53 @@ namespace GestionReservas.GUI.Dlg
             var dlgConsultaReserva = new DlgConsultaReserva(new RegistroReserva(reservas, Clientes), Clientes);
             this.Hide();
             if(dlgConsultaReserva.ShowDialog() == DialogResult.OK) { }
+
+            if (!this.IsDisposed) { this.Show(); }
+            else{  Application.Exit();  }
+        }
+        
+        void BusquedaHabitacioOcupada()
+        {
+            Console.WriteLine("Busqueda habitacion ocupada");
+            var dlgConsultaHbitacionOcupada= new DlgConsultaFecha();
+
+
+            this.Hide();
+
+            if (dlgConsultaHbitacionOcupada.ShowDialog() == DialogResult.OK)
+            {
+                List<Reserva> reservas = new List<Reserva>();
+                RegistroHabitaciones habitaciones = new RegistroHabitaciones();
+                RegistroHabitaciones registroHabitacio = RegistroHabitaciones.RecuperarXml();
+                DateTime fecha = dlgConsultaHbitacionOcupada.Habitacion;
+               
+                foreach (Reserva r in Reservas)
+                {
+                    var fechaEntrada= r.FechaEntrada;
+                    var fechaSalida = r.FechaSalida;
+                    var idHabitacionReserva = r.NumeroHabitacion;
+                    if (fecha >= fechaEntrada && fecha<=fechaSalida)
+                    {
+                        Habitacion hab = registroHabitacio.getHabitacion(idHabitacionReserva);
+                        habitaciones.Add(hab);
+                        
+                    }
+                }
+
+                this.HabitacionesBuscar = habitaciones;
+                this.Actualiza();
+
+                /*var dlgConsultaHabitacion= new DlgConsultaHabitacion(habitaciones);
+
+
+                this.Hide();
+
+                if(dlgConsultaHabitacion.ShowDialog() == DialogResult.OK) { }
+
+                if (!this.IsDisposed) { this.Show(); }
+                else{  Application.Exit();  }*/
+
+            }
 
             if (!this.IsDisposed) { this.Show(); }
             else{  Application.Exit();  }

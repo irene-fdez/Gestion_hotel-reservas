@@ -66,6 +66,7 @@
     </Compile>
     <Compile Include="GUI\Dlg\DIgInsertaHabitaciones.cs" />
     <Compile Include="GUI\Dlg\DIgModificaHabitacion.cs" />
+    <Compile Include="GUI\Dlg\DlgConsultaFecha.cs" />
     <Compile Include="GUI\Dlg\DlgConsultaReserva.cs">
       <SubType>Form</SubType>
     </Compile>
