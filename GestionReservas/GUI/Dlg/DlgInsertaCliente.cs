@@ -343,28 +343,27 @@ namespace GestionReservas.GUI.Dlg
                 Anchor = AnchorStyles.Bottom,
                 Mask = "000000000"
             };
-            //
+          
 
-            //this.mtbTelef.Validating += (sender, cancelArgs) =>
-            //{
-            //    var btAccept = (Button)this.AcceptButton;
-            //    bool invalid = this.mtbTelef.Equals(null);
+            this.mtbTelef.Validating += (sender, cancelArgs) =>
+            {
+                var btAccept = (Button)this.AcceptButton;
+                bool invalid = string.IsNullOrWhiteSpace(this.Nombre);
 
-            //    invalid = invalid || this.tbNombre.Text == "";
+                invalid = invalid || this.mtbTelef.Text == "";
 
-            //    if (invalid || this.tbNombre.Text == "")
-            //    {
+                if (invalid || this.mtbTelef.Text == "")
+                {
 
-            //        string mensaje = "El campo no puede estar vacio";
-            //        MessageBox.Show(mensaje, "Informacion", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    string mensaje = "El campo no puede estar vacio";
+                    MessageBox.Show(mensaje, "Informacion", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-            //        this.tbNombre.Focus();
-            //    }
+                    this.mtbTelef.Focus();
+                }
 
-            //    btAccept.Enabled = !invalid;
-            //};
+                btAccept.Enabled = !invalid;
+            };
 
-            //
             pnlTelef.MaximumSize = new Size(int.MaxValue, mtbTelef.Height * 2);
 
             pnlTelef.Controls.Add(this.mtbTelef);
